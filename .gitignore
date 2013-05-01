@@ -1,0 +1,16 @@
+Library
+Assembly-*.csproj
+Assembly-*.unityproj
+TurfWindows*
+Temp
+obj
+git.sln
+git-csharp.*
+.DS_Store
+*.suo
+*.sln
+*.pidb
+*.userprefs
+*.msh
+*.psv
+*.tex
