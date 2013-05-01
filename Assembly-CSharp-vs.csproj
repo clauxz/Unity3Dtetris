@@ -159,6 +159,8 @@
      <Compile Include="Assets\NGUI\Scripts\UI\UITiledSprite.cs" />
      <Compile Include="Assets\NGUI\Scripts\UI\UITooltip.cs" />
      <Compile Include="Assets\NGUI\Scripts\UI\UIViewport.cs" />
+     <Compile Include="Assets\Scripts\EventManager.cs" />
+     <Compile Include="Assets\Scripts\Helper.cs" />
      <Compile Include="Assets\Scripts\ScoreboardScreen.cs" />
      <Compile Include="Assets\result scoreboard\ScoreBoard.cs" />
      <Compile Include="Assets\result scoreboard\ScoreManager.cs" />

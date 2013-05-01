@@ -13,7 +13,8 @@ function OnGUI(){
 		//Start button
 		if(GUILayout.Button("Start",skin.GetStyle("button"),GUILayout.Width(200),GUILayout.Height(100)))
 		{
-			Application.LoadLevel("TetrisRegister");
+
+						Application.LoadLevel("TetrisRegister");
 		}
 		//Tutorial button
 		if(GUILayout.Button("Tutorial",skin.GetStyle("button"),GUILayout.Width(200),GUILayout.Height(100)))
