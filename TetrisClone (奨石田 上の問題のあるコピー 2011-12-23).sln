@@ -1,0 +1,33 @@
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+
+Project("{260091C6-C0A6-BB8C-1327-972874096D40}") = "TetrisClone", "Assembly-CSharp-firstpass.csproj", "{7F171721-C4C6-A87B-2E88-002058BC499C}"
+EndProject
+Project("{260091C6-C0A6-BB8C-1327-972874096D40}") = "TetrisClone", "Assembly-CSharp.csproj", "{21588542-2513-FCC5-AD7A-B119309A4760}"
+EndProject
+Project("{260091C6-C0A6-BB8C-1327-972874096D40}") = "TetrisClone", "Assembly-UnityScript.unityproj", "{70005131-C9C2-3578-96C8-8B682F4691B5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7F171721-C4C6-A87B-2E88-002058BC499C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F171721-C4C6-A87B-2E88-002058BC499C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F171721-C4C6-A87B-2E88-002058BC499C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F171721-C4C6-A87B-2E88-002058BC499C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21588542-2513-FCC5-AD7A-B119309A4760}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21588542-2513-FCC5-AD7A-B119309A4760}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21588542-2513-FCC5-AD7A-B119309A4760}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21588542-2513-FCC5-AD7A-B119309A4760}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70005131-C9C2-3578-96C8-8B682F4691B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70005131-C9C2-3578-96C8-8B682F4691B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70005131-C9C2-3578-96C8-8B682F4691B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70005131-C9C2-3578-96C8-8B682F4691B5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	
+EndGlobal

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Enabled</key>
+	<array>
+		<true/>
+	</array>
+	<key>PathNames</key>
+	<array>
+		<string>Assets/level.unity</string>
+	</array>
+	<key>standaloneOSXPPC LastLocation</key>
+	<string>/Users/erichaines/Unity Projects/Unity Player.app</string>
+</dict>
+</plist>
