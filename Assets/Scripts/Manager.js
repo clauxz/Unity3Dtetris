@@ -163,7 +163,7 @@ function SetBlock (blockMatrix : boolean[,], xPos : int, yPos : int, mat : Mater
 		for (x = 0; x < size; x++) {	
 			if (blockMatrix[x, y]) {
 				var c = Instantiate (cube, Vector3(xPos+x, yPos-y, 0.0), Quaternion.identity);
-				//c.renderer.material = mat;
+				c.renderer.material = mat;
 				field[xPos+x, yPos-y] = true;
 			}
 		}
