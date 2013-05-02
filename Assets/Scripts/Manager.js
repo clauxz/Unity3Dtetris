@@ -109,8 +109,9 @@ function SpawnBlock () {
 	//Instantiating new block
 	currentBlock = nextBlock;
 	var go = Instantiate (blocks[currentBlock]);
-	go.transform.parent=brickHolder;
+	//go.transform.parent=brickHolder;
 	go.transform.localScale = Vector3.one;
+	go.transform.position.x =0;// Vector3.zero;
 	go.GetComponent("Block").SetMaterial(materials[currentBlock]);
 	
 	//Randoming next block

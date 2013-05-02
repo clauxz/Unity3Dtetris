@@ -42,31 +42,31 @@ public class EventManager : MonoBehaviour {
 			
 		case ButtonType.Dynamic:
 			PlayerPrefs.SetString("GameKind", "TimePlus");
-			PlayerPrefs.SetInt("GameSpeed", Helper.levelValue);
+			PlayerPrefs.SetInt("GameSpeed", GameManager.levelValue);
 			Application.LoadLevel("TetrisClone");
 			break;
 		case ButtonType.Constant:
 			PlayerPrefs.SetString("GameKind", "Constant");
-			PlayerPrefs.SetInt("GameSpeed", Helper.levelValue);
+			PlayerPrefs.SetInt("GameSpeed", GameManager.levelValue);
 			Application.LoadLevel("TetrisClone");
 			break;
 		case ButtonType.Manual:
 			PlayerPrefs.SetString("GameKind", "Manually");
-			PlayerPrefs.SetInt("GameSpeed", Helper.levelValue);
+			PlayerPrefs.SetInt("GameSpeed", GameManager.levelValue);
 			Application.LoadLevel("TetrisClone");
 			break;
 		case ButtonType.Level_inc:
-			//GameObject.Find("levelValue").GetComponent<UILabel>().text=levelValue.ToString();
-			if(Helper.levelValue < 10){
-				Helper.levelValue++;
-			GameObject.Find("levelValue").GetComponent<UILabel>().text=Helper.levelValue.ToString();
+			
+			if(GameManager.levelValue < 10){
+				GameManager.levelValue++;
+			GameObject.Find("levelValue").GetComponent<UILabel>().text=GameManager.levelValue.ToString();
 			}
 			
 			break;
 		case ButtonType.Level_dec:
-			if(Helper.levelValue > 1) {
-				Helper.levelValue--;
-			GameObject.Find("levelValue").GetComponent<UILabel>().text=Helper.levelValue.ToString();
+			if(GameManager.levelValue > 1) {
+				GameManager.levelValue--;
+			GameObject.Find("levelValue").GetComponent<UILabel>().text=GameManager.levelValue.ToString();
 			}
 			break;
 		case ButtonType.Return:

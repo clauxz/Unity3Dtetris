@@ -51,7 +51,7 @@ function Start () {
 	}
 	
 	// For blocks with even sizes, we just add 0, but odd sizes need .5 added to the position to work right
-	transform.position.x = Manager.use.FieldWidth()/2 + (size%2 == 0? 0.0 : .5);
+	transform.position.x = (Manager.use.FieldWidth()/2 + (size%2 == 0? 0.0 : .5));
 	xPosition = transform.position.x - halfSizeFloat;
 	yPosition = Manager.use.FieldHeight() - 1;
 	transform.position.y = yPosition - halfSizeFloat;
@@ -104,7 +104,7 @@ function CheckInput () {
 		if (Input.GetKey(KeyCode.LeftArrow)||Input.GetKey(KeyCode.A)) {
 			yield MoveHorizontal(-1);
 		}
-		else if (Input.GetKey(KeyCode.RightArrow)||Input.GetKey(KeyCode.D)) {
+		else if (Input.GetKey(KeyCode.RightArrow)||Input.GetKey(KeyCode.W)) {
 			yield MoveHorizontal(1);
 		}
 
