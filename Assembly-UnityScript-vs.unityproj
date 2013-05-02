@@ -45,10 +45,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\Block.js" />
-     <Compile Include="Assets\Scripts\FirstScreen.js" />
      <Compile Include="Assets\Scripts\Manager.js" />
-     <Compile Include="Assets\Scripts\RegisterScreen.js" />
-     <Compile Include="Assets\Scripts\StartScreen.js" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Depth Cutout.shader" />
      <None Include="Assets\NGUI\Examples\Models\Orc\Orc Skin.shader" />
      <None Include="Assets\NGUI\Examples\Atlases\Wooden\Arimo20.txt" />

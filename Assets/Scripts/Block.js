@@ -34,8 +34,8 @@ function Start () {
 		}
 	}
 	
-	halfSize = size/2;
-	halfSizeFloat = size*.5; // halfSize is an integer for the array, but we need a float for positioning the on-screen cubes (for odd sizes)
+	halfSize = (size/2);
+	halfSizeFloat = (size*.5); // halfSize is an integer for the array, but we need a float for positioning the on-screen cubes (for odd sizes)
 	
 	// Convert block string array from the inspector to a boolean 2D array for easier usage
 	blockMatrix = new boolean[size, size];
@@ -43,7 +43,7 @@ function Start () {
 		for (x = 0; x < size; x++) {
 			if (block[y][x] == "1"[0]) {
 				blockMatrix[x, y] = true;
-				var block = Instantiate(Manager.use.cube, Vector3(x-halfSizeFloat, (size-y)+halfSizeFloat-size, 0.0), Quaternion.identity) as Transform;
+				var block = Instantiate(Manager.use.cube, Vector3((x-halfSizeFloat)*.1, ((size-y)+halfSizeFloat-size)*.1, 0.0), Quaternion.identity) as Transform;
 				block.parent = transform;
 				block.renderer.material = material;
 			}
@@ -101,18 +101,18 @@ function CheckInput () {
 	while (playable) {
 		
 		var input = Input.GetAxis("Horizontal");
-		if (input < 0.0) {
+		if (Input.GetKey(KeyCode.LeftArrow)||Input.GetKey(KeyCode.A)) {
 			yield MoveHorizontal(-1);
 		}
-		else if (input > 0.0) {
+		else if (Input.GetKey(KeyCode.RightArrow)||Input.GetKey(KeyCode.D)) {
 			yield MoveHorizontal(1);
 		}
 
-		if (Input.GetButtonDown("Rotate")) {
+		if (Input.GetKeyDown(KeyCode.UpArrow)||Input.GetKeyDown(KeyCode.W)) {
 			RotateBlock();
 		}
 		
-		if (Input.GetButton("Drop")) {
+		if (Input.GetKey(KeyCode.DownArrow)||Input.GetKey(KeyCode.S)) {
 			fallSpeed = Manager.use.blockDropSpeed;
 			//dropped = true;
 			//Manager.use.score += 5;

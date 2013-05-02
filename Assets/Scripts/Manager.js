@@ -9,8 +9,9 @@ var blockMoveDelay = 0.1f;
 var blocks : GameObject[];
 var materials : Material[];
 var cube : Transform;
-var leftWall : Transform;
-var rightWall : Transform;
+var brickHolder : Transform;
+//var leftWall : Transform;
+//var rightWall : Transform;
 
 /*sergio's variables*/
 var delayTime = 1.0;
@@ -76,9 +77,9 @@ function Start () {
 	
 	// Position stuff in the scene so it looks right regardless of what sizes are entered for the playing field
 	// (Though the camera would have to be moved back for larger sizes)
-	leftWall.position.x = maxBlockSize-.5;
-	rightWall.position.x = fieldWidth-maxBlockSize+.5;
-	Camera.main.transform.position = Vector3(fieldWidth/2, fieldHeight/2, -16.0);
+	//leftWall.position.x = maxBlockSize-.5;
+	//rightWall.position.x = fieldWidth-maxBlockSize+.5;
+//	Camera.main.transform.position = Vector3(fieldWidth/2, fieldHeight/2, -16.0);
 	
 	cubeReferences = new Transform[fieldWidth * fieldHeight];
 	cubePositions = new int[fieldWidth * fieldHeight];
@@ -108,6 +109,8 @@ function SpawnBlock () {
 	//Instantiating new block
 	currentBlock = nextBlock;
 	var go = Instantiate (blocks[currentBlock]);
+	go.transform.parent=brickHolder;
+	go.transform.localScale = Vector3.one;
 	go.GetComponent("Block").SetMaterial(materials[currentBlock]);
 	
 	//Randoming next block
@@ -162,7 +165,7 @@ function SetBlock (blockMatrix : boolean[,], xPos : int, yPos : int, mat : Mater
 	for (y = 0; y < size; y++) {
 		for (x = 0; x < size; x++) {	
 			if (blockMatrix[x, y]) {
-				var c = Instantiate (cube, Vector3(xPos+x, yPos-y, 0.0), Quaternion.identity);
+				var c = Instantiate (cube, Vector3((xPos+x)*.1, (yPos-y)*.1, 0.0), Quaternion.identity);
 				c.renderer.material = mat;
 				field[xPos+x, yPos-y] = true;
 			}
@@ -289,7 +292,7 @@ function PrintField () {
 	Debug.Log (fieldChars);
 }
 
-function OnGUI()
+/*function OnGUI()
 {
 	//var debugstring = "gameSpeed = " + blockNormalSpeed.ToString() + "\n";
 	//GUI.Label(Rect(0,Screen.height *0.7, 100, 200),"DEBUG: " + debugstring);
@@ -334,4 +337,4 @@ function OnGUI()
 	{
 		GUI.Label(Rect(Screen.width*0.4, Screen.height *0.5, 150, 25), "GAME OVER", skin.GetStyle("gameover"));	
 	}
-}
+}*/
