@@ -44,11 +44,11 @@ public class GameManager : MonoBehaviour {
 	//Block Settings...
 	//public GameObject node;
 	public int maxBlockSize;
-	public float blockNormalSpeed;
-	public int blockDropSpeed;
-	public int blockMoveDelay;
+	public double blockNormalSpeed;
+	public double blockDropSpeed;
+	public double blockMoveDelay;
 	
-	private string gameKind="Manually";
+	public string gameKind="Manually";
 	int totalRowsCleared = 0;
 
 	long score = 0;
@@ -100,25 +100,28 @@ public class GameManager : MonoBehaviour {
 		block = new string[4];
 		
 		block[0]="0000";
-		block[1]="0000";
-		block[2]="1111";
-		block[3]="0000";
+		block[1]="1111";
+		block[2]="0000";
+		block[2]="0000";
+		
 		
 		blocks.Add(block);
 		
-		block = new string[3];
+		block = new string[4];
 		
-		block[0]="011";
-		block[1]="010";
+		block[0]="000";
+		block[1]="011";
 		block[2]="010";
+		block[3]="010";
 		
 		blocks.Add(block);
 		
-		block = new string[3];
+		block = new string[4];
 		
-		block[0]="001";
-		block[1]="111";
-		block[2]="100";
+		block[0]="000";
+		block[1]="010";
+		block[2]="110";
+		block[3]="100";
 		
 		blocks.Add(block);
 		
@@ -157,6 +160,16 @@ public class GameManager : MonoBehaviour {
 	{
 		blockNormalSpeed += 0.5f;
 		delayTime -= delayTime * 0.4;
+	}
+		
+	for (int i = 0; i < fieldHeight; i++) {
+		for (int j = 0; j < maxBlockSize; j++) {
+			field[j, i] = true;
+			field[fieldWidth-1-j, i] = true;
+		}
+	}
+	for (int i = 0; i < fieldWidth; i++) {
+		field[i, 0] = true;
 	}
 
 	cubeReferences = new Transform[fieldWidth * fieldHeight];
@@ -235,8 +248,7 @@ void CheckRows (int yStart, int size) {
 	go.GetComponent<Block>().enabled=true;
 	
 	go.transform.localScale = Vector3.one;
-	//go.transform.position.x =0;// Vector3.zero;
-	//(materials[currentBlock]);
+	
 	
 	//Randoming next block
 /*	nextBlock = Random.Range(0, blocks.Length);

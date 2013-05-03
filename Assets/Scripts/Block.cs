@@ -59,13 +59,14 @@ public class Block : MonoBehaviour {
 			xPosition = (int)transform.localPosition.x - halfSize;
 			yPosition = 165;
 			//transform.position.y = yPosition;// - halfSize;
-			fallSpeed = GameManager.instance.blockNormalSpeed;
+			fallSpeed =(float) GameManager.instance.blockNormalSpeed;
 			
-		/*	if (GameManager.instance.CheckBlock (blockMatrix, xPosition, yPosition)) {
+			if (GameManager.instance.CheckBlock (blockMatrix, xPosition, yPosition)) {
 					//Manager.use.GameOver();
 				Debug.Log("Game over");
 				return;
-				}*/
+				}
+			this.playable=true;
 		//	Fall();
 		}
 		
@@ -100,6 +101,89 @@ void Update () {
 				//transform.position.y = i - halfSize;
 		//	yield;
 		}
+		
+		CheckInput();
+		
 	}
+}
+	
+
+
+private void CheckInput () {
+	
+		
+		//var input = Input.GetAxis("Horizontal");
+		if (Input.GetKey(KeyCode.LeftArrow)||Input.GetKey(KeyCode.A)) {
+			StartCoroutine(MoveHorizontal(-18));
+		}
+		else if (Input.GetKey(KeyCode.RightArrow)||Input.GetKey(KeyCode.W)) {
+			StartCoroutine(MoveHorizontal(18));
+		}
+
+		if (Input.GetKeyDown(KeyCode.UpArrow)||Input.GetKeyDown(KeyCode.W)) {
+			RotateBlock();
+		}
+		
+		if (Input.GetKey(KeyCode.DownArrow)||Input.GetKey(KeyCode.S)) {
+			fallSpeed =(float)GameManager.instance.blockDropSpeed;
+			//dropped = true;
+			//Manager.use.score += 5;
+			//break;	// Break out of while loop, so the coroutine stops (we don't care about input anymore)
+		}
+		else
+		{
+			fallSpeed =(float) GameManager.instance.blockNormalSpeed ;
+			
+		}
+		
+		//Change the next block
+		if(Input.GetKeyDown(KeyCode.Keypad5) || Input.GetKeyDown(KeyCode.Space))
+		{
+		//	GameManager.instance.ChangeNextBlock();
+		}
+		
+		//Get speed down ou up just in Manual game
+		if(GameManager.instance.gameKind == "Manually")
+		{
+			if(Input.GetKeyDown(KeyCode.KeypadPlus))
+			{
+				GameManager.instance.blockNormalSpeed += .5;
+				GameManager.instance.delayTime -= GameManager.instance.delayTime * 0.4;
+			}
+			if(Input.GetKeyDown(KeyCode.KeypadMinus) && GameManager.instance.blockNormalSpeed > 2.0)
+			{
+				GameManager.instance.blockNormalSpeed -= .5;
+				GameManager.instance.delayTime += GameManager.instance.delayTime * 0.4;
+			}
+		}
+		
+	
+}
+	
+public IEnumerator MoveHorizontal (int dir) {
+	// Check to see if block could be moved in the desired direction
+	//if (!GameManager.instance.CheckBlock (blockMatrix, xPosition + dir, yPosition)) {
+	//	transform.position.x += dir;
+		xPosition += dir;
+		Vector3 pos = transform.localPosition;
+		transform.localPosition=new Vector3(xPosition,pos.y,pos.z);
+		yield return new WaitForSeconds (1f);
+	//}
+}
+
+void RotateBlock () {
+	// Rotate matrix 90° to the right and store the results in a temporary matrix
+	var tempMatrix = new bool[size, size];
+	for (int y = 0; y < size; y++) {
+		for (int x = 0; x < size; x++) {
+			tempMatrix[y, x] = blockMatrix[x, (size-1)-y];
+		}
+	}
+	
+	// If the rotated block doesn't overlap existing blocks, copy the rotated matrix back and rotate on-screen block to match
+//	if (!GameManager.instance.CheckBlock (tempMatrix, xPosition, yPosition)) {
+		System.Array.Copy (tempMatrix, blockMatrix, size*size);
+		transform.Rotate (Vector3.forward * -90);
+//	}
 }
 }

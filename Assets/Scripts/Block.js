@@ -101,7 +101,7 @@ function Fall () {
 function CheckInput () {
 	while (playable) {
 		
-		var input = Input.GetAxis("Horizontal");
+		//var input = Input.GetAxis("Horizontal");
 		if (Input.GetKey(KeyCode.LeftArrow)||Input.GetKey(KeyCode.A)) {
 			yield MoveHorizontal(-1);
 		}
