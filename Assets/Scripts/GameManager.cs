@@ -40,6 +40,8 @@ public class GameManager : MonoBehaviour {
 	
 	public GameObject block;
 	
+	public GameObject nextBlockObject;
+	
 	
 	//Block Settings...
 	//public GameObject node;
@@ -102,26 +104,26 @@ public class GameManager : MonoBehaviour {
 		block[0]="0000";
 		block[1]="1111";
 		block[2]="0000";
-		block[2]="0000";
+		block[3]="0000";
 		
 		
 		blocks.Add(block);
 		
 		block = new string[4];
 		
-		block[0]="000";
-		block[1]="011";
-		block[2]="010";
-		block[3]="010";
+		block[0]="0000";
+		block[1]="0110";
+		block[2]="0100";
+		block[3]="0100";
 		
 		blocks.Add(block);
 		
 		block = new string[4];
 		
-		block[0]="000";
-		block[1]="010";
-		block[2]="110";
-		block[3]="100";
+		block[0]="0000";
+		block[1]="0010";
+		block[2]="0110";
+		block[3]="0100";
 		
 		blocks.Add(block);
 		
@@ -244,20 +246,29 @@ void CheckRows (int yStart, int size) {
 	go.transform.parent=blockHolder.transform;
 	go.GetComponent<Block>().block=blocks[currentBlock];
 	go.GetComponent<Block>().blockColor=blocksColors[currentBlock];
-	go.GetComponent<Block>().playable=true;
+	
 	go.GetComponent<Block>().enabled=true;
 	
 	go.transform.localScale = Vector3.one;
 	
 	
 	//Randoming next block
-/*	nextBlock = Random.Range(0, blocks.Length);
-	Destroy(goNextBlock);
-	goNextBlock = Instantiate (blocks[nextBlock]);
-	goNextBlock.GetComponent("Block").SetMaterial(materials[nextBlock]);
-	goNextBlock.GetComponent("Block").playable = false;
-	goNextBlock.transform.position.x = -8.5;
-	goNextBlock.transform.position.y = 7.5;*/
+	nextBlock = Random.Range(0, blocks.Count);
+	
+	var children = new List<GameObject>();
+
+		foreach (Transform child in nextBlockObject.transform) children.Add(child.gameObject);
+			children.ForEach(child => Destroy(child));	
+		
+	goNextBlock =(GameObject) Instantiate (block);
+	goNextBlock.transform.parent=nextBlockObject.transform;
+	goNextBlock.GetComponent<Block>().block=blocks[nextBlock];
+	goNextBlock.GetComponent<Block>().blockColor=blocksColors[nextBlock];
+	goNextBlock.GetComponent<Block>().isNextBlock=true;
+	
+	goNextBlock.GetComponent<Block>().enabled=true;
+	goNextBlock.transform.localPosition = Vector3.zero;
+	goNextBlock.transform.localScale = Vector3.one;
 }
 	// Update is called once per frame
 	void Update () {

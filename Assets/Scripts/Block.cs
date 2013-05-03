@@ -40,8 +40,9 @@ public class Block : MonoBehaviour {
 		
 		blockMatrix = new bool[size, size];
 		
-		for (int y = 0; y < size; y++) {
+		for (int y = 0; y < size ; y++) {
 		for (int x = 0; x < size; x++) {
+				Debug.Log(x+" "+ y);
 			if (block[y][x]=="1"[0]) {
 				blockMatrix[x, y] = true;
 				GameObject blocker =(GameObject) Instantiate(this.node);//Instantiate(GameManager.instance.node,new Vector3((x-13), (size-y)+13-size, 0.0), Quaternion.identity) ;
@@ -61,11 +62,11 @@ public class Block : MonoBehaviour {
 			//transform.position.y = yPosition;// - halfSize;
 			fallSpeed =(float) GameManager.instance.blockNormalSpeed;
 			
-			if (GameManager.instance.CheckBlock (blockMatrix, xPosition, yPosition)) {
+		/*	if (GameManager.instance.CheckBlock (blockMatrix, xPosition, yPosition)) {
 					//Manager.use.GameOver();
 				Debug.Log("Game over");
 				return;
-				}
+				}*/
 			this.playable=true;
 		//	Fall();
 		}
