@@ -61,15 +61,17 @@ public class Block : MonoBehaviour {
 			//transform.position.y = yPosition;// - halfSize;
 			fallSpeed = GameManager.instance.blockNormalSpeed;
 			
-			if (GameManager.instance.CheckBlock (blockMatrix, xPosition, yPosition)) {
+		/*	if (GameManager.instance.CheckBlock (blockMatrix, xPosition, yPosition)) {
 					//Manager.use.GameOver();
 				Debug.Log("Game over");
 				return;
-				}
+				}*/
+		//	Fall();
 		}
 		
 		
 	}
+	
 	
 /*	void Delay (float time) {
 	var t = 0.0;
@@ -78,24 +80,26 @@ public class Block : MonoBehaviour {
 		t += Time.deltaTime;	
 	//	yield;
 	}
-}
+}*/
 
-void Fall () {
-	while (playable) {
+void Update () {
+	if (playable) {
 		// Check to see if block would collide if moved down one row
 		yPosition--;
-		if (Manager.use.CheckBlock (blockMatrix, xPosition, yPosition)) {
+	/*	if (Manager.use.CheckBlock (blockMatrix, xPosition, yPosition)) {
 			Manager.use.SetBlock (blockMatrix, xPosition, yPosition+1, material);
 			Destroy(gameObject);
 			break;
-		}
+		}*/
 		
 		// Make on-screen block fall down 1 square
 		// Also serves as a delay...if you want old-fashioned square-by-square movement, replace this with yield WaitForSeconds
 		for (float i = yPosition+1; i > yPosition; i -= Time.deltaTime*fallSpeed) {
-			transform.position.y = i - halfSizeFloat;
+			Vector3 val = transform.localPosition;
+			transform.localPosition=new Vector3(val.x,(i - halfSize),val.z);
+				//transform.position.y = i - halfSize;
 		//	yield;
 		}
 	}
-}*/
+}
 }

@@ -36,7 +36,9 @@ public class GameManager : MonoBehaviour {
 	public int fieldWidth;
 	public int fieldHeight;
 	
+	public GameObject blockHolder;
 	
+	public GameObject block;
 	
 	
 	//Block Settings...
@@ -46,7 +48,11 @@ public class GameManager : MonoBehaviour {
 	public int blockDropSpeed;
 	public int blockMoveDelay;
 	
-	private string gameKind;
+	private string gameKind="Manually";
+	int totalRowsCleared = 0;
+
+	long score = 0;
+	double timeTaken = 0.0;
 	
 	public double delayTime=1.0f;
 	
@@ -54,7 +60,16 @@ public class GameManager : MonoBehaviour {
 	
 	private Transform[] cubeReferences;
 	private int[] cubePositions;
+	private float lastTimeTaken = 0;
 	private int nextBlock;
+	private int currentBlock;
+	private GameObject goNextBlock;
+	private bool isNext;
+	
+
+	private int rowsCleared = 0;
+
+
 	
 	//Define Types of Blocks here..
 	
@@ -152,7 +167,7 @@ public class GameManager : MonoBehaviour {
 	
 	nextBlock = Random.Range(0, blocks.Count);
 		
-		
+	SpawnBlock();
 	}
 	
 	private static void Clearfield(int fieldWidth,int fieldHeight)
@@ -207,6 +222,30 @@ void CheckRows (int yStart, int size) {
 		}
 	}
 	return false;
+}
+	
+	void SpawnBlock () {
+	//Instantiating new block
+	currentBlock = nextBlock;
+	GameObject go =(GameObject) Instantiate (block);
+	go.transform.parent=blockHolder.transform;
+	go.GetComponent<Block>().block=blocks[currentBlock];
+	go.GetComponent<Block>().blockColor=blocksColors[currentBlock];
+	go.GetComponent<Block>().playable=true;
+	go.GetComponent<Block>().enabled=true;
+	
+	go.transform.localScale = Vector3.one;
+	//go.transform.position.x =0;// Vector3.zero;
+	//(materials[currentBlock]);
+	
+	//Randoming next block
+/*	nextBlock = Random.Range(0, blocks.Length);
+	Destroy(goNextBlock);
+	goNextBlock = Instantiate (blocks[nextBlock]);
+	goNextBlock.GetComponent("Block").SetMaterial(materials[nextBlock]);
+	goNextBlock.GetComponent("Block").playable = false;
+	goNextBlock.transform.position.x = -8.5;
+	goNextBlock.transform.position.y = 7.5;*/
 }
 	// Update is called once per frame
 	void Update () {
