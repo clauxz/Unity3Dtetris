@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour {
 	
 	public GameObject nextBlockObject;
 	
-	
+	//public static bool isOnceSpawn=false;
 	//Block Settings...
 	//public GameObject node;
 	public int maxBlockSize;
@@ -182,50 +182,10 @@ public class GameManager : MonoBehaviour {
 	
 	nextBlock = Random.Range(0, blocks.Count);
 		
-	SpawnBlock();
+	StartCoroutine(SpawnBlock());
 	}
 	
-	/*private static void Clearfield(int fieldWidth,int fieldHeight)
-	{
-		field=new bool[fieldWidth,fieldHeight];
-		for(int x=0;x<fieldWidth;x++)
-		{
-			for(int y =0;y<fieldHeight;y++)
-			{
-				field[x,y]=false;
-			}
-		}
-	}*/
 	
-/*	function SetBlock (blockMatrix : boolean[,], xPos : int, yPos : int, mat : Material) {
-	var size = blockMatrix.GetLength(0);
-	for (y = 0; y < size; y++) {
-		for (x = 0; x < size; x++) {	
-			if (blockMatrix[x, y]) {
-				var c = Instantiate (cube, Vector3((xPos+x)*.1, (yPos-y)*.1, 0.0), Quaternion.identity);
-				c.renderer.material = mat;
-				field[xPos+x, yPos-y] = true;
-			}
-		}
-	}
-	yield CheckRows (yPos - size, size);
-	SpawnBlock();
-}
-
-void CheckRows (int yStart, int size) {
-	//yield;	// Wait a frame for block to be destroyed so we don't include those cubes
-	if (yStart < 1) yStart = 1;	// Make sure to start above the floor
-	for (int y = yStart; y < yStart+size; y++) {
-		for (int x = maxBlockSize; x < fieldWidth-maxBlockSize; x++) { // We don't need to check the walls
-			if (!field[x, y]) break;
-		}
-		// If the loop above completed, then x will equal fieldWidth-maxBlockSize, which means the row was completely filled in
-		if (x == fieldWidth-maxBlockSize) {
-			CollapseRows (y);
-			y--; // We want to check the same row again after the collapse, in case there was more than one row filled in
-		}
-	}
-}*/
 	
 	public bool CheckBlock (bool[,] blockMatrix,int xPos,int yPos){
 	int size = blockMatrix.GetLength(0);
@@ -240,7 +200,7 @@ void CheckRows (int yStart, int size) {
 	return false;
 	}
 	
-	void SpawnBlock () {
+	public IEnumerator SpawnBlock () {
 	//Instantiating new block
 	currentBlock = nextBlock;
 	GameObject go =(GameObject) Instantiate (block);
@@ -270,6 +230,7 @@ void CheckRows (int yStart, int size) {
 	goNextBlock.GetComponent<Block>().enabled=true;
 	goNextBlock.transform.localPosition = Vector3.zero;
 	goNextBlock.transform.localScale = Vector3.one;
+	yield return new WaitForSeconds (1f);
 }
 	// Update is called once per frame
 	void Update () {

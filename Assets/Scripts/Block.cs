@@ -8,7 +8,8 @@ public class Block : MonoBehaviour {
 	public bool playable;
 	public GameObject node;
 	public bool isNextBlock;
-	public bool isWallCollide=false;
+	public int BlockCurrentPos=0;
+	public bool isCollided=false;
 	
 	
 	//Private variables
@@ -117,10 +118,10 @@ private void CheckInput () {
 	
 		
 		//var input = Input.GetAxis("Horizontal");
-		if (Input.GetKeyDown(KeyCode.LeftArrow)||Input.GetKey(KeyCode.A)) {
+		if (Input.GetKeyDown(KeyCode.LeftArrow)||Input.GetKeyDown(KeyCode.A)) {
 			StartCoroutine(MoveHorizontal(-18));
 		}
-		else if (Input.GetKeyDown(KeyCode.RightArrow)||Input.GetKey(KeyCode.W)) {
+		else if (Input.GetKeyDown(KeyCode.RightArrow)||Input.GetKeyDown(KeyCode.W)) {
 			StartCoroutine(MoveHorizontal(18));
 		}
 
@@ -129,7 +130,7 @@ private void CheckInput () {
 		}
 		
 		if (Input.GetKey(KeyCode.DownArrow)||Input.GetKey(KeyCode.S)) {
-			//fallSpeed =(float)GameManager.instance.blockDropSpeed;
+			fallSpeed =(float)GameManager.instance.blockDropSpeed;
 			//dropped = true;
 			//Manager.use.score += 5;
 			//break;	// Break out of while loop, so the coroutine stops (we don't care about input anymore)
@@ -166,7 +167,7 @@ private void CheckInput () {
 	
 public IEnumerator MoveHorizontal (int dir) {
 	// Check to see if block could be moved in the desired direction
-	if (!isWallCollide) {
+//	if (!isWallCollide) {
 	//	transform.position.x += dir;
 		xPosition += dir;
 		Vector3 pos = transform.localPosition;
@@ -174,26 +175,21 @@ public IEnumerator MoveHorizontal (int dir) {
 		
 		yield return new WaitForSeconds (1f);
 			
-	}
+/*	}
 	else
 		{
 			isWallCollide=false;
-		}
+		}*/
 	
 }
 
+
 void RotateBlock () {
 	// Rotate matrix 90° to the right and store the results in a temporary matrix
-	var tempMatrix = new bool[size, size];
-	for (int y = 0; y < size; y++) {
-		for (int x = 0; x < size; x++) {
-			tempMatrix[y, x] = blockMatrix[x, (size-1)-y];
-		}
-	}
 	
 	// If the rotated block doesn't overlap existing blocks, copy the rotated matrix back and rotate on-screen block to match
 //	if (!GameManager.instance.CheckBlock (tempMatrix, xPosition, yPosition)) {
-		System.Array.Copy (tempMatrix, blockMatrix, size*size);
+//		System.Array.Copy (tempMatrix, blockMatrix, size*size);
 		transform.Rotate (Vector3.forward * -90);
 //	}
 }
