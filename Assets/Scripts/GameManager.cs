@@ -35,8 +35,9 @@ public class GameManager : MonoBehaviour {
 	
 	
 	
+	
 	//Block Settings...
-	public GameObject node;
+	//public GameObject node;
 	public int maxBlockSize;
 	public int blockNormalSpeed;
 	public int blockDropSpeed;
