@@ -49,21 +49,29 @@ public class Block : MonoBehaviour {
 					blocker.transform.localScale=Vector3.one*20;
 				blocker.transform.localPosition= new Vector3(x*halfSize, y*(-halfSize), 0.0f);
 				blocker.GetComponent<UISlicedSprite>().color=this.blockColor;
-			//	block.renderer.material = material;
+			
 				}
 			}
 		}
 		if(!this.isNextBlock)
 		{
-			transform.localPosition = Vector3.zero;//(Manager.use.FieldWidth()/2 + (size%2 == 0? 0.0 : .5));
+			transform.localPosition =new Vector3(-13,165,-1);//(Manager.use.FieldWidth()/2 + (size%2 == 0? 0.0 : .5));
 			xPosition = (int)transform.localPosition.x - halfSize;
 			yPosition = 165;
-//			transform.position.y = yPosition - halfSize;
-		//	fallSpeed = Manager.use.blockNormalSpeed;
+			//transform.position.y = yPosition;// - halfSize;
+			fallSpeed = GameManager.instance.blockNormalSpeed;
+			
+			if (GameManager.instance.CheckBlock (blockMatrix, xPosition, yPosition)) {
+					//Manager.use.GameOver();
+				Debug.Log("Game over");
+				return;
+				}
 		}
+		
+		
 	}
 	
-	void Delay (float time) {
+/*	void Delay (float time) {
 	var t = 0.0;
 	//Debug.Log(time);
 	while (t <= GameManager.instance.delayTime && !dropped) {
@@ -89,5 +97,5 @@ void Fall () {
 		//	yield;
 		}
 	}
-}
+}*/
 }
