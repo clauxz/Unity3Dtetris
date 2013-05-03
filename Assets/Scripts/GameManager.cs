@@ -151,8 +151,8 @@ public class GameManager : MonoBehaviour {
 			return;
 		}
 		
-		Clearfield(fieldWidth,fieldHeight);
-		
+		//Clearfield(fieldWidth,fieldHeight);
+		field=new bool[fieldWidth,fieldHeight];
 		//Retrieving game type
 	gameKind = PlayerPrefs.GetString("GameKind", "TimePlus");
 	
@@ -185,7 +185,7 @@ public class GameManager : MonoBehaviour {
 	SpawnBlock();
 	}
 	
-	private static void Clearfield(int fieldWidth,int fieldHeight)
+	/*private static void Clearfield(int fieldWidth,int fieldHeight)
 	{
 		field=new bool[fieldWidth,fieldHeight];
 		for(int x=0;x<fieldWidth;x++)
@@ -195,7 +195,7 @@ public class GameManager : MonoBehaviour {
 				field[x,y]=false;
 			}
 		}
-	}
+	}*/
 	
 /*	function SetBlock (blockMatrix : boolean[,], xPos : int, yPos : int, mat : Material) {
 	var size = blockMatrix.GetLength(0);
@@ -231,13 +231,14 @@ void CheckRows (int yStart, int size) {
 	int size = blockMatrix.GetLength(0);
 	for (int y = size-1; y >= 0; y--) {
 		for (int x = 0; x < size; x++) {
+				Debug.Log("x :"+(xPos+x)+" y :"+ (yPos-y) );
 			if (blockMatrix[x, y] && field[xPos+x, yPos-y]) {
 				return true;
 			}
 		}
 	}
 	return false;
-}
+	}
 	
 	void SpawnBlock () {
 	//Instantiating new block

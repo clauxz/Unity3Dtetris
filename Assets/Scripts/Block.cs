@@ -8,6 +8,7 @@ public class Block : MonoBehaviour {
 	public bool playable;
 	public GameObject node;
 	public bool isNextBlock;
+	public bool isWallCollide=false;
 	
 	
 	//Private variables
@@ -42,7 +43,7 @@ public class Block : MonoBehaviour {
 		
 		for (int y = 0; y < size ; y++) {
 		for (int x = 0; x < size; x++) {
-				Debug.Log(x+" "+ y);
+				
 			if (block[y][x]=="1"[0]) {
 				blockMatrix[x, y] = true;
 				GameObject blocker =(GameObject) Instantiate(this.node);//Instantiate(GameManager.instance.node,new Vector3((x-13), (size-y)+13-size, 0.0), Quaternion.identity) ;
@@ -56,10 +57,12 @@ public class Block : MonoBehaviour {
 		}
 		if(!this.isNextBlock)
 		{
-			transform.localPosition =new Vector3(-13,165,-1);//(Manager.use.FieldWidth()/2 + (size%2 == 0? 0.0 : .5));
+			transform.localPosition =new Vector3(-18,165,-1);//(Manager.use.FieldWidth()/2 + (size%2 == 0? 0.0 : .5));
 			xPosition = (int)transform.localPosition.x - halfSize;
 			yPosition = 165;
-			//transform.position.y = yPosition;// - halfSize;
+		//	xPosition = (int)transform.position.x - halfSize;
+		//	yPosition = GameManager.instance.fieldHeight - 1;
+			Debug.Log(xPosition + " " + yPosition);
 			fallSpeed =(float) GameManager.instance.blockNormalSpeed;
 			
 		/*	if (GameManager.instance.CheckBlock (blockMatrix, xPosition, yPosition)) {
@@ -114,10 +117,10 @@ private void CheckInput () {
 	
 		
 		//var input = Input.GetAxis("Horizontal");
-		if (Input.GetKey(KeyCode.LeftArrow)||Input.GetKey(KeyCode.A)) {
+		if (Input.GetKeyDown(KeyCode.LeftArrow)||Input.GetKey(KeyCode.A)) {
 			StartCoroutine(MoveHorizontal(-18));
 		}
-		else if (Input.GetKey(KeyCode.RightArrow)||Input.GetKey(KeyCode.W)) {
+		else if (Input.GetKeyDown(KeyCode.RightArrow)||Input.GetKey(KeyCode.W)) {
 			StartCoroutine(MoveHorizontal(18));
 		}
 
@@ -126,7 +129,7 @@ private void CheckInput () {
 		}
 		
 		if (Input.GetKey(KeyCode.DownArrow)||Input.GetKey(KeyCode.S)) {
-			fallSpeed =(float)GameManager.instance.blockDropSpeed;
+			//fallSpeed =(float)GameManager.instance.blockDropSpeed;
 			//dropped = true;
 			//Manager.use.score += 5;
 			//break;	// Break out of while loop, so the coroutine stops (we don't care about input anymore)
@@ -163,13 +166,20 @@ private void CheckInput () {
 	
 public IEnumerator MoveHorizontal (int dir) {
 	// Check to see if block could be moved in the desired direction
-	//if (!GameManager.instance.CheckBlock (blockMatrix, xPosition + dir, yPosition)) {
+	if (!isWallCollide) {
 	//	transform.position.x += dir;
 		xPosition += dir;
 		Vector3 pos = transform.localPosition;
 		transform.localPosition=new Vector3(xPosition,pos.y,pos.z);
+		
 		yield return new WaitForSeconds (1f);
-	//}
+			
+	}
+	else
+		{
+			isWallCollide=false;
+		}
+	
 }
 
 void RotateBlock () {
