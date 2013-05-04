@@ -125,14 +125,7 @@ public class Block : MonoBehaviour {
 	}
 		
 
-public int ConvertRange(
-    int originalStart, int originalEnd, // original range
-    int newStart, int newEnd, // desired range
-    int value) // value to convert
-{
-    double scale = (double)(newEnd - newStart) / (originalEnd - originalStart);
-    return (int)(newStart + ((value - originalStart) * scale));
-}	
+
 	
 	public IEnumerator emptyYield()
 	{
@@ -253,7 +246,7 @@ void RotateBlock () {
 	}
 	
 	// If the rotated block doesn't overlap existing blocks, copy the rotated matrix back and rotate on-screen block to match
-	if (!GameManager.instance.CheckBlock (tempMatrix, xPosition, (yPosition/20))) {
+	if (!GameManager.instance.CheckBlock (tempMatrix, (xPosition/20), (yPosition/20))) {
 		System.Array.Copy (tempMatrix, blockMatrix, size*size);
 			this.transform.Rotate(Vector3.forward*-90);
 	//	transform.Rotate (Vector3.forward * -90.0);

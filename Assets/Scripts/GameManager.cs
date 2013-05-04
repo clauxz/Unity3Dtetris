@@ -283,7 +283,88 @@ public class GameManager : MonoBehaviour {
 			}
 		}
 	}
+	StartCoroutine(yieldCheckRows(yPos - size, size));
 	//yield CheckRows (yPos - size, size);
 	StartCoroutine(SpawnBlock());
+	}
+	
+	public void CheckRows (int yStart,int size) {
+		StartCoroutine(emptyYield());	// Wait a frame for block to be destroyed so we don't include those cubes
+	if (yStart < 1) yStart = 1;
+		
+	int y=0;
+	int x=0;// Make sure to start above the floor
+	for (y = yStart; y < yStart+size; y++) {
+		for (x = maxBlockSize; x < fieldWidth-maxBlockSize; x++) { // We don't need to check the walls
+			if (!field[x, y]) break;
+		}
+		// If the loop above completed, then x will equal fieldWidth-maxBlockSize, which means the row was completely filled in
+		if (x == fieldWidth-maxBlockSize) {
+			StartCoroutine(emptyYield());
+			CollapseRows (y);
+			y--; // We want to check the same row again after the collapse, in case there was more than one row filled in
+		}
+	}
+}
+	
+	public void CollapseRows (int yStart) {
+	// Move rows down in array, which effectively deletes the current row (yStart)
+	for (int y = yStart; y < fieldHeight-1; y++) {
+		for (int x = maxBlockSize; x < fieldWidth-maxBlockSize; x++) {
+			field[x, y] = field[x, y+1];
+		}
+	}
+	// Make sure top line is cleared
+	for (int x = maxBlockSize; x < fieldWidth-maxBlockSize; x++) {
+		field[x, fieldHeight-1] = false;
+	}
+	
+	// Destroy on-screen cubes on the deleted row, and store references to cubes that are above it
+	GameObject[] cubes =(GameObject.FindGameObjectsWithTag("Cube")) ;
+	int cubesToMove = 0;
+	foreach (GameObject cube in cubes) {
+		if (cube.transform.position.y > yStart) {
+			cubePositions[cubesToMove] =(int) cube.transform.position.y;
+			cubeReferences[cubesToMove++] = cube.transform;
+		}
+		else if (cube.transform.position.y == yStart) {
+			Destroy(cube);
+		}
+	}
+	// Move the appropriate cubes down one square
+	// The third parameter in Mathf.Lerp is clamped to 1.0, which makes the transform.position.y be positioned exactly when done,
+	// which is important for the game logic (see the code just above)
+	var t = 0.0;
+	while (t <= 1.0) {
+		t += Time.deltaTime * 5.0;
+		for (int i = 0; i < cubesToMove; i++) {
+				Vector3 sVal = cubeReferences[i].localPosition;
+			cubeReferences[i].localPosition =new Vector3(sVal.x,
+					Mathf.Lerp ((float)cubePositions[i], (float)(cubePositions[i]-1), (float)t),
+					sVal.z);
+		}
+		StartCoroutine(emptyYield());
+	}
+	
+	// Make blocks drop faster when enough rows are cleared in TimePlus game
+	if(gameKind == "TimePlus")
+	{
+		blockNormalSpeed += .2;
+		delayTime -= delayTime * 0.08;
+	}
+	totalRowsCleared++;
+	score += 10;
+}
+	
+	public IEnumerator emptyYield()
+	{
+		yield return null;
+	}
+	
+	public IEnumerator yieldCheckRows(int yPos,int size)
+	{
+		emptyYield();
+		CheckRows (yPos - size, size);
+		yield return null;
 	}
 }
