@@ -276,7 +276,7 @@ public class GameManager : MonoBehaviour {
 			if (blockMatrix[x, y]) {
 				GameObject c =(GameObject) Instantiate (Node);
 				c.transform.parent=blockHolder.transform;
-				c.transform.localPosition=new Vector3(xPos+x, (yPos-y)*20, -1);
+				c.transform.localPosition=new Vector3((xPos+x)*20, (yPos-y)*20, -1);
 				c.transform.localScale=new Vector3(20,20,1);
 				c.GetComponent<UISlicedSprite>().color=col;
 				field[xPos+x, yPos-y] = true;

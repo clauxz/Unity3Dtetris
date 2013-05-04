@@ -82,7 +82,7 @@ public class Block : MonoBehaviour {
 			yPosition = (int)((GameManager.instance.fieldHeight*20));
 			
 			//Debug.Log((xPosition*GameManager.instance.GameScale)+" " + (yPosition*GameManager.instance.GameScale));
-			transform.localPosition =new Vector3((float)((((GameManager.instance.fieldWidth)/2)) + (size%2 == 0? 0.0 : .5)),(yPosition - halfSizeFloat),-1);
+			transform.localPosition =new Vector3((float)((((GameManager.instance.fieldWidth)/2)*20) + (size%2 == 0? 0 : 20/2)),(yPosition - halfSizeFloat),-1);
 			
 			xPosition =(int)(transform.localPosition.x- halfSizeFloat);
 			
@@ -98,7 +98,7 @@ public class Block : MonoBehaviour {
 		//	yPosition = GameManager.instance.fieldHeight - 1;
 		//	Debug.Log(xPosition + " " + yPosition);
 		//	int newY= (int)ConvertRange(130,-90,0,13,yPosition);*/
-		if (GameManager.instance.CheckBlock (blockMatrix, (xPosition), (yPosition/20))) {
+		if (GameManager.instance.CheckBlock (blockMatrix, (xPosition/20), (yPosition/20))) {
 					//Manager.use.GameOver();
 				Debug.Log("Game over");
 				return;
@@ -144,8 +144,8 @@ void Update () {
 		// Check to see if block would collide if moved down one row
 		yPosition--;
 	//	int newY= (int)ConvertRange(170,-90,13,0,yPosition);
-		if (GameManager.instance.CheckBlock (blockMatrix, (xPosition), (int)(yPosition/20))) {
-			GameManager.instance.SetBlock (blockMatrix, (xPosition), (yPosition+1)/20, this.blockColor);
+		if (GameManager.instance.CheckBlock (blockMatrix, (int)(xPosition/20), (int)(yPosition/20))) {
+			GameManager.instance.SetBlock (blockMatrix, (xPosition/20), (yPosition+1)/20, this.blockColor);
 			//StartCoroutine(GameManager.instance.SpawnBlock());
 			Destroy(gameObject);
 			
