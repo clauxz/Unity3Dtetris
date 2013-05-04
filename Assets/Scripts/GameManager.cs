@@ -216,12 +216,21 @@ public class GameManager : MonoBehaviour {
 	
 	
 	//Randoming next block
-	nextBlock = Random.Range(0, blocks.Count);
+	ChangeNextBlock();
+	yield return new WaitForSeconds (1f);
+}
+	// Update is called once per frame
+	void Update () {
 	
+	}
+	
+	public void ChangeNextBlock () {
+	//Randoming a new next block
+	nextBlock = Random.Range(0, blocks.Count);
 	var children = new List<GameObject>();
 
 		foreach (Transform child in nextBlockObject.transform) children.Add(child.gameObject);
-			children.ForEach(child => Destroy(child));	
+			children.ForEach(child => Destroy(child));
 		
 	goNextBlock =(GameObject) Instantiate (block);
 	goNextBlock.transform.parent=nextBlockObject.transform;
@@ -232,10 +241,5 @@ public class GameManager : MonoBehaviour {
 	goNextBlock.GetComponent<Block>().enabled=true;
 	goNextBlock.transform.localPosition = Vector3.zero;
 	goNextBlock.transform.localScale = Vector3.one;
-	yield return new WaitForSeconds (1f);
-}
-	// Update is called once per frame
-	void Update () {
-	
 	}
 }

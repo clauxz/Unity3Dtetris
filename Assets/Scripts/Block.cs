@@ -65,12 +65,13 @@ public class Block : MonoBehaviour {
 		//	yPosition = GameManager.instance.fieldHeight - 1;
 		//	Debug.Log(xPosition + " " + yPosition);
 			fallSpeed =(float) GameManager.instance.blockNormalSpeed;
-			int newY= (int)ConvertRange(170,-90,0,13,yPosition);
+			int newY= (int)ConvertRange(130,-90,0,13,yPosition);
 			if (GameManager.instance.CheckBlock (blockMatrix, xPosition, newY)) {
 					//Manager.use.GameOver();
 				Debug.Log("Game over");
 				return;
 				}
+			StartCoroutine(yieldDelay((float)GameManager.instance.delayTime));
 			this.playable=true;
 		//	Fall();
 		}
@@ -79,14 +80,18 @@ public class Block : MonoBehaviour {
 	}
 	
 	
-/*	void Delay (float time) {
-	var t = 0.0;
-	//Debug.Log(time);
-	while (t <= GameManager.instance.delayTime && !dropped) {
-		t += Time.deltaTime;	
-	//	yield;
+	public IEnumerator Delay (float time) {
+	
+		yield return new WaitForSeconds(time);
+	
 	}
-}*/
+	
+	public IEnumerator yieldDelay(float time)
+	{
+		StartCoroutine(Delay(time));
+		yield return null;
+	}
+		
 
 public static int ConvertRange(
     int originalStart, int originalEnd, // original range
@@ -128,10 +133,10 @@ private void CheckInput () {
 	
 		
 		//var input = Input.GetAxis("Horizontal");
-		if (Input.GetKey(KeyCode.LeftArrow)||Input.GetKeyDown(KeyCode.A)) {
+		if (Input.GetKey(KeyCode.LeftArrow)||Input.GetKey(KeyCode.A)) {
 			StartCoroutine(yieldMoveHorizontal(-18));
 		}
-		else if (Input.GetKey(KeyCode.RightArrow)||Input.GetKeyDown(KeyCode.W)) {
+		else if (Input.GetKey(KeyCode.RightArrow)||Input.GetKey(KeyCode.D)) {
 			StartCoroutine(yieldMoveHorizontal(18));
 		}
 
@@ -152,9 +157,9 @@ private void CheckInput () {
 		}
 		
 		//Change the next block
-		if(Input.GetKeyDown(KeyCode.Keypad5) || Input.GetKeyDown(KeyCode.Space))
+		if(Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
 		{
-		//	GameManager.instance.ChangeNextBlock();
+			GameManager.instance.ChangeNextBlock();
 		}
 		
 		//Get speed down ou up just in Manual game
