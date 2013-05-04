@@ -33,6 +33,9 @@ public class GameManager : MonoBehaviour {
 	
 	//Tetris Field Size...
 	
+	
+	public GameObject Node;
+	
 	public int fieldWidth;
 	public int fieldHeight;
 	
@@ -177,7 +180,11 @@ public class GameManager : MonoBehaviour {
 	for (int i = 0; i < fieldWidth; i++) {
 		field[i, 0] = true;
 	}
-
+		
+	/*for(int x=0;x<fieldWidth;x++)
+			for(int y =0;y<fieldHeight;y++)
+				Debug.Log(field[x,y]);*/
+		
 	cubeReferences = new Transform[fieldWidth * fieldHeight];
 	cubePositions = new int[fieldWidth * fieldHeight];
 	
@@ -192,17 +199,21 @@ public class GameManager : MonoBehaviour {
 	
 	
 	public bool CheckBlock (bool[,] blockMatrix,int xPos,int yPos){
-	int size = blockMatrix.GetLength(0);
+	//	Debug.Log(xPos+"  " +yPos);
+	int size = (blockMatrix.GetLength(0));
+	
 	for (int y = size-1; y >= 0; y--) {
 		for (int x = 0; x < size; x++) {
-				Debug.Log("x :"+(xPos+x)+" y :"+ (yPos-y) );
-		//	if (blockMatrix[x, y] && field[xPos+x, yPos-y]) {
-		//		return true;
-		//	}
+				if (blockMatrix[x, y] && field[xPos+x, yPos-y]) {
+				return true;
+			}
+			
 		}
 	}
 	return false;
 	}
+	
+	
 	
 	public IEnumerator SpawnBlock () {
 	//Instantiating new block
@@ -241,7 +252,7 @@ public class GameManager : MonoBehaviour {
 	goNextBlock.GetComponent<Block>().isNextBlock=true;
 	
 	goNextBlock.GetComponent<Block>().enabled=true;
-	goNextBlock.transform.localPosition = Vector3.zero;
+	goNextBlock.transform.localPosition = new Vector3(0,0,-10);
 	goNextBlock.transform.localScale = Vector3.one;
 	}
 }

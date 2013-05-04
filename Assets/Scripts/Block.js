@@ -1,7 +1,6 @@
 var block : String[];
 var playable = true;
 
-
 private var blockMatrix : boolean[,];
 private var fallSpeed : float;
 private var yPosition : int;
@@ -35,8 +34,8 @@ function Start () {
 		}
 	}
 	
-	halfSize = (size/2);
-	halfSizeFloat = (size*.5); // halfSize is an integer for the array, but we need a float for positioning the on-screen cubes (for odd sizes)
+	halfSize = size/2;
+	halfSizeFloat = size*.5; // halfSize is an integer for the array, but we need a float for positioning the on-screen cubes (for odd sizes)
 	
 	// Convert block string array from the inspector to a boolean 2D array for easier usage
 	blockMatrix = new boolean[size, size];
@@ -44,7 +43,7 @@ function Start () {
 		for (x = 0; x < size; x++) {
 			if (block[y][x] == "1"[0]) {
 				blockMatrix[x, y] = true;
-				var block = Instantiate(Manager.use.cube, Vector3((x-halfSizeFloat)*.1, ((size-y)+halfSizeFloat-size)*.1, 0.0), Quaternion.identity) as Transform;
+				var block = Instantiate(Manager.use.cube, Vector3(x-halfSizeFloat, (size-y)+halfSizeFloat-size, 0.0), Quaternion.identity) as Transform;
 				block.parent = transform;
 				block.renderer.material = material;
 			}
@@ -52,7 +51,7 @@ function Start () {
 	}
 	
 	// For blocks with even sizes, we just add 0, but odd sizes need .5 added to the position to work right
-	transform.position.x = (Manager.use.FieldWidth()/2 + (size%2 == 0? 0.0 : .5));
+	transform.position.x = Manager.use.FieldWidth()/2 + (size%2 == 0? 0.0 : .5);
 	xPosition = transform.position.x - halfSizeFloat;
 	yPosition = Manager.use.FieldHeight() - 1;
 	transform.position.y = yPosition - halfSizeFloat;
@@ -100,29 +99,23 @@ function Fall () {
 
 function CheckInput () {
 	while (playable) {
-		
-		//var input = Input.GetAxis("Horizontal");
-		if (Input.GetKey(KeyCode.LeftArrow)||Input.GetKey(KeyCode.A)) {
+		var input = Input.GetAxis("Horizontal");
+		if (input < 0.0) {
 			yield MoveHorizontal(-1);
 		}
-		else if (Input.GetKey(KeyCode.RightArrow)||Input.GetKey(KeyCode.W)) {
+		else if (input > 0.0) {
 			yield MoveHorizontal(1);
 		}
 
-		if (Input.GetKeyDown(KeyCode.UpArrow)||Input.GetKeyDown(KeyCode.W)) {
+		if (Input.GetButtonDown("Rotate")) {
 			RotateBlock();
 		}
-		
-		if (Input.GetKey(KeyCode.DownArrow)||Input.GetKey(KeyCode.S)) {
+	
+		if (Input.GetButtonDown("Drop")) {
 			fallSpeed = Manager.use.blockDropSpeed;
-			//dropped = true;
-			//Manager.use.score += 5;
-			//break;	// Break out of while loop, so the coroutine stops (we don't care about input anymore)
-		}
-		else
-		{
-			fallSpeed = Manager.use.blockNormalSpeed ;
-			
+			dropped = true;
+			Manager.use.score += 5;
+			break;	// Break out of while loop, so the coroutine stops (we don't care about input anymore)
 		}
 		
 		//Change the next block
