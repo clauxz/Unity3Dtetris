@@ -37,7 +37,7 @@ public class Block : MonoBehaviour {
 		
 		if(width<3)
 			return;
-		//halfSize = (size/2);
+		int halfSizediff =((size*18)/2);
 		halfSize = 18;
 		
 		blockMatrix = new bool[size, size];
@@ -50,7 +50,7 @@ public class Block : MonoBehaviour {
 				GameObject blocker =(GameObject) Instantiate(this.node);//Instantiate(GameManager.instance.node,new Vector3((x-13), (size-y)+13-size, 0.0), Quaternion.identity) ;
 				blocker.transform.parent = transform;
 					blocker.transform.localScale=Vector3.one*20;
-				blocker.transform.localPosition= new Vector3(x*halfSize, y*(-halfSize), 0.0f);
+				blocker.transform.localPosition= new Vector3((x*halfSize), (y*(-halfSize))+halfSizediff, 0.0f);
 				blocker.GetComponent<UISlicedSprite>().color=this.blockColor;
 			
 				}
@@ -58,9 +58,9 @@ public class Block : MonoBehaviour {
 		}
 		if(!this.isNextBlock)
 		{
-			transform.localPosition =new Vector3(-18,165,-1);//(Manager.use.FieldWidth()/2 + (size%2 == 0? 0.0 : .5));
+			transform.localPosition =new Vector3(0,200,-1);//(Manager.use.FieldWidth()/2 + (size%2 == 0? 0.0 : .5));
 			xPosition = (int)transform.localPosition.x - halfSize;
-			yPosition = 165;
+			yPosition = 200;
 		//	xPosition = (int)transform.position.x - halfSize;
 		//	yPosition = GameManager.instance.fieldHeight - 1;
 		//	Debug.Log(xPosition + " " + yPosition);
@@ -199,7 +199,7 @@ public IEnumerator yieldMoveHorizontal(int dir)
 void RotateBlock () {
 	// Rotate matrix 90° to the right and store the results in a temporary matrix
 	
-	var tempMatrix = new bool[size, size];
+/*	var tempMatrix = new bool[size, size];
 	for (int y = 0; y < size; y++) {
 		for ( int x = 0; x < size; x++) {
 			tempMatrix[y, x] = blockMatrix[x, (size-1)-y];
@@ -208,8 +208,8 @@ void RotateBlock () {
 		
 	// If the rotated block doesn't overlap existing blocks, copy the rotated matrix back and rotate on-screen block to match
 	if (!GameManager.instance.CheckBlock (tempMatrix, xPosition, yPosition)) {
-		System.Array.Copy (tempMatrix, blockMatrix, size*size);
+		System.Array.Copy (tempMatrix, blockMatrix, size*size);*/
 		transform.Rotate (Vector3.forward * -90);
-	}
+	//}
 }
 }

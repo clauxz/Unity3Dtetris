@@ -11,7 +11,7 @@ public class BlockCollider : MonoBehaviour {
 	 void OnTriggerEnter (Collider other ) {
 		
 		
-		if(other.gameObject.name=="FloorCollider"||other.gameObject.name=="BlockCollider")
+		if(other.gameObject.name=="FloorCollider")//||other.gameObject.name=="BlockCollider")
 		{
 			
         	this.transform.parent.gameObject.GetComponent<Block>().playable=false;
