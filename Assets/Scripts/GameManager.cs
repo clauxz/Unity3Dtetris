@@ -14,7 +14,10 @@ public enum ButtonType{
 	Constant=8,
 	Level_inc=9,
 	Level_dec=10,
-	Return=11
+	Return=11,
+	inGameReset=12,
+	inGameExit=13,
+	inGameBack=14
 	
 }
 
@@ -47,9 +50,10 @@ public class GameManager : MonoBehaviour {
 	public GameObject block;
 	
 	public GameObject nextBlockObject;
-	public GameObject leftWall;
-	public GameObject rightWall;
-	public GameObject holderBack;
+	public GameObject gameOverLabel;
+	public GameObject scoreLabel;
+	public GameObject timeLabel;
+	public GameObject destrowLabel;
 	
 	//public static bool isOnceSpawn=false;
 	//Block Settings...
@@ -62,12 +66,14 @@ public class GameManager : MonoBehaviour {
 	public string gameKind="Manually";
 	int totalRowsCleared = 0;
 
-	long score = 0;
-	double timeTaken = 0.0;
+	int score = 0;
+	float timeTaken = 0f;
+	float iTimeTaken=0f;
 	
 	public double delayTime=1.0f;
 	
 	public bool gameOver;
+	public bool hasSaved;
 	
 	private Transform[] cubeReferences;
 	private int[] cubePositions;
@@ -247,7 +253,20 @@ public class GameManager : MonoBehaviour {
 }
 	// Update is called once per frame
 	void Update () {
-	
+		if(!gameOver)
+		{
+		timeTaken += Time.deltaTime;
+		iTimeTaken = Mathf.Ceil(timeTaken);
+		if(gameKind == "TimePlus" && iTimeTaken%10 == 0 && lastTimeTaken != iTimeTaken)
+		{
+			lastTimeTaken = iTimeTaken;
+			score += 2;
+		}
+			destrowLabel.GetComponent<UILabel>().text=totalRowsCleared.ToString();
+			scoreLabel.GetComponent<UILabel>().text=score.ToString();
+			timeLabel.GetComponent<UILabel>().text=(timeTaken).ToString();
+			
+		}
 	}
 	
 	public void ChangeNextBlock () {
@@ -285,6 +304,7 @@ public class GameManager : MonoBehaviour {
 	}
 	StartCoroutine(yieldCheckRows(yPos - size, size));
 	//yield CheckRows (yPos - size, size);
+		score ++;
 	StartCoroutine(SpawnBlock());
 	}
 	
@@ -367,4 +387,50 @@ public class GameManager : MonoBehaviour {
 		CheckRows (yPos - size, size);
 		yield return null;
 	}
+	
+	public void GameOver () {
+	//Debug.Log ("Game Over!");
+	
+	//save in database if game ins't tutorial
+	if(gameKind != "Tutorial" && !gameOver)
+	{
+		var currentId = PlayerPrefs.GetInt("Players", 1);
+		var curPlayer = "Player" + currentId.ToString();
+		
+		var n = PlayerPrefs.GetString("CurrentPlayerName");
+		PlayerPrefs.SetString(curPlayer + "_name", n);
+		PlayerPrefs.SetInt(curPlayer + "_score", score);
+		PlayerPrefs.SetInt(curPlayer + "_rows", totalRowsCleared);
+		
+		if(gameKind == "TimePlus"){
+			PlayerPrefs.SetInt(curPlayer + "_level", totalRowsCleared);	
+		}
+		else if(gameKind == "Constant"){
+			PlayerPrefs.SetInt(curPlayer + "_level", PlayerPrefs.GetInt("GameSpeed", 1));
+		}
+		else if(gameKind == "Manually"){
+			PlayerPrefs.SetInt(curPlayer + "_level", 0);	
+		}
+		
+		PlayerPrefs.SetFloat(curPlayer + "_timetaken", timeTaken);
+		PlayerPrefs.SetString(curPlayer + "_game", gameKind);
+		PlayerPrefs.SetString(curPlayer + "_status", "active");
+		PlayerPrefs.SetString(curPlayer + "_prefix", curPlayer);
+				
+		PlayerPrefs.SetInt("Players", ++currentId);		
+		
+		var mess = "CurrPlayer: " + curPlayer + "\n" +
+		curPlayer + "_name: " + n + "\n" +
+		curPlayer + "_score: " + score + "\n" +
+		curPlayer + "_level: " + totalRowsCleared + "\n" +
+		curPlayer + "_rows: " + totalRowsCleared + "\n" +
+		curPlayer + "_timetaken: " + timeTaken + "\n" +
+		curPlayer + "_game: " + gameKind;
+		//Debug.Log(mess);
+		hasSaved = true;
+	}
+	gameOver = true;
+	gameOverLabel.GetComponent<UILabel>().enabled=true;
+}
+	
 }

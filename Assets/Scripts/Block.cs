@@ -52,9 +52,9 @@ public class Block : MonoBehaviour {
 	}
 	
 		
-		halfSize = size/2;
-		halfSizeFloat = size/2;
-		
+		halfSize = (size/2);
+		halfSizeFloat = (size/2);
+		// int halfSizediff =((size*20)/2);
 		blockMatrix = new bool[size, size];
 		
 		for (int y = 0; y < size ; y++) {
@@ -65,7 +65,7 @@ public class Block : MonoBehaviour {
 				GameObject blocker =(GameObject) Instantiate(GameManager.instance.Node);//Instantiate(GameManager.instance.node,new Vector3((x-13), (size-y)+13-size, 0.0), Quaternion.identity) ;
 				blocker.transform.parent = transform;
 					blocker.transform.localScale=Vector3.one*GameManager.instance.GameScale;
-			
+			//blocker.transform.localPosition= new Vector3((x*20), (y*(-20))+halfSizediff, 0.0f);
 				blocker.transform.localPosition= new Vector3((x*GameManager.instance.GameScale)-halfSizeFloat, (size-(y*GameManager.instance.GameScale))+halfSizeFloat-size, 0.0f);
 				blocker.GetComponent<UISlicedSprite>().color=this.blockColor;
 			
@@ -82,7 +82,7 @@ public class Block : MonoBehaviour {
 			yPosition = (int)((GameManager.instance.fieldHeight*20));
 			
 			//Debug.Log((xPosition*GameManager.instance.GameScale)+" " + (yPosition*GameManager.instance.GameScale));
-			transform.localPosition =new Vector3((float)((((GameManager.instance.fieldWidth)/2)*20) + (size%2 == 0? 0 : 20/2)),(yPosition - halfSizeFloat),-1);
+			transform.localPosition =new Vector3((float)((((GameManager.instance.fieldWidth)/2) + (size%2 == 0? 0 : 20/2))*20),(yPosition - halfSizeFloat),-1);
 			
 			xPosition =(int)(transform.localPosition.x- halfSizeFloat);
 			
@@ -99,8 +99,8 @@ public class Block : MonoBehaviour {
 		//	Debug.Log(xPosition + " " + yPosition);
 		//	int newY= (int)ConvertRange(130,-90,0,13,yPosition);*/
 		if (GameManager.instance.CheckBlock (blockMatrix, (xPosition/20), (yPosition/20))) {
-					//Manager.use.GameOver();
-				Debug.Log("Game over");
+					GameManager.instance.GameOver();
+					//GameManager.instance.gameOverLabel.GetComponent<UILabel>().
 				return;
 			}
 			StartCoroutine(yieldDelay((float)GameManager.instance.delayTime));

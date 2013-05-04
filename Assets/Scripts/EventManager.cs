@@ -72,6 +72,15 @@ public class EventManager : MonoBehaviour {
 		case ButtonType.Return:
 			Application.LoadLevel("TetrisInit");
 			break;
+		case ButtonType.inGameReset:
+			Application.LoadLevel("TetrisClone");
+			break;
+		case ButtonType.inGameExit:
+			Application.LoadLevel("TetrisInit");
+			break;
+		case ButtonType.inGameBack:
+			Application.LoadLevel("TetrisStart");
+			break;
 			
 		}
 		
