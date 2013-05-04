@@ -173,11 +173,11 @@ private void CheckInput () {
 	
 		
 		//var input = Input.GetAxis("Horizontal");
-		if (Input.GetKey(KeyCode.LeftArrow)||Input.GetKey(KeyCode.A)) {
-			StartCoroutine(yieldMoveHorizontal(-1));
+		if (Input.GetKeyDown(KeyCode.LeftArrow)||Input.GetKey(KeyCode.A)) {
+			StartCoroutine(yieldMoveHorizontal(-20));
 		}
-		else if (Input.GetKey(KeyCode.RightArrow)||Input.GetKey(KeyCode.D)) {
-			StartCoroutine(yieldMoveHorizontal(1));
+		else if (Input.GetKeyDown(KeyCode.RightArrow)||Input.GetKey(KeyCode.D)) {
+			StartCoroutine(yieldMoveHorizontal(20));
 		}
 
 		if (Input.GetKeyDown(KeyCode.UpArrow)||Input.GetKeyDown(KeyCode.W)) {
@@ -222,7 +222,7 @@ private void CheckInput () {
 	
 public IEnumerator MoveHorizontal (int dir) {
 	// Check to see if block could be moved in the desired direction
-	if (!GameManager.instance.CheckBlock (blockMatrix, xPosition + dir, (yPosition*20))) {
+	if (!GameManager.instance.CheckBlock (blockMatrix, (xPosition + dir)/20, (yPosition/20))) {
 	//	transform.position.x += dir;
 		xPosition += dir;
 		Vector3 pos = transform.localPosition;
