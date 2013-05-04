@@ -152,6 +152,8 @@ public class GameManager : MonoBehaviour {
 		}
 		
 		//Clearfield(fieldWidth,fieldHeight);
+		fieldWidth = fieldWidth + maxBlockSize*2;
+		fieldHeight = fieldHeight + maxBlockSize;
 		field=new bool[fieldWidth,fieldHeight];
 		//Retrieving game type
 	gameKind = PlayerPrefs.GetString("GameKind", "TimePlus");
@@ -192,9 +194,9 @@ public class GameManager : MonoBehaviour {
 	for (int y = size-1; y >= 0; y--) {
 		for (int x = 0; x < size; x++) {
 				Debug.Log("x :"+(xPos+x)+" y :"+ (yPos-y) );
-			if (blockMatrix[x, y] && field[xPos+x, yPos-y]) {
-				return true;
-			}
+		//	if (blockMatrix[x, y] && field[xPos+x, yPos-y]) {
+		//		return true;
+		//	}
 		}
 	}
 	return false;

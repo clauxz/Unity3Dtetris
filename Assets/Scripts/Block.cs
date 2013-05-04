@@ -63,14 +63,14 @@ public class Block : MonoBehaviour {
 			yPosition = 165;
 		//	xPosition = (int)transform.position.x - halfSize;
 		//	yPosition = GameManager.instance.fieldHeight - 1;
-			Debug.Log(xPosition + " " + yPosition);
+		//	Debug.Log(xPosition + " " + yPosition);
 			fallSpeed =(float) GameManager.instance.blockNormalSpeed;
-			
-		/*	if (GameManager.instance.CheckBlock (blockMatrix, xPosition, yPosition)) {
+			int newY= (int)ConvertRange(170,-90,0,13,yPosition);
+			if (GameManager.instance.CheckBlock (blockMatrix, xPosition, newY)) {
 					//Manager.use.GameOver();
 				Debug.Log("Game over");
 				return;
-				}*/
+				}
 			this.playable=true;
 		//	Fall();
 		}
@@ -88,15 +88,25 @@ public class Block : MonoBehaviour {
 	}
 }*/
 
+public static int ConvertRange(
+    int originalStart, int originalEnd, // original range
+    int newStart, int newEnd, // desired range
+    int value) // value to convert
+{
+    double scale = (double)(newEnd - newStart) / (originalEnd - originalStart);
+    return (int)(newStart + ((value - originalStart) * scale));
+}	
+	
 void Update () {
 	if (playable) {
 		// Check to see if block would collide if moved down one row
 		yPosition--;
-	/*	if (Manager.use.CheckBlock (blockMatrix, xPosition, yPosition)) {
-			Manager.use.SetBlock (blockMatrix, xPosition, yPosition+1, material);
-			Destroy(gameObject);
-			break;
-		}*/
+	//	int newY= (int)ConvertRange(170,-90,13,0,yPosition);
+//		if (GameManager.instance.CheckBlock (blockMatrix, xPosition, newY)) {
+	//		Manager.use.SetBlock (blockMatrix, xPosition, yPosition+1, material);
+			//Destroy(gameObject);
+//			break;
+	//	}
 		
 		// Make on-screen block fall down 1 square
 		// Also serves as a delay...if you want old-fashioned square-by-square movement, replace this with yield WaitForSeconds
@@ -118,11 +128,11 @@ private void CheckInput () {
 	
 		
 		//var input = Input.GetAxis("Horizontal");
-		if (Input.GetKeyDown(KeyCode.LeftArrow)||Input.GetKeyDown(KeyCode.A)) {
-			StartCoroutine(MoveHorizontal(-18));
+		if (Input.GetKey(KeyCode.LeftArrow)||Input.GetKeyDown(KeyCode.A)) {
+			StartCoroutine(yieldMoveHorizontal(-18));
 		}
-		else if (Input.GetKeyDown(KeyCode.RightArrow)||Input.GetKeyDown(KeyCode.W)) {
-			StartCoroutine(MoveHorizontal(18));
+		else if (Input.GetKey(KeyCode.RightArrow)||Input.GetKeyDown(KeyCode.W)) {
+			StartCoroutine(yieldMoveHorizontal(18));
 		}
 
 		if (Input.GetKeyDown(KeyCode.UpArrow)||Input.GetKeyDown(KeyCode.W)) {
@@ -167,30 +177,39 @@ private void CheckInput () {
 	
 public IEnumerator MoveHorizontal (int dir) {
 	// Check to see if block could be moved in the desired direction
-//	if (!isWallCollide) {
+	if (!GameManager.instance.CheckBlock (blockMatrix, xPosition + dir, yPosition)) {
 	//	transform.position.x += dir;
 		xPosition += dir;
 		Vector3 pos = transform.localPosition;
 		transform.localPosition=new Vector3(xPosition,pos.y,pos.z);
 		
-		yield return new WaitForSeconds (1f);
+		yield return new WaitForSeconds ((float)GameManager.instance.blockMoveDelay);
 			
-/*	}
-	else
-		{
-			isWallCollide=false;
-		}*/
+	}
+	
 	
 }
+public IEnumerator yieldMoveHorizontal(int dir)
+	{
+		StartCoroutine(MoveHorizontal(dir));
+		yield return null;
+	}
 
 
 void RotateBlock () {
 	// Rotate matrix 90° to the right and store the results in a temporary matrix
 	
+	var tempMatrix = new bool[size, size];
+	for (int y = 0; y < size; y++) {
+		for ( int x = 0; x < size; x++) {
+			tempMatrix[y, x] = blockMatrix[x, (size-1)-y];
+		}
+	}	
+		
 	// If the rotated block doesn't overlap existing blocks, copy the rotated matrix back and rotate on-screen block to match
-//	if (!GameManager.instance.CheckBlock (tempMatrix, xPosition, yPosition)) {
-//		System.Array.Copy (tempMatrix, blockMatrix, size*size);
+	if (!GameManager.instance.CheckBlock (tempMatrix, xPosition, yPosition)) {
+		System.Array.Copy (tempMatrix, blockMatrix, size*size);
 		transform.Rotate (Vector3.forward * -90);
-//	}
+	}
 }
 }
