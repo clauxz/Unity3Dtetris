@@ -31,6 +31,9 @@ public class GameManager : MonoBehaviour {
 	
 	public static bool[,] field;
 	
+	public int GameScale;
+	public int framePosX;
+	public int framePosY;
 	//Tetris Field Size...
 	
 	
@@ -44,6 +47,9 @@ public class GameManager : MonoBehaviour {
 	public GameObject block;
 	
 	public GameObject nextBlockObject;
+	public GameObject leftWall;
+	public GameObject rightWall;
+	public GameObject holderBack;
 	
 	//public static bool isOnceSpawn=false;
 	//Block Settings...
@@ -180,7 +186,10 @@ public class GameManager : MonoBehaviour {
 	for (int i = 0; i < fieldWidth; i++) {
 		field[i, 0] = true;
 	}
-		
+	
+//	leftWall.transform.localPosition =new Vector3( (float)(maxBlockSize-.5),0,-1);
+//	rightWall.transform.localPosition =new Vector3( (float)(fieldWidth-maxBlockSize+.5),0,-1);
+	//	holderBack.transform.localScale=new Vector3( (float)((fieldWidth)*GameScale),(fieldHeight*GameScale),1);
 	/*for(int x=0;x<fieldWidth;x++)
 			for(int y =0;y<fieldHeight;y++)
 				Debug.Log(field[x,y]);*/
@@ -200,6 +209,7 @@ public class GameManager : MonoBehaviour {
 	
 	public bool CheckBlock (bool[,] blockMatrix,int xPos,int yPos){
 	//	Debug.Log(xPos+"  " +yPos);
+	//	try{
 	int size = (blockMatrix.GetLength(0));
 	
 	for (int y = size-1; y >= 0; y--) {
@@ -209,7 +219,10 @@ public class GameManager : MonoBehaviour {
 			}
 			
 		}
+				
 	}
+			
+	//	}catch(System.Exception e){}
 	return false;
 	}
 	
@@ -254,5 +267,23 @@ public class GameManager : MonoBehaviour {
 	goNextBlock.GetComponent<Block>().enabled=true;
 	goNextBlock.transform.localPosition = new Vector3(0,0,-10);
 	goNextBlock.transform.localScale = Vector3.one;
+	}
+	
+	public void SetBlock (bool[,] blockMatrix,int xPos, int yPos,Color col) {
+	var size = blockMatrix.GetLength(0);
+	for ( int y = 0; y < size; y++) {
+		for ( int x = 0; x < size; x++) {	
+			if (blockMatrix[x, y]) {
+				GameObject c =(GameObject) Instantiate (Node);
+				c.transform.parent=blockHolder.transform;
+				c.transform.localPosition=new Vector3(xPos+x, (yPos-y)*20, -1);
+				c.transform.localScale=new Vector3(20,20,1);
+				c.GetComponent<UISlicedSprite>().color=col;
+				field[xPos+x, yPos-y] = true;
+			}
+		}
+	}
+	//yield CheckRows (yPos - size, size);
+	StartCoroutine(SpawnBlock());
 	}
 }

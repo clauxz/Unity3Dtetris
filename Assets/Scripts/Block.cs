@@ -31,15 +31,26 @@ public class Block : MonoBehaviour {
 		
 		
 		size = block.Length;
-		
-		
-		if(size<3)
-			return;
-		
 		var width = block[0].Length;
-		
-		if(width<3)
+	if (size < 2) {
+		Debug.LogError ("Blocks must have at least two lines");
+		return;
+	}
+	if (width != size) {
+		Debug.LogError ("Block width and height must be the same");
+		return;
+	}
+	if (size > GameManager.instance.maxBlockSize) {
+		Debug.LogError ("Blocks must not be larger than " + GameManager.instance.maxBlockSize);
+		return;
+	}
+	for ( int i = 1; i < size; i++) {
+		if (block[i].Length != block[i-1].Length) {
+			Debug.LogError ("All lines in the block must be the same length");
 			return;
+		}
+	}
+	
 		
 		halfSize = size/2;
 		halfSizeFloat = size/2;
@@ -53,9 +64,9 @@ public class Block : MonoBehaviour {
 				blockMatrix[x, y] = true;
 				GameObject blocker =(GameObject) Instantiate(GameManager.instance.Node);//Instantiate(GameManager.instance.node,new Vector3((x-13), (size-y)+13-size, 0.0), Quaternion.identity) ;
 				blocker.transform.parent = transform;
-					blocker.transform.localScale=Vector3.one*20;
+					blocker.transform.localScale=Vector3.one*GameManager.instance.GameScale;
 			
-				blocker.transform.localPosition= new Vector3((x*18)-halfSizeFloat, (size-(y*18))+halfSizeFloat-size, 0.0f);
+				blocker.transform.localPosition= new Vector3((x*GameManager.instance.GameScale)-halfSizeFloat, (size-(y*GameManager.instance.GameScale))+halfSizeFloat-size, 0.0f);
 				blocker.GetComponent<UISlicedSprite>().color=this.blockColor;
 			
 				}
@@ -67,9 +78,13 @@ public class Block : MonoBehaviour {
 			
 			
 			
-			xPosition =(int)((GameManager.instance.fieldWidth)/2 + (size%2 == 0? 0.0 : 0.5));
-			yPosition = (int)((GameManager.instance.fieldHeight) - 1);
-			transform.localPosition =new Vector3(xPosition,(yPosition - halfSizeFloat),-1);
+			
+			yPosition = (int)((GameManager.instance.fieldHeight*20));
+			
+			//Debug.Log((xPosition*GameManager.instance.GameScale)+" " + (yPosition*GameManager.instance.GameScale));
+			transform.localPosition =new Vector3((float)((((GameManager.instance.fieldWidth)/2)) + (size%2 == 0? 0.0 : .5)),(yPosition - halfSizeFloat),-1);
+			
+			xPosition =(int)(transform.localPosition.x- halfSizeFloat);
 			
 			fallSpeed =(float) GameManager.instance.blockNormalSpeed;
 			
@@ -83,7 +98,7 @@ public class Block : MonoBehaviour {
 		//	yPosition = GameManager.instance.fieldHeight - 1;
 		//	Debug.Log(xPosition + " " + yPosition);
 		//	int newY= (int)ConvertRange(130,-90,0,13,yPosition);*/
-		if (GameManager.instance.CheckBlock (blockMatrix, xPosition, yPosition)) {
+		if (GameManager.instance.CheckBlock (blockMatrix, (xPosition), (yPosition/20))) {
 					//Manager.use.GameOver();
 				Debug.Log("Game over");
 				return;
@@ -129,9 +144,9 @@ void Update () {
 		// Check to see if block would collide if moved down one row
 		yPosition--;
 	//	int newY= (int)ConvertRange(170,-90,13,0,yPosition);
-		if (GameManager.instance.CheckBlock (blockMatrix, xPosition, yPosition)) {
-	//		Manager.use.SetBlock (blockMatrix, xPosition, yPosition+1, material);
-			
+		if (GameManager.instance.CheckBlock (blockMatrix, (xPosition), (int)(yPosition/20))) {
+			GameManager.instance.SetBlock (blockMatrix, (xPosition), (yPosition+1)/20, this.blockColor);
+			//StartCoroutine(GameManager.instance.SpawnBlock());
 			Destroy(gameObject);
 			
 			return;
@@ -159,10 +174,10 @@ private void CheckInput () {
 		
 		//var input = Input.GetAxis("Horizontal");
 		if (Input.GetKey(KeyCode.LeftArrow)||Input.GetKey(KeyCode.A)) {
-			StartCoroutine(yieldMoveHorizontal(-18));
+			StartCoroutine(yieldMoveHorizontal(-1));
 		}
 		else if (Input.GetKey(KeyCode.RightArrow)||Input.GetKey(KeyCode.D)) {
-			StartCoroutine(yieldMoveHorizontal(18));
+			StartCoroutine(yieldMoveHorizontal(1));
 		}
 
 		if (Input.GetKeyDown(KeyCode.UpArrow)||Input.GetKeyDown(KeyCode.W)) {
@@ -207,7 +222,7 @@ private void CheckInput () {
 	
 public IEnumerator MoveHorizontal (int dir) {
 	// Check to see if block could be moved in the desired direction
-	//if (!GameManager.instance.CheckBlock (blockMatrix, xPosition + dir, yPosition)) {
+	if (!GameManager.instance.CheckBlock (blockMatrix, xPosition + dir, (yPosition*20))) {
 	//	transform.position.x += dir;
 		xPosition += dir;
 		Vector3 pos = transform.localPosition;
@@ -215,7 +230,7 @@ public IEnumerator MoveHorizontal (int dir) {
 		
 		yield return new WaitForSeconds ((float)GameManager.instance.blockMoveDelay);
 			
-//	}
+	}
 	
 	
 }
@@ -230,7 +245,18 @@ public IEnumerator yieldMoveHorizontal(int dir)
 
 void RotateBlock () {
 	
-		transform.Rotate (Vector3.forward * -90);
+		var tempMatrix = new bool[size, size];
+	for (int y = 0; y < size; y++) {
+		for (int x = 0; x < size; x++) {
+			tempMatrix[y, x] = blockMatrix[x, (size-1)-y];
+		}
+	}
 	
+	// If the rotated block doesn't overlap existing blocks, copy the rotated matrix back and rotate on-screen block to match
+	if (!GameManager.instance.CheckBlock (tempMatrix, xPosition, (yPosition/20))) {
+		System.Array.Copy (tempMatrix, blockMatrix, size*size);
+			this.transform.Rotate(Vector3.forward*-90);
+	//	transform.Rotate (Vector3.forward * -90.0);
+	}
 }
 }
