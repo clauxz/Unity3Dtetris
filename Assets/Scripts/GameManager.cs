@@ -40,7 +40,8 @@ public class GameManager : MonoBehaviour {
 	public int framePosX;
 	public int framePosY;
 	//Tetris Field Size...
-	
+	public AudioClip blockDrop;
+	public AudioClip rowDestroyed;
 	
 	public GameObject Node;
 	
@@ -191,13 +192,7 @@ public class GameManager : MonoBehaviour {
 		field[i, 0] = true;
 	}
 	
-//	leftWall.transform.localPosition =new Vector3( (float)(maxBlockSize-.5),0,-1);
-//	rightWall.transform.localPosition =new Vector3( (float)(fieldWidth-maxBlockSize+.5),0,-1);
-	//	holderBack.transform.localScale=new Vector3( (float)((fieldWidth)*GameScale),(fieldHeight*GameScale),1);
-	/*for(int x=0;x<fieldWidth;x++)
-			for(int y =0;y<fieldHeight;y++)
-				Debug.Log(field[x,y]);*/
-		
+
 	cubeReferences = new Transform[fieldWidth * fieldHeight];
 	cubePositions = new int[fieldWidth * fieldHeight];
 	
@@ -299,6 +294,8 @@ public class GameManager : MonoBehaviour {
 				field[xPos+x, yPos-y] = true;
 			}
 		}
+//		audio.clip=blockDrop;
+			//audio.Play();
 	}
 	StartCoroutine(yieldCheckRows(yPos - size, size));
 	//yield CheckRows (yPos - size, size);
@@ -327,6 +324,7 @@ public class GameManager : MonoBehaviour {
 	
 	public void CollapseRows (int yStart) {
 	// Move rows down in array, which effectively deletes the current row (yStart)
+		
 	for (int y = yStart; y < fieldHeight-1; y++) {
 		for (int x = maxBlockSize; x < fieldWidth-maxBlockSize; x++) {
 			field[x, y] = field[x, y+1];
@@ -377,6 +375,8 @@ public class GameManager : MonoBehaviour {
 	}
 	totalRowsCleared++;
 	score += 10;
+	//	audio.clip=rowDestroyed;
+	//		audio.Play();
 }
 	
 	public IEnumerator emptyYield()
