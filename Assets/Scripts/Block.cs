@@ -246,23 +246,17 @@ void RotateBlock () {
 		System.Array.Copy (tempMatrix, blockMatrix, size*size);
 			
 				Vector3 pos= this.transform.localPosition;
-			//Quaternion rotation = Quaternion.identity;
-   
-      		//  rotation.eulerAngles =this.transform.localRotation;
-        	//	print(rotation.eulerAngles.y);
+		
 			if(transform.eulerAngles.z==180f)
 			{
-			//	Debug.Log(this.transform.rotation.z);
+			
 				this.transform.localPosition= new Vector3(pos.x+20,pos.y,pos.z);
 			}
 			else if(this.transform.localRotation.z==0f)
 			{
-			//	Debug.Log(this.transform.rotation.z);
+			
 				this.transform.localPosition= new Vector3(pos.x-20,pos.y,pos.z);
 			}
-			
-			
-			//this.transform.localPosition= new Vector3(pos.x-20,pos.y,pos.z);
 			
 			this.transform.Rotate(Vector3.forward*-90);
 			

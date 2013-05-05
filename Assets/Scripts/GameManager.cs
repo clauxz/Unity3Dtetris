@@ -337,28 +337,31 @@ public class GameManager : MonoBehaviour {
 	
 	// Destroy on-screen cubes on the deleted row, and store references to cubes that are above it
 	GameObject[] cubes =(GameObject.FindGameObjectsWithTag("Cube")) ;
-		Debug.Log(cubes.Length);
+	Debug.Log(cubes.Length);
+	Debug.Log("Y start " +yStart);
 	int cubesToMove = 0;
 	foreach (GameObject cube in cubes) {
-		if (cube.transform.position.y > yStart) {
-			cubePositions[cubesToMove] =(int) cube.transform.position.y;
+		Debug.Log(cube.transform.localPosition);
+		if (cube.transform.localPosition.y > ((yStart*20))) {
+			cubePositions[cubesToMove] =(int) cube.transform.localPosition.y;
 			cubeReferences[cubesToMove++] = cube.transform;
 		}
-		else if (cube.transform.position.y == yStart) {
+		else if (cube.transform.localPosition.y == ((yStart*20))) {
 			Debug.Log("cube Destroyed");
 			Destroy(cube);
 		}
 	}
+		
 	// Move the appropriate cubes down one square
 	// The third parameter in Mathf.Lerp is clamped to 1.0, which makes the transform.position.y be positioned exactly when done,
 	// which is important for the game logic (see the code just above)
 	var t = 0.0;
-	while (t <= 20.0) {
+	while (t <= 1.0) {
 		t += Time.deltaTime * 5.0;
 		for (int i = 0; i < cubesToMove; i++) {
 				Vector3 sVal = cubeReferences[i].localPosition;
 			cubeReferences[i].localPosition =new Vector3(sVal.x,
-					Mathf.Lerp ((float)cubePositions[i], (float)(cubePositions[i]-1), (float)t),
+					Mathf.Lerp ((float)cubePositions[i], (float)(cubePositions[i]-20), (float)t),
 					sVal.z);
 		}
 		StartCoroutine(emptyYield());
