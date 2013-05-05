@@ -81,8 +81,32 @@ public class EventManager : MonoBehaviour {
 		case ButtonType.inGameBack:
 			Application.LoadLevel("TetrisStart");
 			break;
+		case ButtonType.exportCSV:
+			
+			StartCoroutine(WaitForResult(ScoreboardScreen.instance.ExportToCSV()));
+			
+			break;
+		case ButtonType.deleteDB:
+			PlayerPrefs.SetInt("Players", 1);
+			Application.LoadLevel("TetrisScore");
+			break;
 			
 		}
 		
+	}
+	
+	public IEnumerator WaitForResult(bool isResult)
+	{
+		if(isResult)
+		{
+		//	this.GetComponentsInChildren<UILabel>()[0].
+		}
+		else
+		{
+			
+			
+		}
+		
+		yield return new WaitForSeconds(10f);
 	}
 }

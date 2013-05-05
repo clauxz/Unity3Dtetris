@@ -5,6 +5,9 @@ using System.IO;
 public class ScoreboardScreen : MonoBehaviour {
 	
 	public GUISkin skin; // Skin
+	public GameObject prefab;
+	
+	public static ScoreboardScreen instance;
 	
 	private int totalPlayers;
 	private string[] names;
@@ -20,6 +23,8 @@ public class ScoreboardScreen : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
+		instance=this;
+		
 		totalPlayers = PlayerPrefs.GetInt("Players", 0);
 		names = new string[totalPlayers];
 		times = new float[totalPlayers];
@@ -87,12 +92,37 @@ public class ScoreboardScreen : MonoBehaviour {
 	
 	}
 	
-	// Update is called once per frame
-	void Update () {
+
 	
+	void UpdateScoreBoard()
+	{
+		for(int i = 1; i < totalPlayers; i++) 
+				{
+					if(status[i] == "active")
+					{
+						GameObject item = (GameObject) Instantiate(prefab);
+						item.transform.parent=this.transform;
+						item.transform.localPosition=Vector3.zero;
+						item.transform.localScale=Vector3.one;
+						
+						/*	Label( names[i], false, 100);
+							Label( games[i], false, 100);
+							Label( levels[i].ToString(), false, 100);
+							Label( rows[i].ToString(), false, 100);
+							Label( string.Format("{0:F1}", times[i]), false, 100);
+							Label( scores[i].ToString(), false, 100);
+							if(Button("X", 100))
+							{
+								DeletePlayer(prefixes[i]);
+								status[i] = PlayerPrefs.GetString(prefixes[i]+"_status");
+							}*/
+					
+					}
+				}
+		this.transform.GetComponent<UITable>().Reposition();
 	}
 	
-	void OnGUI () {
+/*	void OnGUI () {
 		GUILayout.BeginArea( new Rect(Screen.width/2-350, 10, 700, Screen.height-20));
 			Label("ScoreBoard", true, 700);
 			//Build scoreboard header
@@ -149,11 +179,12 @@ public class ScoreboardScreen : MonoBehaviour {
 			GUILayout.EndHorizontal();
 		
 		GUILayout.EndArea();
-	}
+	}*/
 	
 	//Export to a csv file the database
-	void ExportToCSV()
+	public bool ExportToCSV()
 	{
+		try{
 		StreamWriter sw = new StreamWriter(Application.dataPath + "/export.csv");
 		string message = string.Format("{0};{1};{2};{3};{4};{5};", "Name", "Game", "Level","Destroyed Rows","Time","Score");
 		sw.WriteLine(message);
@@ -166,6 +197,11 @@ public class ScoreboardScreen : MonoBehaviour {
 			}
 		}
 		sw.Close();
+		return true;
+		}catch(System.Exception e)
+		{
+			return false;
+		}
 	
 	}
 	
@@ -177,7 +213,7 @@ public class ScoreboardScreen : MonoBehaviour {
 	}
 	
 	//Aux functions//
-	void Label(string text, bool headerStyle, int width)
+/*	void Label(string text, bool headerStyle, int width)
 	{
 		GUILayout.Label(text, skin.GetStyle(headerStyle ? "sbh" : "sb"), GUILayout.Width(width), GUILayout.Height(25)); 	
 	}
@@ -188,5 +224,5 @@ public class ScoreboardScreen : MonoBehaviour {
 			return true;
 		else
 			return false;
-	}
+	}*/
 }
