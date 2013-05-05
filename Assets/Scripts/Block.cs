@@ -52,8 +52,8 @@ public class Block : MonoBehaviour {
 	}
 	
 		
-		halfSize = (size/2);
-		halfSizeFloat = (size/2);
+		halfSize = ((size*20)/2);
+		halfSizeFloat = ((size*20)/2);
 		// int halfSizediff =((size*20)/2);
 		blockMatrix = new bool[size, size];
 		
@@ -66,7 +66,7 @@ public class Block : MonoBehaviour {
 				blocker.transform.parent = transform;
 					blocker.transform.localScale=Vector3.one*GameManager.instance.GameScale;
 			//blocker.transform.localPosition= new Vector3((x*20), (y*(-20))+halfSizediff, 0.0f);
-				blocker.transform.localPosition= new Vector3((x*GameManager.instance.GameScale)-halfSizeFloat, (size-(y*GameManager.instance.GameScale))+halfSizeFloat-size, 0.0f);
+				blocker.transform.localPosition= new Vector3((x*20)-halfSizeFloat, (size-(y*20))+halfSizeFloat-size, 0.0f);
 				blocker.GetComponent<UISlicedSprite>().color=this.blockColor;
 			
 				}
@@ -79,33 +79,23 @@ public class Block : MonoBehaviour {
 			
 			
 			
-			yPosition = (int)((GameManager.instance.fieldHeight*20));
+			yPosition = (int)((GameManager.instance.fieldHeight*20)-20);
 			
 			//Debug.Log((xPosition*GameManager.instance.GameScale)+" " + (yPosition*GameManager.instance.GameScale));
-			transform.localPosition =new Vector3((float)((((GameManager.instance.fieldWidth)/2) + (size%2 == 0? 0 : 20/2))*20),(yPosition - halfSizeFloat),-1);
+			transform.localPosition =new Vector3((float)((((GameManager.instance.fieldWidth)/2)*20 + (size%2 == 0? 0 : 20/2))),(yPosition - halfSizeFloat),-1);
 			
 			xPosition =(int)(transform.localPosition.x- halfSizeFloat);
 			
 			fallSpeed =(float) GameManager.instance.blockNormalSpeed;
-			
-			
-	/*		float xVal = (float)(GameManager.instance.fieldWidth/2 + (size%2 == 0? 0.0 : .5));
-			transform.localPosition =new Vector3(xVal,140,-1);//(Manager.use.FieldWidth()/2 + (size%2 == 0? 0.0 : .5));
-			xPosition = (int)transform.localPosition.x;
-			yPosition = (int)transform.localPosition.y;
-		//	Debug.Log(transform.localPosition.x+" "+transform.localPosition.y);
-		//	xPosition = (int)transform.position.x - halfSize;
-		//	yPosition = GameManager.instance.fieldHeight - 1;
-		//	Debug.Log(xPosition + " " + yPosition);
-		//	int newY= (int)ConvertRange(130,-90,0,13,yPosition);*/
+
 		if (GameManager.instance.CheckBlock (blockMatrix, (xPosition/20), (yPosition/20))) {
 					GameManager.instance.GameOver();
-					//GameManager.instance.gameOverLabel.GetComponent<UILabel>().
+					
 				return;
 			}
 			StartCoroutine(yieldDelay((float)GameManager.instance.delayTime));
 			this.playable=true;
-		//	Fall();
+	
 		}
 		
 		
@@ -135,23 +125,24 @@ public class Block : MonoBehaviour {
 void Update () {
 	if (playable) {
 		// Check to see if block would collide if moved down one row
-		yPosition--;
+		yPosition-=2;
 	//	int newY= (int)ConvertRange(170,-90,13,0,yPosition);
 		if (GameManager.instance.CheckBlock (blockMatrix, (int)(xPosition/20), (int)(yPosition/20))) {
-			GameManager.instance.SetBlock (blockMatrix, (xPosition/20), (yPosition+1)/20, this.blockColor);
-			//StartCoroutine(GameManager.instance.SpawnBlock());
+			GameManager.instance.SetBlock (blockMatrix, (xPosition/20), (yPosition+20)/20, this.blockColor);
+		
 			Destroy(gameObject);
 			
 			return;
-//			break;
+
 		}
-		//float valu = yPosition*18;
+		
 		// Make on-screen block fall down 1 square
 		// Also serves as a delay...if you want old-fashioned square-by-square movement, replace this with yield WaitForSeconds
-		for (float i = yPosition+1; i > yPosition; i -= Time.deltaTime*fallSpeed) {
+		for (float i = yPosition+20; i > yPosition; i -= Time.deltaTime*fallSpeed) {
 			Vector3 val = transform.localPosition;
 			transform.localPosition=new Vector3(val.x,(i - halfSize),val.z);
 				//transform.position.y = i - halfSize;
+			emptyYield();
 		//	yield;
 		}
 		
@@ -167,10 +158,10 @@ private void CheckInput () {
 		
 		//var input = Input.GetAxis("Horizontal");
 		if (Input.GetKeyDown(KeyCode.LeftArrow)||Input.GetKey(KeyCode.A)) {
-			StartCoroutine(yieldMoveHorizontal(-20));
+			StartCoroutine(yieldMoveHorizontal(-1*20));
 		}
 		else if (Input.GetKeyDown(KeyCode.RightArrow)||Input.GetKey(KeyCode.D)) {
-			StartCoroutine(yieldMoveHorizontal(20));
+			StartCoroutine(yieldMoveHorizontal(1*20));
 		}
 
 		if (Input.GetKeyDown(KeyCode.UpArrow)||Input.GetKeyDown(KeyCode.W)) {
@@ -216,10 +207,14 @@ private void CheckInput () {
 public IEnumerator MoveHorizontal (int dir) {
 	// Check to see if block could be moved in the desired direction
 	if (!GameManager.instance.CheckBlock (blockMatrix, (xPosition + dir)/20, (yPosition/20))) {
-	//	transform.position.x += dir;
-		xPosition += dir;
+	
 		Vector3 pos = transform.localPosition;
-		transform.localPosition=new Vector3(xPosition,pos.y,pos.z);
+		transform.localPosition=new Vector3((pos.x+dir),pos.y,pos.z);
+	//	transform.position.x += dir;
+	//	Debug.Log(xPosition + " " + dir);
+		xPosition += dir;
+	//	Debug.Log(xPosition + " " + dir);
+		
 		
 		yield return new WaitForSeconds ((float)GameManager.instance.blockMoveDelay);
 			

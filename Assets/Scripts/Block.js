@@ -99,19 +99,19 @@ function Fall () {
 
 function CheckInput () {
 	while (playable) {
-		var input = Input.GetAxis("Horizontal");
-		if (input < 0.0) {
+		//var input = Input.GetAxis("Horizontal");
+		if (Input.GetKeyDown(KeyCode.LeftArrow)||Input.GetKey(KeyCode.A)) {
 			yield MoveHorizontal(-1);
 		}
-		else if (input > 0.0) {
+		else if (Input.GetKeyDown(KeyCode.RightArrow)||Input.GetKey(KeyCode.D)) {
 			yield MoveHorizontal(1);
 		}
 
-		if (Input.GetButtonDown("Rotate")) {
+		if (Input.GetKeyDown(KeyCode.UpArrow)||Input.GetKeyDown(KeyCode.W)) {
 			RotateBlock();
 		}
 	
-		if (Input.GetButtonDown("Drop")) {
+		if (Input.GetKey(KeyCode.DownArrow)||Input.GetKey(KeyCode.S)) {
 			fallSpeed = Manager.use.blockDropSpeed;
 			dropped = true;
 			Manager.use.score += 5;

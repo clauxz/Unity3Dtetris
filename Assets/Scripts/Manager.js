@@ -145,7 +145,7 @@ function CheckBlock (blockMatrix : boolean[,], xPos : int, yPos : int) : boolean
 	var size = blockMatrix.GetLength(0);
 	for (y = size-1; y >= 0; y--) {
 		for (x = 0; x < size; x++) {
-			Debug.Log("xPos : "+ (xPos+ x)+ " yPos : " + (yPos-y));
+		//	Debug.Log("xPos : "+ (xPos+ x)+ " yPos : " + (yPos-y));
 			if (blockMatrix[x, y] && field[xPos+x, yPos-y]) {
 				return true;
 			}

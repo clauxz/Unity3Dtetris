@@ -96,59 +96,55 @@ public class GameManager : MonoBehaviour {
 		blocks = new List<string[]>();
 		
 		
-		string[] block = new string[4];
+		string[] block = new string[3];
 		
-		block[0]="0000";
-		block[1]="0000";
-		block[2]="1110";
-		block[3]="0100";
+		
+		block[0]="000";
+		block[1]="111";
+		block[2]="010";
 		
 		blocks.Add(block);
 		
+		
+		block = new string[2];
+		
+		
+		block[0]="11";
+		block[1]="11";
+		
+		blocks.Add(block);
 		
 		block = new string[4];
 		
 		block[0]="0000";
-		block[1]="0000";
-		block[2]="1100";
-		block[3]="1100";
-		
-		blocks.Add(block);
-		
-		block = new string[4];
-		
-		block[0]="0000";
-		block[1]="0000";
-		block[2]="1111";
+		block[1]="1111";
+		block[2]="0000";
 		block[3]="0000";
 		
 		
 		blocks.Add(block);
 		
-		block = new string[4];
+		block = new string[3];
 		
-		block[0]="0000";
-		block[1]="1100";
-		block[2]="1000";
-		block[3]="1000";
-		
-		blocks.Add(block);
-		
-		block = new string[4];
-		
-		block[0]="0000";
-		block[1]="0100";
-		block[2]="1100";
-		block[3]="1000";
+		block[0]="110";
+		block[1]="010";
+		block[2]="010";
 		
 		blocks.Add(block);
 		
-		block = new string[4];
+		block = new string[3];
 		
-		block[0]="0000";
-		block[1]="0000";
-		block[2]="1100";
-		block[3]="0000";
+		block[0]="010";
+		block[1]="011";
+		block[2]="001";
+		
+		blocks.Add(block);
+		
+		block = new string[3];
+		
+		block[0]="011";
+		block[1]="010";
+		block[2]="010";
 		
 		blocks.Add(block);
 		
