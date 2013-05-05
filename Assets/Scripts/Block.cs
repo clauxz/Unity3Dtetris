@@ -24,6 +24,7 @@ public class Block : MonoBehaviour {
 	private float halfSizeFloat;
 	private bool dropped = false;
 	private Material material;
+	private int rotationCount=0;
 	
 	// Use this for initialization
 	void Start () {
@@ -64,7 +65,7 @@ public class Block : MonoBehaviour {
 				blockMatrix[x, y] = true;
 				GameObject blocker =(GameObject) Instantiate(GameManager.instance.Node);//Instantiate(GameManager.instance.node,new Vector3((x-13), (size-y)+13-size, 0.0), Quaternion.identity) ;
 				blocker.transform.parent = transform;
-					blocker.transform.localScale=Vector3.one*GameManager.instance.GameScale;
+					blocker.transform.localScale=Vector3.one*20;
 			//blocker.transform.localPosition= new Vector3((x*20), (y*(-20))+halfSizediff, 0.0f);
 				blocker.transform.localPosition= new Vector3((x*20)-halfSizeFloat, (size-(y*20))+halfSizeFloat-size, 0.0f);
 				blocker.GetComponent<UISlicedSprite>().color=this.blockColor;
@@ -125,7 +126,7 @@ public class Block : MonoBehaviour {
 void Update () {
 	if (playable) {
 		// Check to see if block would collide if moved down one row
-		yPosition-=2;
+		yPosition--;
 	//	int newY= (int)ConvertRange(170,-90,13,0,yPosition);
 		if (GameManager.instance.CheckBlock (blockMatrix, (int)(xPosition/20), (int)(yPosition/20))) {
 			GameManager.instance.SetBlock (blockMatrix, (xPosition/20), (yPosition+20)/20, this.blockColor);
@@ -243,8 +244,28 @@ void RotateBlock () {
 	// If the rotated block doesn't overlap existing blocks, copy the rotated matrix back and rotate on-screen block to match
 	if (!GameManager.instance.CheckBlock (tempMatrix, (xPosition/20), (yPosition/20))) {
 		System.Array.Copy (tempMatrix, blockMatrix, size*size);
+			
+				Vector3 pos= this.transform.localPosition;
+			//Quaternion rotation = Quaternion.identity;
+   
+      		//  rotation.eulerAngles =this.transform.localRotation;
+        	//	print(rotation.eulerAngles.y);
+			if(transform.eulerAngles.z==180f)
+			{
+			//	Debug.Log(this.transform.rotation.z);
+				this.transform.localPosition= new Vector3(pos.x+20,pos.y,pos.z);
+			}
+			else if(this.transform.localRotation.z==0f)
+			{
+			//	Debug.Log(this.transform.rotation.z);
+				this.transform.localPosition= new Vector3(pos.x-20,pos.y,pos.z);
+			}
+			
+			
+			//this.transform.localPosition= new Vector3(pos.x-20,pos.y,pos.z);
+			
 			this.transform.Rotate(Vector3.forward*-90);
-	//	transform.Rotate (Vector3.forward * -90.0);
+			
 	}
 }
 }
