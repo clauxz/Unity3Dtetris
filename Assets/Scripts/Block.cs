@@ -141,7 +141,15 @@ void Update () {
 		// Also serves as a delay...if you want old-fashioned square-by-square movement, replace this with yield WaitForSeconds
 		for (float i = yPosition+20; i > yPosition; i -= Time.deltaTime*fallSpeed) {
 			Vector3 val = transform.localPosition;
-			transform.localPosition=new Vector3(val.x,(i - halfSize),val.z);
+			if(transform.localEulerAngles.z==180f)
+				{
+					transform.localPosition=new Vector3(val.x,(i - halfSize)+20,val.z);
+				}
+				
+				else
+				{
+					transform.localPosition=new Vector3(val.x,(i - halfSize),val.z);
+				}
 				//transform.position.y = i - halfSize;
 			emptyYield();
 		//	yield;
@@ -251,14 +259,19 @@ void RotateBlock () {
 			{
 			
 				this.transform.localPosition= new Vector3(pos.x+20,pos.y,pos.z);
+				
 			}
 			else if(this.transform.localRotation.z==0f)
 			{
 			
 				this.transform.localPosition= new Vector3(pos.x-20,pos.y,pos.z);
+				
 			}
 			
-			this.transform.Rotate(Vector3.forward*-90);
+				this.transform.Rotate(Vector3.forward*-90);
+			
+			
+			
 			
 	}
 }
