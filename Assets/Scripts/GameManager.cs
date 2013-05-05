@@ -260,7 +260,7 @@ public class GameManager : MonoBehaviour {
 		}
 			destrowLabel.GetComponent<UILabel>().text=totalRowsCleared.ToString();
 			scoreLabel.GetComponent<UILabel>().text=score.ToString();
-			timeLabel.GetComponent<UILabel>().text=(timeTaken).ToString();
+			timeLabel.GetComponent<UILabel>().text=Mathf.RoundToInt(timeTaken).ToString();
 			
 		}
 	}
