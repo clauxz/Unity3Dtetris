@@ -126,7 +126,7 @@ public class Block : MonoBehaviour {
 void Update () {
 	if (playable) {
 		// Check to see if block would collide if moved down one row
-		yPosition--;
+		yPosition-=(int)fallSpeed;
 	//	int newY= (int)ConvertRange(170,-90,13,0,yPosition);
 		if (GameManager.instance.CheckBlock (blockMatrix, (int)(xPosition/20), (int)(yPosition/20))) {
 			GameManager.instance.SetBlock (blockMatrix, (xPosition/20), (yPosition+20)/20, this.blockColor);
@@ -139,7 +139,7 @@ void Update () {
 		
 		// Make on-screen block fall down 1 square
 		// Also serves as a delay...if you want old-fashioned square-by-square movement, replace this with yield WaitForSeconds
-		for (float i = yPosition+20; i > yPosition; i -= Time.deltaTime*fallSpeed) {
+		for (float i = yPosition+20; i > yPosition; i -= Time.deltaTime) {
 			Vector3 val = transform.localPosition;
 			if(transform.localEulerAngles.z==180f)
 				{

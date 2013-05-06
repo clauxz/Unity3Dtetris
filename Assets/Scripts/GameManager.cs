@@ -57,6 +57,7 @@ public class GameManager : MonoBehaviour {
 	public GameObject scoreLabel;
 	public GameObject timeLabel;
 	public GameObject destrowLabel;
+	public GameObject gameSpeedLabel;
 	
 	//public static bool isOnceSpawn=false;
 	//Block Settings...
@@ -99,15 +100,23 @@ public class GameManager : MonoBehaviour {
 		blocks = new List<string[]>();
 		
 		
-		string[] block = new string[3];
+		string[] block;
 		
+		block = new string[3];
 		
-		block[0]="000";
-		block[1]="111";
+		block[0]="011";
+		block[1]="010";
 		block[2]="010";
 		
 		blocks.Add(block);
 		
+		block = new string[3];
+		
+		block[0]="010";
+		block[1]="110";
+		block[2]="100";
+		
+		blocks.Add(block);
 		
 		block = new string[2];
 		
@@ -117,13 +126,18 @@ public class GameManager : MonoBehaviour {
 		
 		blocks.Add(block);
 		
-		block = new string[4];
+			block = new string[3];
 		
-		block[0]="0000";
-		block[1]="1111";
-		block[2]="0000";
-		block[3]="0000";
+		block[0]="010";
+		block[1]="011";
+		block[2]="001";
 		
+		blocks.Add(block);
+		
+		block = new string[3];
+		block[0]="000";
+		block[1]="111";
+		block[2]="010";
 		
 		blocks.Add(block);
 		
@@ -135,21 +149,24 @@ public class GameManager : MonoBehaviour {
 		
 		blocks.Add(block);
 		
-		block = new string[3];
 		
-		block[0]="010";
-		block[1]="011";
-		block[2]="001";
+		block = new string[4];
 		
-		blocks.Add(block);
+		block[0]="0000";
+		block[1]="1111";
+		block[2]="0000";
+		block[3]="0000";
 		
-		block = new string[3];
-		
-		block[0]="011";
-		block[1]="010";
-		block[2]="010";
 		
 		blocks.Add(block);
+		
+		
+		
+	
+		
+		
+		
+		
 		
 	}
 	
@@ -258,7 +275,7 @@ public class GameManager : MonoBehaviour {
 			destrowLabel.GetComponent<UILabel>().text=totalRowsCleared.ToString();
 			scoreLabel.GetComponent<UILabel>().text=score.ToString();
 			timeLabel.GetComponent<UILabel>().text=Mathf.RoundToInt(timeTaken).ToString();
-			
+			gameSpeedLabel.GetComponent<UILabel>().text=this.blockNormalSpeed.ToString();
 		}
 	}
 	
