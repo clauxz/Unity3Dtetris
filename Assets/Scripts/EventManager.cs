@@ -81,12 +81,21 @@ public class EventManager : MonoBehaviour {
 			break;
 		case ButtonType.exportCSV:
 			
-		//	ScoreboardScreen.instance.ExportToCSV();
+			ScoreboardScreen.instance.ExportToCSV();
 			
 			break;
 		case ButtonType.deleteDB:
-		//	PlayerPrefs.SetInt("Players", 1);
-		//	Application.LoadLevel("TetrisScore");
+			PlayerPrefs.SetInt("Players", 1);
+			Application.LoadLevel("TetrisScore");
+			break;
+			
+		case ButtonType.deleteRow:
+			string valu = (this.gameObject.name).Substring(this.gameObject.name.Length-1,1);
+			Destroy(GameObject.Find("item"+valu));
+			GameObject.Find("Offset").GetComponent<UITable>().repositionNow=true;
+			int val = System.Convert.ToInt16(valu);
+			ScoreboardScreen.instance.DeletePlayer(ScoreboardScreen.instance.prefixes[val]);
+			ScoreboardScreen.instance.status[val] = PlayerPrefs.GetString(ScoreboardScreen.instance.prefixes[val]+"_status");
 			break;
 			
 		}

@@ -19,7 +19,8 @@ public enum ButtonType{
 	inGameExit=13,
 	inGameBack=14,
 	exportCSV=15,
-	deleteDB=16
+	deleteDB=16,
+	deleteRow=17
 	
 }
 

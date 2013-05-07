@@ -15,13 +15,16 @@ public class ScoreboardScreen : MonoBehaviour {
 	private int[] levels;
 	private int[] scores;
 	private string[] games;
-	private string[] status;
-	private string[] prefixes;
+	public string[] status;
+	public string[] prefixes;
+	
+	public static ScoreboardScreen instance;
 	
 	//private Vector2 scrollPosition = new Vector2(20, 20);
 	
 	// Use this for initialization
 	void Start () {
+		instance=this;
 		totalPlayers = PlayerPrefs.GetInt("Players", 0);
 		names = new string[totalPlayers];
 		times = new float[totalPlayers];
@@ -103,7 +106,7 @@ public class ScoreboardScreen : MonoBehaviour {
 					if(status[i] == "active")
 					{
 						GameObject nItem = (GameObject)Instantiate(prefab);
-						
+						nItem.name="item"+i;
 						nItem.transform.parent=this.transform;
 				
 						nItem.transform.localPosition=Vector3.zero;
@@ -206,7 +209,7 @@ public class ScoreboardScreen : MonoBehaviour {
 	/// <summary>
 	/// Exports to CS.
 	/// </summary>
-	void ExportToCSV()
+	public void ExportToCSV()
 	{
 		StreamWriter sw = new StreamWriter(Application.dataPath + "/export.csv");
 		string message = string.Format("{0};{1};{2};{3};{4};{5};", "Name", "Game", "Level","Destroyed Rows","Time","Score");
@@ -228,7 +231,7 @@ public class ScoreboardScreen : MonoBehaviour {
 	/// <param name='prefix'>
 	/// Prefix.
 	/// </param>
-	void DeletePlayer(string prefix)
+	public void DeletePlayer(string prefix)
 	{
 		Debug.Log(PlayerPrefs.GetString(prefix+"_status"));
 		PlayerPrefs.SetString(prefix+"_status", "deleted");
