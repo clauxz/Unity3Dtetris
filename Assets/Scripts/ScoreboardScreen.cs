@@ -4,7 +4,8 @@ using System.IO;
 
 public class ScoreboardScreen : MonoBehaviour {
 	
-	public GUISkin skin; // Skin
+	//Our Row Prefab Stores Here
+	public GameObject prefab;
 	
 	private int totalPlayers;
 	private string[] names;
@@ -16,7 +17,7 @@ public class ScoreboardScreen : MonoBehaviour {
 	private string[] status;
 	private string[] prefixes;
 	
-	private Vector2 scrollPosition = new Vector2(20, 20);
+	//private Vector2 scrollPosition = new Vector2(20, 20);
 	
 	// Use this for initialization
 	void Start () {
@@ -85,6 +86,54 @@ public class ScoreboardScreen : MonoBehaviour {
 		}
 	}
 	
+		//Populate Scores
+		PopulateData();
+		
+	}
+	
+	
+	/// <summary>
+	/// Populates the data.
+	/// </summary>
+	public void PopulateData()
+	{
+		for(int i = 1; i < totalPlayers; i++) 
+				{
+					if(status[i] == "active")
+					{
+						GameObject nItem = (GameObject)Instantiate(prefab);
+						
+						nItem.transform.parent=this.transform;
+				
+						nItem.transform.localPosition=Vector3.zero;
+				
+						nItem.transform.localScale=Vector3.one;
+				
+						UILabel[] array = nItem.GetComponentsInChildren<UILabel>();
+						array[0].text=string.Format("{0:F1}", times[i]);
+						array[1].text=games[i];
+				array[2].text=levels[i].ToString();
+				array[3].text=names[i];
+				array[4].text=rows[i].ToString();
+				array[5].text=scores[i].ToString();
+				GameObject.Find("Delete").name="delete"+i;
+			/*			GUILayout.BeginHorizontal();
+							Label( names[i], false, 100);
+							Label( games[i], false, 100);
+							Label( levels[i].ToString(), false, 100);
+							Label( rows[i].ToString(), false, 100);
+							Label( string.Format("{0:F1}", times[i]), false, 100);
+							Label( scores[i].ToString(), false, 100);
+							if(Button("X", 100))
+							{
+								DeletePlayer(prefixes[i]);
+								status[i] = PlayerPrefs.GetString(prefixes[i]+"_status");
+							}
+						GUILayout.EndHorizontal();*/
+					}
+				}
+		this.GetComponent<UITable>().repositionNow=true;
+		
 	}
 	
 	// Update is called once per frame
@@ -92,7 +141,7 @@ public class ScoreboardScreen : MonoBehaviour {
 	
 	}
 	
-	void OnGUI () {
+/*	void OnGUI () {
 		GUILayout.BeginArea( new Rect(Screen.width/2-350, 10, 700, Screen.height-20));
 			Label("ScoreBoard", true, 700);
 			//Build scoreboard header
@@ -149,9 +198,12 @@ public class ScoreboardScreen : MonoBehaviour {
 			GUILayout.EndHorizontal();
 		
 		GUILayout.EndArea();
-	}
+	}*/
 	
 	//Export to a csv file the database
+	/// <summary>
+	/// Exports to CS.
+	/// </summary>
 	void ExportToCSV()
 	{
 		StreamWriter sw = new StreamWriter(Application.dataPath + "/export.csv");
@@ -168,7 +220,12 @@ public class ScoreboardScreen : MonoBehaviour {
 		sw.Close();
 	
 	}
-	
+	/// <summary>
+	/// Deletes the player.
+	/// </summary>
+	/// <param name='prefix'>
+	/// Prefix.
+	/// </param>
 	void DeletePlayer(string prefix)
 	{
 		Debug.Log(PlayerPrefs.GetString(prefix+"_status"));
@@ -177,7 +234,7 @@ public class ScoreboardScreen : MonoBehaviour {
 	}
 	
 	//Aux functions//
-	void Label(string text, bool headerStyle, int width)
+/*	void Label(string text, bool headerStyle, int width)
 	{
 		GUILayout.Label(text, skin.GetStyle(headerStyle ? "sbh" : "sb"), GUILayout.Width(width), GUILayout.Height(25)); 	
 	}
@@ -188,5 +245,5 @@ public class ScoreboardScreen : MonoBehaviour {
 			return true;
 		else
 			return false;
-	}
+	}*/
 }

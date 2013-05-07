@@ -29,8 +29,6 @@ public class EventManager : MonoBehaviour {
 			string pname = GameObject.Find("pname").GetComponent<UIInput>().text;
 			if(pname.Length > 0)
 				{
-					
-								
 					PlayerPrefs.SetString("CurrentPlayerName", pname);
 					//Starts the screen to choose game
 					Application.LoadLevel("TetrisStart");
@@ -83,7 +81,7 @@ public class EventManager : MonoBehaviour {
 			break;
 		case ButtonType.exportCSV:
 			
-		//	StartCoroutine(WaitForResult(ScoreboardScreen.instance.ExportToCSV()));
+		//	ScoreboardScreen.instance.ExportToCSV();
 			
 			break;
 		case ButtonType.deleteDB:
@@ -95,18 +93,5 @@ public class EventManager : MonoBehaviour {
 		
 	}
 	
-	public IEnumerator WaitForResult(bool isResult)
-	{
-		if(isResult)
-		{
-		//	this.GetComponentsInChildren<UILabel>()[0].
-		}
-		else
-		{
-			
-			
-		}
-		
-		yield return new WaitForSeconds(10f);
-	}
+	
 }
