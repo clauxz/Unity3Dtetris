@@ -137,15 +137,20 @@ void Update () {
 
 		}
 		
+				
 		// Make on-screen block fall down 1 square
 		// Also serves as a delay...if you want old-fashioned square-by-square movement, replace this with yield WaitForSeconds
 		for (float i = yPosition+1; i > yPosition; i -= Time.deltaTime) {
 			Vector3 val = transform.localPosition;
-			if(transform.localEulerAngles.z==180f)
+				if(transform.localEulerAngles.z==0)
+				{
+					transform.localPosition=new Vector3(val.x,(i - halfSize),val.z);
+				}
+				else if(transform.localEulerAngles.z<=180f)
 				{
 					transform.localPosition=new Vector3(val.x,(i - halfSize)+20,val.z);
+					
 				}
-				
 				else
 				{
 					transform.localPosition=new Vector3(val.x,(i - halfSize),val.z);
