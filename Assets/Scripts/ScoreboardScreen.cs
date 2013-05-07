@@ -6,6 +6,7 @@ public class ScoreboardScreen : MonoBehaviour {
 	
 	//Our Row Prefab Stores Here
 	public GameObject prefab;
+	public GameObject camera;
 	
 	private int totalPlayers;
 	private string[] names;
@@ -117,6 +118,7 @@ public class ScoreboardScreen : MonoBehaviour {
 				array[4].text=rows[i].ToString();
 				array[5].text=scores[i].ToString();
 				GameObject.Find("Delete").name="delete"+i;
+				nItem.GetComponent<UIDragCamera>().draggableCamera=camera.GetComponent<UIDraggableCamera>();
 			/*			GUILayout.BeginHorizontal();
 							Label( names[i], false, 100);
 							Label( games[i], false, 100);
