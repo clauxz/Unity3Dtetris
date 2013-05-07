@@ -83,12 +83,12 @@ public class EventManager : MonoBehaviour {
 			break;
 		case ButtonType.exportCSV:
 			
-			StartCoroutine(WaitForResult(ScoreboardScreen.instance.ExportToCSV()));
+		//	StartCoroutine(WaitForResult(ScoreboardScreen.instance.ExportToCSV()));
 			
 			break;
 		case ButtonType.deleteDB:
-			PlayerPrefs.SetInt("Players", 1);
-			Application.LoadLevel("TetrisScore");
+		//	PlayerPrefs.SetInt("Players", 1);
+		//	Application.LoadLevel("TetrisScore");
 			break;
 			
 		}

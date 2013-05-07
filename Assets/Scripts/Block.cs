@@ -166,10 +166,10 @@ private void CheckInput () {
 	
 		
 		//var input = Input.GetAxis("Horizontal");
-		if (Input.GetKeyDown(KeyCode.LeftArrow)||Input.GetKey(KeyCode.A)) {
+		if (Input.GetKeyDown(KeyCode.LeftArrow)||Input.GetKeyDown(KeyCode.A)) {
 			StartCoroutine(yieldMoveHorizontal(-1*20));
 		}
-		else if (Input.GetKeyDown(KeyCode.RightArrow)||Input.GetKey(KeyCode.D)) {
+		else if (Input.GetKeyDown(KeyCode.RightArrow)||Input.GetKeyDown(KeyCode.D)) {
 			StartCoroutine(yieldMoveHorizontal(1*20));
 		}
 
@@ -177,7 +177,7 @@ private void CheckInput () {
 			RotateBlock();
 		}
 		
-		if (Input.GetKey(KeyCode.DownArrow)||Input.GetKey(KeyCode.S)) {
+		if (Input.GetKey(KeyCode.DownArrow)||Input.GetKey(KeyCode.S)||Input.GetKey(KeyCode.Space)) {
 			fallSpeed =(float)GameManager.instance.blockDropSpeed;
 			//dropped = true;
 			//Manager.use.score += 5;
