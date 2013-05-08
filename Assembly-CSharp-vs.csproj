@@ -160,6 +160,7 @@
      <Compile Include="Assets\NGUI\Scripts\UI\UITooltip.cs" />
      <Compile Include="Assets\NGUI\Scripts\UI\UIViewport.cs" />
      <Compile Include="Assets\Scripts\Block.cs" />
+     <Compile Include="Assets\Scripts\BlockBlinker.cs" />
      <Compile Include="Assets\Scripts\BlockCollider.cs" />
      <Compile Include="Assets\Scripts\EventManager.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />

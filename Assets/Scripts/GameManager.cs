@@ -59,6 +59,8 @@ public class GameManager : MonoBehaviour {
 	public GameObject timeLabel;
 	public GameObject destrowLabel;
 	public GameObject gameSpeedLabel;
+	public int RowToCollapse;
+
 	
 	//public static bool isOnceSpawn=false;
 	//Block Settings...
@@ -88,7 +90,7 @@ public class GameManager : MonoBehaviour {
 	private GameObject goNextBlock;
 	private bool isNext;
 	
-
+	
 	private int rowsCleared = 0;
 
 
@@ -161,14 +163,6 @@ public class GameManager : MonoBehaviour {
 		
 		blocks.Add(block);
 		
-		
-		
-	
-		
-		
-		
-		
-		
 	}
 	
 	// Use this for initialization
@@ -210,14 +204,19 @@ public class GameManager : MonoBehaviour {
 		field[i, 0] = true;
 	}
 	
-
+//Cube Refrences and position Array is init
 	cubeReferences = new Transform[fieldWidth * fieldHeight];
 	cubePositions = new int[fieldWidth * fieldHeight];
 	
 	//Every time it starts the Manager, gameOver is false
 	gameOver = false;
 	
+		
+	//Random BLock Integer Gets Generated ...	
 	nextBlock = Random.Range(0, blocks.Count);
+		
+		
+	//Our First Block Gets Spwn on the Field..
 		
 	StartCoroutine(SpawnBlock());
 	}
@@ -247,7 +246,7 @@ public class GameManager : MonoBehaviour {
 	
 	public IEnumerator SpawnBlock () {
 	//Instantiating new block
-	currentBlock = nextBlock;
+	currentBlock = nextBlock;   //Line 
 	GameObject go =(GameObject) Instantiate (block);
 	go.transform.parent=blockHolder.transform;
 	go.GetComponent<Block>().block=blocks[currentBlock];
@@ -305,44 +304,63 @@ public class GameManager : MonoBehaviour {
 		for ( int x = 0; x < size; x++) {	
 			if (blockMatrix[x, y]) {
 				GameObject c =(GameObject) Instantiate (Node);
+				c.tag="Cube";
 				c.transform.parent=blockHolder.transform;
 				c.transform.localPosition=new Vector3((xPos+x)*20, (yPos-y)*20, -1);
 				c.transform.localScale=new Vector3(20,20,1);
 				c.GetComponent<UISlicedSprite>().color=col;
+				c.GetComponent<BlockBlinker>().from=col;
+				c.GetComponent<BlockBlinker>().eventReceiver=this.gameObject;
+					c.GetComponent<BlockBlinker>().callWhenFinished="TweenFinish";
+				//c.GetComponent<BlockBlinker>().enabled=true;
 				field[xPos+x, yPos-y] = true;
 			}
 		}
 //		audio.clip=blockDrop;
 			//audio.Play();
 	}
-		CheckRows (yPos - size, size);
-	//StartCoroutine(yieldCheckRows(yPos - size, size));
-	//yield CheckRows (yPos - size, size);
-		score ++;
+		
+	StartCoroutine(CheckRows (yPos - size, size));
+	
+	score ++;
 	StartCoroutine(SpawnBlock());
 	}
 	
-	public void CheckRows (int yStart,int size) {
+	public void TweenFinish()
+	{
+		
+		
+	}
+	
+	public IEnumerator CheckRows (int yStart,int size) {
 		StartCoroutine(emptyYield());	// Wait a frame for block to be destroyed so we don't include those cubes
 	if (yStart < 1) yStart = 1;
 		
-	//int y=0;
-//	int x=0;// Make sure to start above the floor
+
 	for (int y = yStart; y < yStart+size; y++) {
 		for (int x = maxBlockSize; x < fieldWidth-maxBlockSize; x++) { // We don't need to check the walls
 			if (!field[x, y]) break;
-			Debug.Log(x+ " = " +(fieldWidth-maxBlockSize));
+			
 			if ((x+1) == fieldWidth-maxBlockSize) {
-				Debug.Log("Row Completed");
-		//	StartCoroutine(emptyYield());
+				
+			GameObject[] cubes =(GameObject.FindGameObjectsWithTag("Cube")) ;
+	
+			int cubesToMove = 0;
+			Debug.Log(cubes.Length);
+			foreach (GameObject cube in cubes) {
+			
+			if (cube.transform.localPosition.y == ((y*20))) {
+				
+				cube.GetComponent<BlockBlinker>().enabled=true;	
+				}
+			}	
+			yield return new WaitForSeconds(1f);		
 			CollapseRows (y);
 				
 			y--; // We want to check the same row again after the collapse, in case there was more than one row filled in
 			}
 		}
-//			Debug.Log(x+ " = " +(fieldWidth-maxBlockSize));
-		// If the loop above completed, then x will equal fieldWidth-maxBlockSize, which means the row was completely filled in
-		
+
 	}
 }
 	
@@ -363,6 +381,7 @@ public class GameManager : MonoBehaviour {
 	GameObject[] cubes =(GameObject.FindGameObjectsWithTag("Cube")) ;
 	
 	int cubesToMove = 0;
+	
 	foreach (GameObject cube in cubes) {
 		
 		if (cube.transform.localPosition.y > ((yStart*20))) {
@@ -370,7 +389,8 @@ public class GameManager : MonoBehaviour {
 			cubeReferences[cubesToMove++] = cube.transform;
 		}
 		else if (cube.transform.localPosition.y == ((yStart*20))) {
-			
+			//cube.GetComponent<BlockBlinker>().enabled=true;	
+			//	cubesToDestroy.Add(cube);
 			Destroy(cube);
 		}
 	}
@@ -382,6 +402,7 @@ public class GameManager : MonoBehaviour {
 	while (t <= 1.0) {
 		t += Time.deltaTime * 5.0;
 		for (int i = 0; i < cubesToMove; i++) {
+				
 				Vector3 sVal = cubeReferences[i].localPosition;
 			cubeReferences[i].localPosition =new Vector3(sVal.x,
 					Mathf.Lerp ((float)cubePositions[i], (float)(cubePositions[i]-20), (float)t),
@@ -402,20 +423,23 @@ public class GameManager : MonoBehaviour {
 	//		audio.Play();
 }
 	
+	
+	
 	public IEnumerator emptyYield()
 	{
 		yield return null;
 	}
 	
-	public IEnumerator yieldCheckRows(int yPos,int size)
+	public IEnumerator WaitThenCollapse(int val)
 	{
-		emptyYield();
-		CheckRows (yPos - size, size);
-		yield return null;
+		yield return new WaitForSeconds(1f);
+		
+		CollapseRows(val);
+		
 	}
+
 	
 	public void GameOver () {
-	//Debug.Log ("Game Over!");
 	
 	//save in database if game ins't tutorial
 	if(gameKind != "Tutorial" && !gameOver)

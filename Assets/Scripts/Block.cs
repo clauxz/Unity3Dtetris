@@ -203,12 +203,13 @@ private void CheckInput () {
 		//Get speed down ou up just in Manual game
 		if(GameManager.instance.gameKind == "Manually")
 		{
-			if(Input.GetKeyDown(KeyCode.KeypadPlus))
+		//	Debug.Log("+-");
+			if(Input.GetKeyDown(KeyCode.Plus)||Input.GetKeyDown(KeyCode.KeypadPlus))
 			{
 				GameManager.instance.blockNormalSpeed += .5;
 				GameManager.instance.delayTime -= GameManager.instance.delayTime * 0.4;
 			}
-			if(Input.GetKeyDown(KeyCode.KeypadMinus) && GameManager.instance.blockNormalSpeed > 2.0)
+			if(((Input.GetKeyDown(KeyCode.Minus)||Input.GetKeyDown(KeyCode.KeypadMinus))) && GameManager.instance.blockNormalSpeed > 2.0)
 			{
 				GameManager.instance.blockNormalSpeed -= .5;
 				GameManager.instance.delayTime += GameManager.instance.delayTime * 0.4;

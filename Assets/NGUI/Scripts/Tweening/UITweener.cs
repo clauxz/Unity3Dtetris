@@ -60,6 +60,17 @@ public abstract class UITweener : IgnoreTimeScale
 	/// </summary>
 
 	public float delay = 0f;
+	
+	
+	/// <summary>
+	/// The loop count.
+	/// </summary>
+	public int loopCount=0;
+	
+	/// <summary>
+	/// The _loop count.
+	/// </summary>
+	private int _loopCount=0;
 
 	/// <summary>
 	/// How long is the duration of the tween?
@@ -135,7 +146,7 @@ public abstract class UITweener : IgnoreTimeScale
 	/// Update on start, so there is no frame in-between.
 	/// </summary>
 
-	void Start () { mStartTime = Time.realtimeSinceStartup + delay; Update(); }
+	void Start () {_loopCount=loopCount; mStartTime = Time.realtimeSinceStartup + delay; Update(); }
 
 	/// <summary>
 	/// Update the tweening factor and call the virtual update function.
@@ -152,14 +163,35 @@ public abstract class UITweener : IgnoreTimeScale
 		// Loop style simply resets the play factor after it exceeds 1.
 		if (style == Style.Loop)
 		{
+			
+			if(_loopCount==0)
+			{
 			if (mFactor > 1f)
 			{
 				mFactor -= Mathf.Floor(mFactor);
+				
+			}
+			}
+			else
+			{
+			if (mFactor > 1f)
+			{
+				mFactor -= Mathf.Floor(mFactor);
+				
+			}
+			
+			if(_loopCount!=1)
+				_loopCount--;
+			else
+				enabled=false;
 			}
 		}
 		else if (style == Style.PingPong)
 		{
 			// Ping-pong style reverses the direction
+			if(_loopCount==0)
+			{
+				
 			if (mFactor > 1f)
 			{
 				mFactor = 1f - (mFactor - Mathf.Floor(mFactor));
@@ -170,6 +202,38 @@ public abstract class UITweener : IgnoreTimeScale
 				mFactor = -mFactor;
 				mFactor -= Mathf.Floor(mFactor);
 				mAmountPerDelta = -mAmountPerDelta;
+			}
+				
+			}
+			else
+			{
+					
+			if (mFactor > 1f)
+			{
+				mFactor = 1f - (mFactor - Mathf.Floor(mFactor));
+				mAmountPerDelta = -mAmountPerDelta;
+					
+			}
+			else if (mFactor < 0f)
+			{
+				mFactor = -mFactor;
+				mFactor -= Mathf.Floor(mFactor);
+				mAmountPerDelta = -mAmountPerDelta;
+					if(_loopCount!=1)
+						_loopCount--;
+					else
+					{
+						// Notify the event listener target
+			if (eventReceiver != null && !string.IsNullOrEmpty(callWhenFinished))
+			{
+				eventReceiver.SendMessage(callWhenFinished, this, SendMessageOptions.DontRequireReceiver);
+			}
+						enabled=false;
+					}
+			}
+					
+			
+					
 			}
 		}
 
