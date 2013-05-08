@@ -77,6 +77,8 @@ public class GameManager : MonoBehaviour {
 	float timeTaken = 0f;
 	float iTimeTaken=0f;
 	
+	public bool isGameStarts=false;
+	
 	public double delayTime=1.0f;
 	
 	public bool gameOver;
@@ -217,8 +219,8 @@ public class GameManager : MonoBehaviour {
 		
 		
 	//Our First Block Gets Spwn on the Field..
-		
-	StartCoroutine(SpawnBlock());
+	StartCoroutine(StartCountDown());
+//	StartCoroutine(SpawnBlock());
 	}
 	
 	
@@ -263,6 +265,8 @@ public class GameManager : MonoBehaviour {
 }
 	// Update is called once per frame
 	void Update () {
+		if(isGameStarts)
+		{
 		if(!gameOver)
 		{
 		timeTaken += Time.deltaTime;
@@ -276,6 +280,7 @@ public class GameManager : MonoBehaviour {
 			scoreLabel.GetComponent<UILabel>().text=score.ToString();
 			timeLabel.GetComponent<UILabel>().text=Mathf.RoundToInt(timeTaken).ToString();
 			gameSpeedLabel.GetComponent<UILabel>().text=this.blockNormalSpeed.ToString();
+		}
 		}
 	}
 	
@@ -310,8 +315,8 @@ public class GameManager : MonoBehaviour {
 				c.transform.localScale=new Vector3(20,20,1);
 				c.GetComponent<UISlicedSprite>().color=col;
 				c.GetComponent<BlockBlinker>().from=col;
-				c.GetComponent<BlockBlinker>().eventReceiver=this.gameObject;
-					c.GetComponent<BlockBlinker>().callWhenFinished="TweenFinish";
+			//	c.GetComponent<BlockBlinker>().eventReceiver=this.gameObject;
+			//		c.GetComponent<BlockBlinker>().callWhenFinished="TweenFinish";
 				//c.GetComponent<BlockBlinker>().enabled=true;
 				field[xPos+x, yPos-y] = true;
 			}
@@ -326,11 +331,7 @@ public class GameManager : MonoBehaviour {
 	StartCoroutine(SpawnBlock());
 	}
 	
-	public void TweenFinish()
-	{
-		
-		
-	}
+	
 	
 	public IEnumerator CheckRows (int yStart,int size) {
 		StartCoroutine(emptyYield());	// Wait a frame for block to be destroyed so we don't include those cubes
@@ -363,6 +364,39 @@ public class GameManager : MonoBehaviour {
 
 	}
 }
+	
+	public IEnumerator StartCountDown()
+	{
+		//GameObject countDown=GameObject.Find("CountDown");//.GetComponent<UILabel>();
+		GameObject Blocker = GameObject.Find("Blocker");
+		for(int x=1;x<5;x++)
+		{
+			GameObject countDown=GameObject.Find("null");// = ;
+			switch(x)
+			{
+				case 1:countDown= GameObject.Find("one");break;
+				case 2:countDown= GameObject.Find("two");break;
+				case 3:countDown= GameObject.Find("three");break;
+				case 4:countDown= GameObject.Find("start");break;
+			}
+			countDown.GetComponent<TweenScale>().enabled=true;
+			
+			if(x<4)
+				countDown.GetComponent<UILabel>().text=x.ToString();
+			else
+				countDown.GetComponent<UILabel>().text="Start";
+			
+			yield return new WaitForSeconds(1f);
+			Destroy(countDown);
+			
+			
+		}
+		
+		Destroy(GameObject.Find("BlockPanel"));
+		
+		isGameStarts=true;
+		StartCoroutine(SpawnBlock());
+	}
 	
 	public void CollapseRows (int yStart) {
 	// Move rows down in array, which effectively deletes the current row (yStart)
