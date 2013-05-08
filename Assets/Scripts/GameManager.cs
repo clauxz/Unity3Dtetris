@@ -315,7 +315,8 @@ public class GameManager : MonoBehaviour {
 //		audio.clip=blockDrop;
 			//audio.Play();
 	}
-	StartCoroutine(yieldCheckRows(yPos - size, size));
+		CheckRows (yPos - size, size);
+	//StartCoroutine(yieldCheckRows(yPos - size, size));
 	//yield CheckRows (yPos - size, size);
 		score ++;
 	StartCoroutine(SpawnBlock());
@@ -325,18 +326,23 @@ public class GameManager : MonoBehaviour {
 		StartCoroutine(emptyYield());	// Wait a frame for block to be destroyed so we don't include those cubes
 	if (yStart < 1) yStart = 1;
 		
-	int y=0;
-	int x=0;// Make sure to start above the floor
-	for (y = yStart; y < yStart+size; y++) {
-		for (x = maxBlockSize; x < fieldWidth-maxBlockSize; x++) { // We don't need to check the walls
+	//int y=0;
+//	int x=0;// Make sure to start above the floor
+	for (int y = yStart; y < yStart+size; y++) {
+		for (int x = maxBlockSize; x < fieldWidth-maxBlockSize; x++) { // We don't need to check the walls
 			if (!field[x, y]) break;
-		}
-		// If the loop above completed, then x will equal fieldWidth-maxBlockSize, which means the row was completely filled in
-		if (x == fieldWidth-maxBlockSize) {
-			StartCoroutine(emptyYield());
+			Debug.Log(x+ " = " +(fieldWidth-maxBlockSize));
+			if ((x+1) == fieldWidth-maxBlockSize) {
+				Debug.Log("Row Completed");
+		//	StartCoroutine(emptyYield());
 			CollapseRows (y);
+				
 			y--; // We want to check the same row again after the collapse, in case there was more than one row filled in
+			}
 		}
+//			Debug.Log(x+ " = " +(fieldWidth-maxBlockSize));
+		// If the loop above completed, then x will equal fieldWidth-maxBlockSize, which means the row was completely filled in
+		
 	}
 }
 	
@@ -355,17 +361,16 @@ public class GameManager : MonoBehaviour {
 	
 	// Destroy on-screen cubes on the deleted row, and store references to cubes that are above it
 	GameObject[] cubes =(GameObject.FindGameObjectsWithTag("Cube")) ;
-	Debug.Log(cubes.Length);
-	Debug.Log("Y start " +yStart);
+	
 	int cubesToMove = 0;
 	foreach (GameObject cube in cubes) {
-		Debug.Log(cube.transform.localPosition);
+		
 		if (cube.transform.localPosition.y > ((yStart*20))) {
 			cubePositions[cubesToMove] =(int) cube.transform.localPosition.y;
 			cubeReferences[cubesToMove++] = cube.transform;
 		}
 		else if (cube.transform.localPosition.y == ((yStart*20))) {
-			Debug.Log("cube Destroyed");
+			
 			Destroy(cube);
 		}
 	}
