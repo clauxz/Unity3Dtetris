@@ -350,19 +350,27 @@ public class GameManager : MonoBehaviour {
 			
 			if ((x+1) == fieldWidth-maxBlockSize) {
 				
-			GameObject[] cubes =(GameObject.FindGameObjectsWithTag("Cube")) ;
+		/*	GameObject[] cubes =(GameObject.FindGameObjectsWithTag("Cube")) ;
 	
 			int cubesToMove = 0;
-			Debug.Log(cubes.Length);
+		
 			foreach (GameObject cube in cubes) {
 			
 			if (cube.transform.localPosition.y == ((y*20))) {
 				
 				cube.GetComponent<BlockBlinker>().enabled=true;	
 				}
-			}	
+			}	*/
+			int[] rows = RowsToKill(y,size);
+			Debug.Log ("Rows Array Length "+rows.Length);
+			
 			yield return new WaitForSeconds(.5f);		
-			CollapseRows (y);
+				for(int z=0;z<rows.Length;z++)
+					{
+						CollapseRows (rows[z]-(z*1));
+					}
+					
+			
 				
 			y--; // We want to check the same row again after the collapse, in case there was more than one row filled in
 			}
@@ -370,6 +378,36 @@ public class GameManager : MonoBehaviour {
 
 	}
 }
+	
+	public int[] RowsToKill(int yStart,int size)
+	{
+		List<int> rows = new List<int>();
+		for (int y = yStart; y < yStart+size; y++) {
+		for (int x = maxBlockSize; x < fieldWidth-maxBlockSize; x++) { // We don't need to check the walls
+			if (!field[x, y]) break;
+			
+			if ((x+1) == fieldWidth-maxBlockSize) {
+			rows.Add(y);
+			GameObject[] cubes =(GameObject.FindGameObjectsWithTag("Cube")) ;
+			
+			foreach (GameObject cube in cubes) {
+			
+			if (cube.transform.localPosition.y == ((y*20))) {
+				
+				cube.GetComponent<BlockBlinker>().enabled=true;	
+							
+				}
+						
+			}
+			Debug.Log(y);
+			}
+			
+		}
+
+	}
+		return rows.ToArray();
+		
+	}
 	
 	public IEnumerator StartCountDown()
 	{
@@ -411,7 +449,7 @@ public class GameManager : MonoBehaviour {
 	
 	public void CollapseRows (int yStart) {
 	// Move rows down in array, which effectively deletes the current row (yStart)
-		
+	
 	for (int y = yStart; y < fieldHeight-1; y++) {
 		for (int x = maxBlockSize; x < fieldWidth-maxBlockSize; x++) {
 			field[x, y] = field[x, y+1];
@@ -434,8 +472,7 @@ public class GameManager : MonoBehaviour {
 			cubeReferences[cubesToMove++] = cube.transform;
 		}
 		else if (cube.transform.localPosition.y == ((yStart*20))) {
-			//cube.GetComponent<BlockBlinker>().enabled=true;	
-			//	cubesToDestroy.Add(cube);
+			
 			Destroy(cube);
 		}
 	}
@@ -443,18 +480,14 @@ public class GameManager : MonoBehaviour {
 	// Move the appropriate cubes down one square
 	// The third parameter in Mathf.Lerp is clamped to 1.0, which makes the transform.position.y be positioned exactly when done,
 	// which is important for the game logic (see the code just above)
-	var t = 0.0;
-	while (t <= 1.0) {
-		t += Time.deltaTime * 5.0;
+	
 		for (int i = 0; i < cubesToMove; i++) {
 				
-				Vector3 sVal = cubeReferences[i].localPosition;
-			cubeReferences[i].localPosition =new Vector3(sVal.x,
-					Mathf.Lerp ((float)cubePositions[i], (float)(cubePositions[i]-20), (float)t),
-					sVal.z);
+			Vector3 sVal = cubeReferences[i].localPosition;
+			cubeReferences[i].localPosition =new Vector3(sVal.x,(float)(cubePositions[i]-20),sVal.z);
 		}
-		StartCoroutine(emptyYield());
-	}
+		
+	
 	
 	// Make blocks drop faster when enough rows are cleared in TimePlus game
 	if(gameKind == "TimePlus"||gameKind=="DynamicM")
@@ -464,8 +497,7 @@ public class GameManager : MonoBehaviour {
 	}
 	totalRowsCleared++;
 	score += 5+(int)((float)(blockNormalSpeed*5)-5);
-	//	audio.clip=rowDestroyed;
-	//		audio.Play();
+	
 }
 	
 	
@@ -475,14 +507,6 @@ public class GameManager : MonoBehaviour {
 		yield return null;
 	}
 	
-	public IEnumerator WaitThenCollapse(int val)
-	{
-		yield return new WaitForSeconds(1f);
-		
-		CollapseRows(val);
-		
-	}
-
 	
 	public void GameOver () {
 	
