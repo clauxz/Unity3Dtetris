@@ -95,8 +95,8 @@ public class Block : MonoBehaviour {
 				return;
 			}
 			//StartCoroutine(yieldDelay((float)GameManager.instance.delayTime));
-			this.playable=true;
-	
+			
+			StartCoroutine( Delay(.5f));
 		}
 		
 		
@@ -106,7 +106,7 @@ public class Block : MonoBehaviour {
 	public IEnumerator Delay (float time) {
 	
 		yield return new WaitForSeconds(time);
-	
+		this.playable=true;
 	}
 	
 	public IEnumerator yieldDelay(float time)

@@ -27,6 +27,13 @@ public enum ButtonType{
 
 
 
+public enum LanguageType{
+	English=0,
+	Japanese=1
+}
+
+
+
 public class GameManager : MonoBehaviour {
 	
 	public static GameManager instance;
@@ -53,6 +60,7 @@ public class GameManager : MonoBehaviour {
 	public GameObject blockHolder;
 	
 	public GameObject block;
+	public GameObject counter;
 	
 	public GameObject nextBlockObject;
 	public GameObject gameOverLabel;
@@ -361,6 +369,7 @@ public class GameManager : MonoBehaviour {
 				cube.GetComponent<BlockBlinker>().enabled=true;	
 				}
 			}	*/
+					
 			int[] rows = RowsToKill(y,size);
 			Debug.Log ("Rows Array Length "+rows.Length);
 			

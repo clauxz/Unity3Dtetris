@@ -163,7 +163,9 @@
      <Compile Include="Assets\Scripts\BlockBlinker.cs" />
      <Compile Include="Assets\Scripts\EventManager.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
+     <Compile Include="Assets\Scripts\LanguageChange.cs" />
      <Compile Include="Assets\Scripts\ScoreboardScreen.cs" />
+     <Compile Include="Assets\Scripts\SelectLanguage.cs" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Depth Cutout.shader" />
      <None Include="Assets\Atlas\MetroE.txt" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Masked Colored.shader" />
