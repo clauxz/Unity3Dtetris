@@ -94,7 +94,7 @@ public class Block : MonoBehaviour {
 					
 				return;
 			}
-			StartCoroutine(yieldDelay((float)GameManager.instance.delayTime));
+			//StartCoroutine(yieldDelay((float)GameManager.instance.delayTime));
 			this.playable=true;
 	
 		}
@@ -126,7 +126,8 @@ public class Block : MonoBehaviour {
 void Update () {
 	if (playable) {
 		// Check to see if block would collide if moved down one row
-		yPosition-=(int)fallSpeed;
+		
+		yPosition-=(int)fallSpeed;//fallSpeed*Time.deltaTime;
 	//	int newY= (int)ConvertRange(170,-90,13,0,yPosition);
 		if (GameManager.instance.CheckBlock (blockMatrix, (int)(xPosition/20), (int)(yPosition/20))) {
 			GameManager.instance.SetBlock (blockMatrix, (xPosition/20), (yPosition+20)/20, this.blockColor);
@@ -156,12 +157,12 @@ void Update () {
 					transform.localPosition=new Vector3(val.x,(i - halfSize),val.z);
 				}
 				//transform.position.y = i - halfSize;
-			emptyYield();
+		//	emptyYield();
 		//	yield;
 		}
 		
 		CheckInput();
-		emptyYield();
+	//	emptyYield();
 	}
 }
 	
@@ -184,6 +185,7 @@ private void CheckInput () {
 		
 		if (Input.GetKey(KeyCode.DownArrow)||Input.GetKey(KeyCode.S)||Input.GetKey(KeyCode.Space)) {
 			fallSpeed =(float)GameManager.instance.blockDropSpeed;
+			GameManager.instance.isDropPressed=true;
 			//dropped = true;
 			//Manager.use.score += 5;
 			//break;	// Break out of while loop, so the coroutine stops (we don't care about input anymore)
@@ -201,17 +203,17 @@ private void CheckInput () {
 		}
 		
 		//Get speed down ou up just in Manual game
-		if(GameManager.instance.gameKind == "Manually")
+		if(GameManager.instance.gameKind == "Manually"||GameManager.instance.gameKind=="DynamicM")
 		{
 		//	Debug.Log("+-");
 			if(Input.GetKeyDown(KeyCode.Plus)||Input.GetKeyDown(KeyCode.KeypadPlus))
 			{
-				GameManager.instance.blockNormalSpeed += .5;
+				GameManager.instance.blockNormalSpeed += .2;
 				GameManager.instance.delayTime -= GameManager.instance.delayTime * 0.4;
 			}
-			if(((Input.GetKeyDown(KeyCode.Minus)||Input.GetKeyDown(KeyCode.KeypadMinus))) && GameManager.instance.blockNormalSpeed > 2.0)
+			if(((Input.GetKeyDown(KeyCode.Minus)||Input.GetKeyDown(KeyCode.KeypadMinus))) && GameManager.instance.blockNormalSpeed > 1.0)
 			{
-				GameManager.instance.blockNormalSpeed -= .5;
+				GameManager.instance.blockNormalSpeed -= .2;
 				GameManager.instance.delayTime += GameManager.instance.delayTime * 0.4;
 			}
 		}

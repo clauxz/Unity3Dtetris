@@ -43,6 +43,11 @@ public class EventManager : MonoBehaviour {
 			PlayerPrefs.SetInt("GameSpeed", GameManager.levelValue);
 			Application.LoadLevel("TetrisClone");
 			break;
+		case ButtonType.DynamicM:
+			PlayerPrefs.SetString("GameKind", "DynamicM");
+			PlayerPrefs.SetInt("GameSpeed", GameManager.levelValue);
+			Application.LoadLevel("TetrisClone");
+			break;
 		case ButtonType.Constant:
 			PlayerPrefs.SetString("GameKind", "Constant");
 			PlayerPrefs.SetInt("GameSpeed", GameManager.levelValue);
@@ -77,7 +82,10 @@ public class EventManager : MonoBehaviour {
 			Application.LoadLevel("TetrisInit");
 			break;
 		case ButtonType.inGameBack:
-			Application.LoadLevel("TetrisStart");
+			if(GameManager.instance.gameKind=="Tutorial")
+				Application.LoadLevel("TetrisInit");
+			else
+				Application.LoadLevel("TetrisStart");
 			break;
 		case ButtonType.exportCSV:
 			

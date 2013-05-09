@@ -20,7 +20,8 @@ public enum ButtonType{
 	inGameBack=14,
 	exportCSV=15,
 	deleteDB=16,
-	deleteRow=17
+	deleteRow=17,
+	DynamicM=18
 	
 }
 
@@ -60,6 +61,7 @@ public class GameManager : MonoBehaviour {
 	public GameObject destrowLabel;
 	public GameObject gameSpeedLabel;
 	public int RowToCollapse;
+	public bool isDropPressed=false;
 
 	
 	//public static bool isOnceSpawn=false;
@@ -246,7 +248,7 @@ public class GameManager : MonoBehaviour {
 	
 	
 	
-	public IEnumerator SpawnBlock () {
+	public void SpawnBlock () {
 	//Instantiating new block
 	currentBlock = nextBlock;   //Line 
 	GameObject go =(GameObject) Instantiate (block);
@@ -261,7 +263,7 @@ public class GameManager : MonoBehaviour {
 	
 	//Randoming next block
 	ChangeNextBlock();
-	yield return new WaitForSeconds (1f);
+	
 }
 	// Update is called once per frame
 	void Update () {
@@ -271,11 +273,11 @@ public class GameManager : MonoBehaviour {
 		{
 		timeTaken += Time.deltaTime;
 		iTimeTaken = Mathf.Ceil(timeTaken);
-		if(gameKind == "TimePlus" && iTimeTaken%10 == 0 && lastTimeTaken != iTimeTaken)
+	/*	if(gameKind == "TimePlus" && iTimeTaken%10 == 0 && lastTimeTaken != iTimeTaken)
 		{
 			lastTimeTaken = iTimeTaken;
 			score += 2;
-		}
+		}*/
 			destrowLabel.GetComponent<UILabel>().text=totalRowsCleared.ToString();
 			scoreLabel.GetComponent<UILabel>().text=score.ToString();
 			timeLabel.GetComponent<UILabel>().text=Mathf.RoundToInt(timeTaken).ToString();
@@ -315,9 +317,7 @@ public class GameManager : MonoBehaviour {
 				c.transform.localScale=new Vector3(20,20,1);
 				c.GetComponent<UISlicedSprite>().color=col;
 				c.GetComponent<BlockBlinker>().from=col;
-			//	c.GetComponent<BlockBlinker>().eventReceiver=this.gameObject;
-			//		c.GetComponent<BlockBlinker>().callWhenFinished="TweenFinish";
-				//c.GetComponent<BlockBlinker>().enabled=true;
+			
 				field[xPos+x, yPos-y] = true;
 			}
 		}
@@ -327,8 +327,14 @@ public class GameManager : MonoBehaviour {
 		
 	StartCoroutine(CheckRows (yPos - size, size));
 	
-	score ++;
-	StartCoroutine(SpawnBlock());
+	if(isDropPressed)
+			score+=2+(int)((float)(blockNormalSpeed*5)-5);
+		else
+			score+=1+(int)((float)(blockNormalSpeed*5)-5);
+		
+	
+	isDropPressed=false;
+	SpawnBlock();
 	}
 	
 	
@@ -355,7 +361,7 @@ public class GameManager : MonoBehaviour {
 				cube.GetComponent<BlockBlinker>().enabled=true;	
 				}
 			}	
-			yield return new WaitForSeconds(1f);		
+			yield return new WaitForSeconds(.5f);		
 			CollapseRows (y);
 				
 			y--; // We want to check the same row again after the collapse, in case there was more than one row filled in
@@ -374,17 +380,22 @@ public class GameManager : MonoBehaviour {
 			GameObject countDown=GameObject.Find("null");// = ;
 			switch(x)
 			{
-				case 1:countDown= GameObject.Find("one");break;
-				case 2:countDown= GameObject.Find("two");break;
-				case 3:countDown= GameObject.Find("three");break;
-				case 4:countDown= GameObject.Find("start");break;
+				case 1:countDown= GameObject.Find("one");
+						countDown.GetComponent<UILabel>().text="3";
+					break;
+				case 2:countDown= GameObject.Find("two");
+						countDown.GetComponent<UILabel>().text="2";
+					break;
+				case 3:countDown= GameObject.Find("three");
+					countDown.GetComponent<UILabel>().text="1";
+					break;
+				case 4:countDown= GameObject.Find("start");
+					countDown.GetComponent<UILabel>().text="Start!";
+					break;
 			}
 			countDown.GetComponent<TweenScale>().enabled=true;
 			
-			if(x<4)
-				countDown.GetComponent<UILabel>().text=x.ToString();
-			else
-				countDown.GetComponent<UILabel>().text="Start";
+			
 			
 			yield return new WaitForSeconds(1f);
 			Destroy(countDown);
@@ -395,7 +406,7 @@ public class GameManager : MonoBehaviour {
 		Destroy(GameObject.Find("BlockPanel"));
 		
 		isGameStarts=true;
-		StartCoroutine(SpawnBlock());
+		SpawnBlock();
 	}
 	
 	public void CollapseRows (int yStart) {
@@ -446,13 +457,13 @@ public class GameManager : MonoBehaviour {
 	}
 	
 	// Make blocks drop faster when enough rows are cleared in TimePlus game
-	if(gameKind == "TimePlus")
+	if(gameKind == "TimePlus"||gameKind=="DynamicM")
 	{
 		blockNormalSpeed += .2;
 		delayTime -= delayTime * 0.08;
 	}
 	totalRowsCleared++;
-	score += 10;
+	score += 5+(int)((float)(blockNormalSpeed*5)-5);
 	//	audio.clip=rowDestroyed;
 	//		audio.Play();
 }
