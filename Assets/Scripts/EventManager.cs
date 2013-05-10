@@ -16,7 +16,7 @@ public class EventManager : MonoBehaviour {
 				Application.LoadLevel("TetrisRegister");
 			break;
 		case ButtonType.Tutorial:
-			PlayerPrefs.SetString("GameKind", "Tutorial");
+			PlayerPrefs.SetString("GameKind", "DynamicM");
 			Application.LoadLevel("TetrisClone");
 			break;
 		case ButtonType.Score:
@@ -82,7 +82,7 @@ public class EventManager : MonoBehaviour {
 			Application.LoadLevel("TetrisInit");
 			break;
 		case ButtonType.inGameBack:
-			if(GameManager.instance.gameKind=="Tutorial")
+			if(GameManager.instance.gameKind=="DynamicM")
 				Application.LoadLevel("TetrisInit");
 			else
 				Application.LoadLevel("TetrisStart");

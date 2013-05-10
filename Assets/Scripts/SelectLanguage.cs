@@ -3,7 +3,7 @@ using System.Collections;
 
 public class SelectLanguage : MonoBehaviour {
 	
-	private LanguageType lang;
+	public LanguageType lang;
 	
 	public GameObject LanguageUI;
 	
@@ -17,7 +17,8 @@ public class SelectLanguage : MonoBehaviour {
 		
 		
 		string language = PlayerPrefs.GetString("language", "English");
-		
+		if(lang==LanguageType.None)
+		{
 		if(language=="English")
 		{
 			lang=LanguageType.English;
@@ -25,6 +26,7 @@ public class SelectLanguage : MonoBehaviour {
 		else
 		{
 			lang=LanguageType.Japanese;
+		}
 		}
 		
 		LanguageChange[] targetObjs = LanguageUI.GetComponentsInChildren<LanguageChange>();
@@ -52,6 +54,7 @@ public class SelectLanguage : MonoBehaviour {
 		{
 			lang=LanguageType.Japanese;
 		}
+		
 		
 		LanguageChange[] targetObjs = LanguageUI.GetComponentsInChildren<LanguageChange>();
 		

@@ -124,7 +124,7 @@ public class Block : MonoBehaviour {
 	}
 	
 void Update () {
-	if (playable) {
+	if (playable&&!(GameManager.instance.isGamePaused)) {
 		// Check to see if block would collide if moved down one row
 		
 		yPosition-=(int)fallSpeed;//fallSpeed*Time.deltaTime;
@@ -182,6 +182,8 @@ private void CheckInput () {
 		if (Input.GetKeyDown(KeyCode.UpArrow)||Input.GetKeyDown(KeyCode.W)) {
 			RotateBlock();
 		}
+		
+		
 		
 		if (Input.GetKey(KeyCode.DownArrow)||Input.GetKey(KeyCode.S)||Input.GetKey(KeyCode.Space)) {
 			fallSpeed =(float)GameManager.instance.blockDropSpeed;

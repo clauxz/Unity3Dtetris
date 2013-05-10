@@ -28,8 +28,10 @@ public enum ButtonType{
 
 
 public enum LanguageType{
+	
 	English=0,
-	Japanese=1
+	Japanese=1,
+	None=2
 }
 
 
@@ -61,6 +63,8 @@ public class GameManager : MonoBehaviour {
 	
 	public GameObject block;
 	public GameObject counter;
+	public GameObject pauselbl;
+	public GameObject pauseBlocker;
 	
 	public GameObject nextBlockObject;
 	public GameObject gameOverLabel;
@@ -103,6 +107,8 @@ public class GameManager : MonoBehaviour {
 	private bool isNext;
 	
 	
+	
+	public bool isGamePaused=false;
 	private int rowsCleared = 0;
 
 
@@ -196,7 +202,7 @@ public class GameManager : MonoBehaviour {
 		fieldHeight = fieldHeight + maxBlockSize;
 		field=new bool[fieldWidth,fieldHeight];
 		//Retrieving game type
-	gameKind = PlayerPrefs.GetString("GameKind", "TimePlus");
+	gameKind =PlayerPrefs.GetString("GameKind", "TimePlus");
 	
 	//Updating speed by start level chosen previously
 	var level = PlayerPrefs.GetInt("GameSpeed", 1);
@@ -273,11 +279,30 @@ public class GameManager : MonoBehaviour {
 	ChangeNextBlock();
 	
 }
+	
+	public void PauseGame()
+	{
+		pauselbl.GetComponent<UILabel>().enabled=true;
+		pauseBlocker.GetComponent<BoxCollider>().enabled=true;
+		pauseBlocker.GetComponent<UISlicedSprite>().enabled=true;
+		isGamePaused=true;
+		
+	}
+	
+	public void ResumeGame()
+	{
+		pauselbl.GetComponent<UILabel>().enabled=false;
+		pauseBlocker.GetComponent<BoxCollider>().enabled=false;
+		pauseBlocker.GetComponent<UISlicedSprite>().enabled=false;
+		isGamePaused=false;
+		
+	}
+	
 	// Update is called once per frame
 	void Update () {
 		if(isGameStarts)
 		{
-		if(!gameOver)
+		if(!(gameOver)&&!(isGamePaused))
 		{
 		timeTaken += Time.deltaTime;
 		iTimeTaken = Mathf.Ceil(timeTaken);
@@ -291,7 +316,16 @@ public class GameManager : MonoBehaviour {
 			timeLabel.GetComponent<UILabel>().text=Mathf.RoundToInt(timeTaken).ToString();
 			gameSpeedLabel.GetComponent<UILabel>().text=this.blockNormalSpeed.ToString();
 		}
+			
+			if (Input.GetKeyDown(KeyCode.P)) {
+				if(!isGamePaused)
+					PauseGame();
+				else
+					ResumeGame();
+			}
 		}
+		
+		
 	}
 	
 	public void ChangeNextBlock () {

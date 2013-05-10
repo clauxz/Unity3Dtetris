@@ -167,6 +167,7 @@
      <Compile Include="Assets\Scripts\ScoreboardScreen.cs" />
      <Compile Include="Assets\Scripts\SelectLanguage.cs" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Depth Cutout.shader" />
+     <None Include="Assets\Atlas\Segoe UI\Segoe UI.txt" />
      <None Include="Assets\Atlas\MetroE.txt" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Masked Colored.shader" />
      <None Include="Assets\NGUI\Examples\Models\Orc\Orc Skin.shader" />
