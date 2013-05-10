@@ -181,16 +181,18 @@ private void CheckInput () {
 
 		if (Input.GetKeyDown(KeyCode.UpArrow)||Input.GetKeyDown(KeyCode.W)) {
 			RotateBlock();
+			GameManager.instance.numOfRotations++;
 		}
 		
-		
+		if (Input.GetKeyDown(KeyCode.DownArrow)||Input.GetKeyDown(KeyCode.S)||Input.GetKeyDown(KeyCode.Space)) {
+			GameManager.instance.numOfDropPressed++;
+			
+		}
 		
 		if (Input.GetKey(KeyCode.DownArrow)||Input.GetKey(KeyCode.S)||Input.GetKey(KeyCode.Space)) {
 			fallSpeed =(float)GameManager.instance.blockDropSpeed;
 			GameManager.instance.isDropPressed=true;
-			//dropped = true;
-			//Manager.use.score += 5;
-			//break;	// Break out of while loop, so the coroutine stops (we don't care about input anymore)
+			
 		}
 		else
 		{
@@ -212,11 +214,13 @@ private void CheckInput () {
 			{
 				GameManager.instance.blockNormalSpeed += .2;
 				GameManager.instance.delayTime -= GameManager.instance.delayTime * 0.4;
+				GameManager.instance.numOfSpeedUp++;
 			}
 			if(((Input.GetKeyDown(KeyCode.Minus)||Input.GetKeyDown(KeyCode.KeypadMinus))) && GameManager.instance.blockNormalSpeed > 1.0)
 			{
 				GameManager.instance.blockNormalSpeed -= .2;
 				GameManager.instance.delayTime += GameManager.instance.delayTime * 0.4;
+				GameManager.instance.numOfSpeedDown++;
 			}
 		}
 		

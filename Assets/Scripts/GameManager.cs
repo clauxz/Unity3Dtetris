@@ -106,6 +106,13 @@ public class GameManager : MonoBehaviour {
 	private GameObject goNextBlock;
 	private bool isNext;
 	
+	public int numOfRotations=0;
+	public int numOfDropPressed=0;
+	public int numOfBlockGen=0;
+	public int numOfSpeedUp=0;
+	public int numOfSpeedDown=0;
+	public System.DateTime startingDate;
+	
 	
 	
 	public bool isGamePaused=false;
@@ -235,6 +242,8 @@ public class GameManager : MonoBehaviour {
 		
 		
 	//Our First Block Gets Spwn on the Field..
+	startingDate=System.DateTime.Now;
+	
 	StartCoroutine(StartCountDown());
 //	StartCoroutine(SpawnBlock());
 	}
@@ -263,6 +272,7 @@ public class GameManager : MonoBehaviour {
 	
 	
 	public void SpawnBlock () {
+	numOfBlockGen++;
 	//Instantiating new block
 	currentBlock = nextBlock;   //Line 
 	GameObject go =(GameObject) Instantiate (block);
@@ -578,17 +588,24 @@ public class GameManager : MonoBehaviour {
 		PlayerPrefs.SetString(curPlayer + "_game", gameKind);
 		PlayerPrefs.SetString(curPlayer + "_status", "active");
 		PlayerPrefs.SetString(curPlayer + "_prefix", curPlayer);
-				
+			
+		PlayerPrefs.SetInt(curPlayer + "_numOfRotations",numOfRotations);
+		PlayerPrefs.SetInt(curPlayer + "_numOfDropPressed",numOfDropPressed);
+		PlayerPrefs.SetInt(curPlayer + "_numOfBlockGen",numOfBlockGen);
+		PlayerPrefs.SetInt(curPlayer + "_numOfSpeedUp",numOfSpeedUp);
+		PlayerPrefs.SetInt(curPlayer + "_numOfSpeedDown",numOfSpeedDown);
+		PlayerPrefs.SetString(curPlayer + "_startingDate",startingDate.ToString());
+			
 		PlayerPrefs.SetInt("Players", ++currentId);		
 		
-		var mess = "CurrPlayer: " + curPlayer + "\n" +
+	/*	var mess = "CurrPlayer: " + curPlayer + "\n" +
 		curPlayer + "_name: " + n + "\n" +
 		curPlayer + "_score: " + score + "\n" +
 		curPlayer + "_level: " + totalRowsCleared + "\n" +
 		curPlayer + "_rows: " + totalRowsCleared + "\n" +
 		curPlayer + "_timetaken: " + timeTaken + "\n" +
 		curPlayer + "_game: " + gameKind;
-		//Debug.Log(mess);
+		//Debug.Log(mess);*/
 		hasSaved = true;
 	}
 	gameOver = true;

@@ -17,6 +17,12 @@ public class ScoreboardScreen : MonoBehaviour {
 	private string[] games;
 	public string[] status;
 	public string[] prefixes;
+	public int[] numOfRotates;
+	public int[] numOfDrops;
+	public int[] numOfBlockGen;
+	public int[] numOfSpeedUp;
+	public int[] numOfSpeedDown;
+	public string[] startingDates;
 	
 	public static ScoreboardScreen instance;
 	
@@ -34,6 +40,12 @@ public class ScoreboardScreen : MonoBehaviour {
 		games = new string[totalPlayers];
 		status = new string[totalPlayers];
 		prefixes = new string[totalPlayers];
+		numOfBlockGen = new int[totalPlayers];
+		numOfRotates = new int[totalPlayers];
+		numOfDrops = new int[totalPlayers];
+		numOfSpeedDown= new int[totalPlayers];
+		numOfSpeedUp = new int[totalPlayers];
+		startingDates = new string[totalPlayers];
 		
 		for(int i = 1; i < totalPlayers; i++)
 		{
@@ -46,6 +58,14 @@ public class ScoreboardScreen : MonoBehaviour {
 			games[i] = PlayerPrefs.GetString(prefix+"_game");
 			status[i] = PlayerPrefs.GetString(prefix+"_status");
 			prefixes[i] = PlayerPrefs.GetString(prefix+"_prefix");
+			numOfBlockGen[i] = PlayerPrefs.GetInt(prefix+"_numOfBlockGen");
+			numOfRotates[i] = PlayerPrefs.GetInt(prefix+"_numOfRotations");
+			numOfDrops[i] = PlayerPrefs.GetInt(prefix+"_numOfDropPressed");
+			numOfSpeedDown[i] = PlayerPrefs.GetInt(prefix+"_numOfSpeedDown");
+			numOfSpeedUp[i] = PlayerPrefs.GetInt(prefix+"_numOfSpeedUp");
+			
+			startingDates[i] = PlayerPrefs.GetString(prefix+"_startingDate");
+			
 		}
 	
 	//Sorting by Higher Score
@@ -73,7 +93,31 @@ public class ScoreboardScreen : MonoBehaviour {
 				
 				int scoreaux = scores[j];
 				scores[j] = scores[i];
-				scores[i] = scoreaux;			
+				scores[i] = scoreaux;	
+					
+				int numOfRotatesAux = numOfRotates[j];
+				numOfRotates[j] = numOfRotates[i];
+				numOfRotates[i] = numOfRotatesAux;
+					
+				int numOfDropsAux = numOfDrops[j];
+				numOfDrops[j] = numOfDrops[i];
+				numOfDrops[i] = numOfDropsAux;
+					
+				int numOfBlockGenAux = numOfBlockGen[j];
+				numOfBlockGen[j] = numOfBlockGen[i];
+				numOfBlockGen[i] = numOfBlockGenAux;
+					
+				int numOfSpeedUpAux = numOfSpeedUp[j];
+				numOfSpeedUp[j] = numOfSpeedUp[i];
+				numOfSpeedUp[i] =numOfSpeedUpAux;
+					
+				int numOfSpeedDownAux = numOfSpeedDown[j];
+				numOfSpeedDown[j] = numOfSpeedDown[i];
+				numOfSpeedDown[i] = numOfSpeedDownAux;
+					
+				string startingDatesaux = startingDates[j];
+				startingDates[j] = startingDates[i];
+				startingDates[i] = startingDatesaux;
 				
 				string gameaux = games[j];
 				games[j] = games[i];
@@ -111,17 +155,23 @@ public class ScoreboardScreen : MonoBehaviour {
 				
 						nItem.transform.localPosition=Vector3.zero;
 				
-						nItem.transform.localScale=Vector3.one;
+						nItem.transform.localScale=Vector3.one*(float)0.55;
 				
 						UILabel[] array = nItem.GetComponentsInChildren<UILabel>();
 						array[0].text=string.Format("{0:F1}", times[i]);
 						array[1].text=games[i];
-				array[2].text=levels[i].ToString();
-				array[3].text=names[i];
-				array[4].text=rows[i].ToString();
-				array[5].text=scores[i].ToString();
-				GameObject.Find("Delete").name="delete"+i;
-				nItem.GetComponent<UIDragCamera>().draggableCamera=camera.GetComponent<UIDraggableCamera>();
+						array[2].text=levels[i].ToString();
+						array[3].text=names[i];
+						array[4].text=rows[i].ToString();
+						array[5].text=scores[i].ToString();
+						array[6].text=numOfRotates[i].ToString();
+				array[7].text=numOfDrops[i].ToString();
+				array[8].text=numOfBlockGen[i].ToString();
+				array[9].text=numOfSpeedUp[i].ToString();
+				array[10].text=numOfSpeedDown[i].ToString();
+				array[11].text=startingDates[i];//numOfRotates[i].ToString();
+						GameObject.Find("Delete").name="delete"+i;
+						nItem.GetComponent<UIDragCamera>().draggableCamera=camera.GetComponent<UIDraggableCamera>();
 			/*			GUILayout.BeginHorizontal();
 							Label( names[i], false, 100);
 							Label( games[i], false, 100);
@@ -212,13 +262,13 @@ public class ScoreboardScreen : MonoBehaviour {
 	public void ExportToCSV()
 	{
 		StreamWriter sw = new StreamWriter(Application.dataPath + "/export.csv");
-		string message = string.Format("{0};{1};{2};{3};{4};{5};", "Name", "Game", "Level","Destroyed Rows","Time","Score");
+		string message = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}", "Name", "Game", "Level","Destroyed Rows","Time","Score","Rotates","Drops","Blocks","SpeedUps","SpeedDowns","DateTime");
 		sw.WriteLine(message);
 		for(int i = 1; i < totalPlayers; i++)
 		{
 			if(status[i] == "active")
 			{
-				message = string.Format("{0},{1},{2},{3},{4},{5},", names[i], games[i], levels[i].ToString(),rows[i].ToString(),string.Format("{0:F1}", times[i]),scores[i].ToString());
+				message = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}", names[i], games[i], levels[i].ToString(),rows[i].ToString(),string.Format("{0:F1}", times[i]),scores[i].ToString(),numOfRotates[i].ToString(),numOfDrops[i].ToString(),numOfBlockGen[i].ToString(),numOfSpeedUp[i].ToString(),numOfSpeedDown[i].ToString(),startingDates[i]);
 				sw.WriteLine(message);
 			}
 		}
