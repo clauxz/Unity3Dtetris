@@ -2,6 +2,11 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+
+/// <summary>
+/// Button Type Selection Enumeration for easy event atachment to the Buttons 
+/// Its heavily being used by EventManager.cs
+/// </summary>
 public enum ButtonType{
 	Start=0,
 	Tutorial=1,
@@ -26,7 +31,9 @@ public enum ButtonType{
 }
 
 
-
+/// <summary>
+/// Language Type Toggle Enumeration For easy Language script atachment to sprites for Toggling
+/// </summary>
 public enum LanguageType{
 	
 	English=0,
@@ -35,50 +42,58 @@ public enum LanguageType{
 }
 
 
-
+/// <summary>
+/// Game manager.
+/// </summary>
 public class GameManager : MonoBehaviour {
 	
+	//SingleTon static class to be utlized by whole Main Game For logic Manipulation
 	public static GameManager instance;
 	
+	//static level selection initiale Level settings
 	public static int levelValue=1;
 	
+	//Setting up Pre defined Block Patterns
 	public List<string[]> blocks;
+	
+	//Setting up Predegined Block Colors.
 	public List<Color> blocksColors;
 	
+	//Main Field Matrix Array For ingame block manipulation
 	public static bool[,] field;
 	
-	public int GameScale;
-	public int framePosX;
-	public int framePosY;
-	//Tetris Field Size...
-	public AudioClip blockDrop;
-	public AudioClip rowDestroyed;
-	
+	//Main Block Sprite Object Ataches here..
 	public GameObject Node;
 	
+	//Field Width and Height to define blocks
 	public int fieldWidth;
 	public int fieldHeight;
 	
+	//block holder where all blocks would be parented
 	public GameObject blockHolder;
 	
+	//Main Block Object which would be falling
 	public GameObject block;
 	public GameObject counter;
 	public GameObject pauselbl;
 	public GameObject pauseBlocker;
 	
+	//Ngui SceneObjects For changing them dynamacaly
 	public GameObject nextBlockObject;
 	public GameObject gameOverLabel;
 	public GameObject scoreLabel;
 	public GameObject timeLabel;
 	public GameObject destrowLabel;
 	public GameObject gameSpeedLabel;
+	
+	//Rows To Collapse as defind
 	public int RowToCollapse;
+	
+	//Checking if Drop is pressed
 	public bool isDropPressed=false;
 
 	
-	//public static bool isOnceSpawn=false;
-	//Block Settings...
-	//public GameObject node;
+	//Maximum BLock Size
 	public int maxBlockSize;
 	public double blockNormalSpeed;
 	public double blockDropSpeed;
@@ -122,7 +137,9 @@ public class GameManager : MonoBehaviour {
 	
 	//Define Types of Blocks here..
 	
-	
+	/// <summary>
+	/// Initiates the blocks.
+	/// </summary>
 	private void InitiateBlocks()
 	{
 		blocks = new List<string[]>();
@@ -204,92 +221,112 @@ public class GameManager : MonoBehaviour {
 			return;
 		}
 		
-		//Clearfield(fieldWidth,fieldHeight);
+		
 		fieldWidth = fieldWidth + maxBlockSize*2;
 		fieldHeight = fieldHeight + maxBlockSize;
 		field=new bool[fieldWidth,fieldHeight];
+		
 		//Retrieving game type
-	gameKind =PlayerPrefs.GetString("GameKind", "TimePlus");
+		gameKind =PlayerPrefs.GetString("GameKind", "TimePlus");
 	
-	//Updating speed by start level chosen previously
-	var level = PlayerPrefs.GetInt("GameSpeed", 1);
-	for(int i = 1; i < level; i++)
-	{
-		blockNormalSpeed += 0.5f;
-		delayTime -= delayTime * 0.4;
-	}
+		//Updating speed by start level chosen previously
+		var level = PlayerPrefs.GetInt("GameSpeed", 1);
 		
-	for (int i = 0; i < fieldHeight; i++) {
-		for (int j = 0; j < maxBlockSize; j++) {
-			field[j, i] = true;
-			field[fieldWidth-1-j, i] = true;
+		for(int i = 1; i < level; i++)
+		{
+			blockNormalSpeed += 0.5f;
+			delayTime -= delayTime * 0.4;
 		}
-	}
-	for (int i = 0; i < fieldWidth; i++) {
-		field[i, 0] = true;
-	}
+		
+		for (int i = 0; i < fieldHeight; i++) {
+			for (int j = 0; j < maxBlockSize; j++) {
+				field[j, i] = true;
+				field[fieldWidth-1-j, i] = true;
+			}
+		}
+		
+		for (int i = 0; i < fieldWidth; i++) {
+			field[i, 0] = true;
+		}
 	
-//Cube Refrences and position Array is init
-	cubeReferences = new Transform[fieldWidth * fieldHeight];
-	cubePositions = new int[fieldWidth * fieldHeight];
+		//Cube Refrences and position Array is init
+		cubeReferences = new Transform[fieldWidth * fieldHeight];
+		cubePositions = new int[fieldWidth * fieldHeight];
 	
-	//Every time it starts the Manager, gameOver is false
-	gameOver = false;
+		//Every time it starts the Manager, gameOver is false
+		gameOver = false;
 	
 		
-	//Random BLock Integer Gets Generated ...	
-	nextBlock = Random.Range(0, blocks.Count);
+		//Random BLock Integer Gets Generated ...	
+		nextBlock = Random.Range(0, blocks.Count);
 		
 		
-	//Our First Block Gets Spwn on the Field..
-	startingDate=System.DateTime.Now;
+		//Our First Block Gets Spwn on the Field..
+		startingDate=System.DateTime.Now;
 	
-	StartCoroutine(StartCountDown());
-//	StartCoroutine(SpawnBlock());
+		StartCoroutine(StartCountDown());
+		
 	}
 	
 	
-	
+	/// <summary>
+	/// Checks the block.
+	/// </summary>
+	/// <returns>
+	/// The block.
+	/// </returns>
+	/// <param name='blockMatrix'>
+	/// If set to <c>true</c> block matrix.
+	/// </param>
+	/// <param name='xPos'>
+	/// If set to <c>true</c> x position.
+	/// </param>
+	/// <param name='yPos'>
+	/// If set to <c>true</c> y position.
+	/// </param>
 	public bool CheckBlock (bool[,] blockMatrix,int xPos,int yPos){
-	//	Debug.Log(xPos+"  " +yPos);
-	//	try{
-	int size = (blockMatrix.GetLength(0));
 	
-	for (int y = size-1; y >= 0; y--) {
-		for (int x = 0; x < size; x++) {
+		int size = (blockMatrix.GetLength(0));
+	
+		for (int y = size-1; y >= 0; y--) {
+			for (int x = 0; x < size; x++) {
 				if (blockMatrix[x, y] && field[xPos+x, yPos-y]) {
 				return true;
+				}
+			
 			}
-			
-		}
 				
-	}
-			
-	//	}catch(System.Exception e){}
-	return false;
+		}
+			return false;
 	}
 	
 	
-	
+	/// <summary>
+	/// Spawns the block.
+	/// </summary>
 	public void SpawnBlock () {
-	numOfBlockGen++;
-	//Instantiating new block
-	currentBlock = nextBlock;   //Line 
-	GameObject go =(GameObject) Instantiate (block);
-	go.transform.parent=blockHolder.transform;
-	go.GetComponent<Block>().block=blocks[currentBlock];
-	go.GetComponent<Block>().blockColor=blocksColors[currentBlock];
+		
+		numOfBlockGen++;
+		//Instantiating new block
+		currentBlock = nextBlock;   //Line 
+		GameObject go =(GameObject) Instantiate (block);
+		go.transform.parent=blockHolder.transform;
+		go.GetComponent<Block>().block=blocks[currentBlock];
+		go.GetComponent<Block>().blockColor=blocksColors[currentBlock];
 	
-	go.GetComponent<Block>().enabled=true;
+		go.GetComponent<Block>().enabled=true;
 	
-	go.transform.localScale = Vector3.one;
+		go.transform.localScale = Vector3.one;
 	
 	
-	//Randoming next block
-	ChangeNextBlock();
+		//Randoming next block
+		ChangeNextBlock();
 	
-}
+	}
 	
+	/// <summary>
+	/// Pauses the game.
+	/// </summary>
 	public void PauseGame()
 	{
 		pauselbl.GetComponent<UILabel>().enabled=true;
@@ -299,6 +336,9 @@ public class GameManager : MonoBehaviour {
 		
 	}
 	
+	/// <summary>
+	/// Resumes the game.
+	/// </summary>
 	public void ResumeGame()
 	{
 		pauselbl.GetComponent<UILabel>().enabled=false;
@@ -312,20 +352,16 @@ public class GameManager : MonoBehaviour {
 	void Update () {
 		if(isGameStarts)
 		{
-		if(!(gameOver)&&!(isGamePaused))
-		{
-		timeTaken += Time.deltaTime;
-		iTimeTaken = Mathf.Ceil(timeTaken);
-	/*	if(gameKind == "TimePlus" && iTimeTaken%10 == 0 && lastTimeTaken != iTimeTaken)
-		{
-			lastTimeTaken = iTimeTaken;
-			score += 2;
-		}*/
+			if(!(gameOver)&&!(isGamePaused))
+			{
+			timeTaken += Time.deltaTime;
+			iTimeTaken = Mathf.Ceil(timeTaken);
+				
 			destrowLabel.GetComponent<UILabel>().text=totalRowsCleared.ToString();
 			scoreLabel.GetComponent<UILabel>().text=score.ToString();
 			timeLabel.GetComponent<UILabel>().text=Mathf.RoundToInt(timeTaken).ToString();
 			gameSpeedLabel.GetComponent<UILabel>().text=this.blockNormalSpeed.ToString();
-		}
+			}
 			
 			if (Input.GetKeyDown(KeyCode.P)) {
 				if(!isGamePaused)
@@ -334,34 +370,53 @@ public class GameManager : MonoBehaviour {
 					ResumeGame();
 			}
 		}
-		
-		
 	}
 	
+	/// <summary>
+	/// Changes the next block.
+	/// </summary>
 	public void ChangeNextBlock () {
-	//Randoming a new next block
-	nextBlock = Random.Range(0, blocks.Count);
-	var children = new List<GameObject>();
+	
+		//Randoming a new next block
+		nextBlock = Random.Range(0, blocks.Count);
+		var children = new List<GameObject>();
 
 		foreach (Transform child in nextBlockObject.transform) children.Add(child.gameObject);
 			children.ForEach(child => Destroy(child));
 		
-	goNextBlock =(GameObject) Instantiate (block);
-	goNextBlock.transform.parent=nextBlockObject.transform;
-	goNextBlock.GetComponent<Block>().block=blocks[nextBlock];
-	goNextBlock.GetComponent<Block>().blockColor=blocksColors[nextBlock];
-	goNextBlock.GetComponent<Block>().isNextBlock=true;
+		goNextBlock =(GameObject) Instantiate (block);
+		goNextBlock.transform.parent=nextBlockObject.transform;
+		goNextBlock.GetComponent<Block>().block=blocks[nextBlock];
+		goNextBlock.GetComponent<Block>().blockColor=blocksColors[nextBlock];
+		goNextBlock.GetComponent<Block>().isNextBlock=true;
 	
-	goNextBlock.GetComponent<Block>().enabled=true;
-	goNextBlock.transform.localPosition = new Vector3(0,0,-10);
-	goNextBlock.transform.localScale = Vector3.one;
+		goNextBlock.GetComponent<Block>().enabled=true;
+		goNextBlock.transform.localPosition = new Vector3(0,0,-10);
+		goNextBlock.transform.localScale = Vector3.one;
 	}
 	
+	
+	/// <summary>
+	/// Sets the block.
+	/// </summary>
+	/// <param name='blockMatrix'>
+	/// Block matrix.
+	/// </param>
+	/// <param name='xPos'>
+	/// X position.
+	/// </param>
+	/// <param name='yPos'>
+	/// Y position.
+	/// </param>
+	/// <param name='col'>
+	/// Col.
+	/// </param>
 	public void SetBlock (bool[,] blockMatrix,int xPos, int yPos,Color col) {
-	var size = blockMatrix.GetLength(0);
-	for ( int y = 0; y < size; y++) {
-		for ( int x = 0; x < size; x++) {	
-			if (blockMatrix[x, y]) {
+
+		var size = blockMatrix.GetLength(0);
+		for ( int y = 0; y < size; y++) {
+			for ( int x = 0; x < size; x++) {	
+				if (blockMatrix[x, y]) {
 				GameObject c =(GameObject) Instantiate (Node);
 				c.tag="Cube";
 				c.transform.parent=blockHolder.transform;
@@ -371,104 +426,121 @@ public class GameManager : MonoBehaviour {
 				c.GetComponent<BlockBlinker>().from=col;
 			
 				field[xPos+x, yPos-y] = true;
+				}
 			}
 		}
-//		audio.clip=blockDrop;
-			//audio.Play();
-	}
 		
-	StartCoroutine(CheckRows (yPos - size, size));
+		StartCoroutine(CheckRows (yPos - size, size));
 	
-	if(isDropPressed)
+		if(isDropPressed)
 			score+=2+(int)((float)(blockNormalSpeed*5)-5);
 		else
 			score+=1+(int)((float)(blockNormalSpeed*5)-5);
 		
 	
-	isDropPressed=false;
-	SpawnBlock();
+		isDropPressed=false;
+		SpawnBlock();
 	}
 	
 	
-	
+	/// <summary>
+	/// Checks the rows.
+	/// </summary>
+	/// <returns>
+	/// The rows.
+	/// </returns>
+	/// <param name='yStart'>
+	/// Y start.
+	/// </param>
+	/// <param name='size'>
+	/// Size.
+	/// </param>
 	public IEnumerator CheckRows (int yStart,int size) {
+
 		StartCoroutine(emptyYield());	// Wait a frame for block to be destroyed so we don't include those cubes
-	if (yStart < 1) yStart = 1;
+		if (yStart < 1) yStart = 1;
 		
 
-	for (int y = yStart; y < yStart+size; y++) {
-		for (int x = maxBlockSize; x < fieldWidth-maxBlockSize; x++) { // We don't need to check the walls
-			if (!field[x, y]) break;
+		for (int y = yStart; y < yStart+size; y++) {
+			for (int x = maxBlockSize; x < fieldWidth-maxBlockSize; x++) { // We don't need to check the walls
+				if (!field[x, y]) break;
 			
-			if ((x+1) == fieldWidth-maxBlockSize) {
+				if ((x+1) == fieldWidth-maxBlockSize) {
 				
-		/*	GameObject[] cubes =(GameObject.FindGameObjectsWithTag("Cube")) ;
-	
-			int cubesToMove = 0;
 		
-			foreach (GameObject cube in cubes) {
+				int[] rows = RowsToKill(y,size);
 			
-			if (cube.transform.localPosition.y == ((y*20))) {
-				
-				cube.GetComponent<BlockBlinker>().enabled=true;	
-				}
-			}	*/
-					
-			int[] rows = RowsToKill(y,size);
-			Debug.Log ("Rows Array Length "+rows.Length);
-			
-			yield return new WaitForSeconds(.5f);		
-				for(int z=0;z<rows.Length;z++)
+				yield return new WaitForSeconds(.5f);		
+					for(int z=0;z<rows.Length;z++)
 					{
-						CollapseRows (rows[z]-(z*1));
+					CollapseRows (rows[z]-(z*1));
 					}
 					
-			
-				
-			y--; // We want to check the same row again after the collapse, in case there was more than one row filled in
+				y--;// We want to check the same row again after the collapse, in case there was more than one row filled in
+				}
 			}
-		}
 
+		}
 	}
-}
 	
+	
+	/// <summary>
+	/// Rowses to kill.
+	/// </summary>
+	/// <returns>
+	/// The to kill.
+	/// </returns>
+	/// <param name='yStart'>
+	/// Y start.
+	/// </param>
+	/// <param name='size'>
+	/// Size.
+	/// </param>
 	public int[] RowsToKill(int yStart,int size)
 	{
 		List<int> rows = new List<int>();
-		for (int y = yStart; y < yStart+size; y++) {
-		for (int x = maxBlockSize; x < fieldWidth-maxBlockSize; x++) { // We don't need to check the walls
-			if (!field[x, y]) break;
-			
-			if ((x+1) == fieldWidth-maxBlockSize) {
-			rows.Add(y);
-			GameObject[] cubes =(GameObject.FindGameObjectsWithTag("Cube")) ;
-			
-			foreach (GameObject cube in cubes) {
-			
-			if (cube.transform.localPosition.y == ((y*20))) {
-				
-				cube.GetComponent<BlockBlinker>().enabled=true;	
-							
-				}
-						
-			}
-			Debug.Log(y);
-			}
-			
-		}
-
-	}
-		return rows.ToArray();
 		
+		for (int y = yStart; y < yStart+size; y++) {
+			
+			for (int x = maxBlockSize; x < fieldWidth-maxBlockSize; x++) { // We don't need to check the walls
+				if (!field[x, y]) break;
+			
+				if ((x+1) == fieldWidth-maxBlockSize) {
+					rows.Add(y);
+					GameObject[] cubes =(GameObject.FindGameObjectsWithTag("Cube")) ;
+			
+					foreach (GameObject cube in cubes) {
+			
+						if (cube.transform.localPosition.y == ((y*20))) {
+							cube.GetComponent<BlockBlinker>().enabled=true;	
+							
+						}
+						
+					}
+			
+				}
+			
+			}
+
+		}
+		return rows.ToArray();
 	}
 	
+	
+	/// <summary>
+	/// Starts the count down.
+	/// </summary>
+	/// <returns>
+	/// The count down.
+	/// </returns>
 	public IEnumerator StartCountDown()
 	{
-		//GameObject countDown=GameObject.Find("CountDown");//.GetComponent<UILabel>();
+		
 		GameObject Blocker = GameObject.Find("Blocker");
+		
 		for(int x=1;x<5;x++)
 		{
-			GameObject countDown=GameObject.Find("null");// = ;
+			GameObject countDown=GameObject.Find("null");
 			switch(x)
 			{
 				case 1:countDown= GameObject.Find("one");
@@ -500,39 +572,47 @@ public class GameManager : MonoBehaviour {
 		SpawnBlock();
 	}
 	
+	
+	/// <summary>
+	/// Collapses the rows.
+	/// </summary>
+	/// <param name='yStart'>
+	/// Y start.
+	/// </param>
 	public void CollapseRows (int yStart) {
 	// Move rows down in array, which effectively deletes the current row (yStart)
 	
-	for (int y = yStart; y < fieldHeight-1; y++) {
+
+		for (int y = yStart; y < fieldHeight-1; y++) {
+			for (int x = maxBlockSize; x < fieldWidth-maxBlockSize; x++) {
+				field[x, y] = field[x, y+1];
+			}
+		}
+		// Make sure top line is cleared
 		for (int x = maxBlockSize; x < fieldWidth-maxBlockSize; x++) {
-			field[x, y] = field[x, y+1];
+			field[x, fieldHeight-1] = false;
 		}
-	}
-	// Make sure top line is cleared
-	for (int x = maxBlockSize; x < fieldWidth-maxBlockSize; x++) {
-		field[x, fieldHeight-1] = false;
-	}
 	
-	// Destroy on-screen cubes on the deleted row, and store references to cubes that are above it
-	GameObject[] cubes =(GameObject.FindGameObjectsWithTag("Cube")) ;
+		// Destroy on-screen cubes on the deleted row, and store references to cubes that are above it
+		GameObject[] cubes =(GameObject.FindGameObjectsWithTag("Cube")) ;
 	
-	int cubesToMove = 0;
+		int cubesToMove = 0;
 	
-	foreach (GameObject cube in cubes) {
+		foreach (GameObject cube in cubes) {
 		
-		if (cube.transform.localPosition.y > ((yStart*20))) {
-			cubePositions[cubesToMove] =(int) cube.transform.localPosition.y;
-			cubeReferences[cubesToMove++] = cube.transform;
-		}
-		else if (cube.transform.localPosition.y == ((yStart*20))) {
+			if (cube.transform.localPosition.y > ((yStart*20))) {
+				cubePositions[cubesToMove] =(int) cube.transform.localPosition.y;
+				cubeReferences[cubesToMove++] = cube.transform;
+			}
+			else if (cube.transform.localPosition.y == ((yStart*20))) {
 			
 			Destroy(cube);
+			}
 		}
-	}
 		
-	// Move the appropriate cubes down one square
-	// The third parameter in Mathf.Lerp is clamped to 1.0, which makes the transform.position.y be positioned exactly when done,
-	// which is important for the game logic (see the code just above)
+		// Move the appropriate cubes down one square
+		// The third parameter in Mathf.Lerp is clamped to 1.0, which makes the transform.position.y be positioned exactly when done,
+		// which is important for the game logic (see the code just above)
 	
 		for (int i = 0; i < cubesToMove; i++) {
 				
@@ -542,74 +622,74 @@ public class GameManager : MonoBehaviour {
 		
 	
 	
-	// Make blocks drop faster when enough rows are cleared in TimePlus game
-	if(gameKind == "TimePlus"||gameKind=="DynamicM")
-	{
-		blockNormalSpeed += .2;
-		delayTime -= delayTime * 0.08;
+		// Make blocks drop faster when enough rows are cleared in TimePlus game
+		if(gameKind == "TimePlus"||gameKind=="DynamicM")
+		{
+			blockNormalSpeed += .2;
+			delayTime -= delayTime * 0.08;
+		}
+		totalRowsCleared++;
+		score += 5+(int)((float)(blockNormalSpeed*5)-5);
+	
 	}
-	totalRowsCleared++;
-	score += 5+(int)((float)(blockNormalSpeed*5)-5);
-	
-}
 	
 	
-	
+	/// <summary>
+	/// Empties the yield.
+	/// </summary>
+	/// <returns>
+	/// The yield.
+	/// </returns>
 	public IEnumerator emptyYield()
 	{
 		yield return null;
 	}
 	
-	
+	/// <summary>
+	/// Games the over.
+	/// </summary>
 	public void GameOver () {
 	
-	//save in database if game ins't tutorial
-	if(gameKind != "Tutorial" && !gameOver)
-	{
-		var currentId = PlayerPrefs.GetInt("Players", 1);
-		var curPlayer = "Player" + currentId.ToString();
+			//save in database if game ins't tutorial
+		if(gameKind != "Tutorial" && !gameOver)
+		{
+			var currentId = PlayerPrefs.GetInt("Players", 1);
+			var curPlayer = "Player" + currentId.ToString();
 		
-		var n = PlayerPrefs.GetString("CurrentPlayerName");
-		PlayerPrefs.SetString(curPlayer + "_name", n);
-		PlayerPrefs.SetInt(curPlayer + "_score", score);
-		PlayerPrefs.SetInt(curPlayer + "_rows", totalRowsCleared);
+			var n = PlayerPrefs.GetString("CurrentPlayerName");
+			PlayerPrefs.SetString(curPlayer + "_name", n);
+			PlayerPrefs.SetInt(curPlayer + "_score", score);
+			PlayerPrefs.SetInt(curPlayer + "_rows", totalRowsCleared);
 		
-		if(gameKind == "TimePlus"){
-			PlayerPrefs.SetInt(curPlayer + "_level", totalRowsCleared);	
-		}
-		else if(gameKind == "Constant"){
-			PlayerPrefs.SetInt(curPlayer + "_level", PlayerPrefs.GetInt("GameSpeed", 1));
-		}
-		else if(gameKind == "Manually"){
-			PlayerPrefs.SetInt(curPlayer + "_level", 0);	
-		}
+			if(gameKind == "TimePlus"){
+				PlayerPrefs.SetInt(curPlayer + "_level", totalRowsCleared);	
+			}
+			else if(gameKind == "Constant"){
+				PlayerPrefs.SetInt(curPlayer + "_level", PlayerPrefs.GetInt("GameSpeed", 1));
+			}
+			else if(gameKind == "Manually"){
+				PlayerPrefs.SetInt(curPlayer + "_level", 0);	
+			}
 		
-		PlayerPrefs.SetFloat(curPlayer + "_timetaken", timeTaken);
-		PlayerPrefs.SetString(curPlayer + "_game", gameKind);
-		PlayerPrefs.SetString(curPlayer + "_status", "active");
-		PlayerPrefs.SetString(curPlayer + "_prefix", curPlayer);
+			PlayerPrefs.SetFloat(curPlayer + "_timetaken", timeTaken);
+			PlayerPrefs.SetString(curPlayer + "_game", gameKind);
+			PlayerPrefs.SetString(curPlayer + "_status", "active");
+			PlayerPrefs.SetString(curPlayer + "_prefix", curPlayer);
 			
-		PlayerPrefs.SetInt(curPlayer + "_numOfRotations",numOfRotations);
-		PlayerPrefs.SetInt(curPlayer + "_numOfDropPressed",numOfDropPressed);
-		PlayerPrefs.SetInt(curPlayer + "_numOfBlockGen",numOfBlockGen);
-		PlayerPrefs.SetInt(curPlayer + "_numOfSpeedUp",numOfSpeedUp);
-		PlayerPrefs.SetInt(curPlayer + "_numOfSpeedDown",numOfSpeedDown);
-		PlayerPrefs.SetString(curPlayer + "_startingDate",startingDate.ToString());
+			PlayerPrefs.SetInt(curPlayer + "_numOfRotations",numOfRotations);
+			PlayerPrefs.SetInt(curPlayer + "_numOfDropPressed",numOfDropPressed);
+			PlayerPrefs.SetInt(curPlayer + "_numOfBlockGen",numOfBlockGen);
+			PlayerPrefs.SetInt(curPlayer + "_numOfSpeedUp",numOfSpeedUp);
+			PlayerPrefs.SetInt(curPlayer + "_numOfSpeedDown",numOfSpeedDown);
+			PlayerPrefs.SetString(curPlayer + "_startingDate",startingDate.ToString());
 			
-		PlayerPrefs.SetInt("Players", ++currentId);		
+			PlayerPrefs.SetInt("Players", ++currentId);		
 		
-	/*	var mess = "CurrPlayer: " + curPlayer + "\n" +
-		curPlayer + "_name: " + n + "\n" +
-		curPlayer + "_score: " + score + "\n" +
-		curPlayer + "_level: " + totalRowsCleared + "\n" +
-		curPlayer + "_rows: " + totalRowsCleared + "\n" +
-		curPlayer + "_timetaken: " + timeTaken + "\n" +
-		curPlayer + "_game: " + gameKind;
-		//Debug.Log(mess);*/
-		hasSaved = true;
+			hasSaved = true;
+		}
+		
+		gameOver = true;
+		gameOverLabel.GetComponent<UILabel>().enabled=true;
 	}
-	gameOver = true;
-	gameOverLabel.GetComponent<UILabel>().enabled=true;
-}
 	
 }
