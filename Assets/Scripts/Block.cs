@@ -3,100 +3,122 @@ using System.Collections;
 
 public class Block : MonoBehaviour {
 	
+	//Block Colorsettings
 	public Color blockColor;
+	
+	//Block Pattern sves here
 	public string[] block;
+	
+	//Flag to trigger if the block should start falling
 	public bool playable;
-	public GameObject node;
+	
+	//if its not our regular Blocks then it would be our Nextblock 
 	public bool isNextBlock;
-	public int BlockCurrentPos=0;
-	public bool isCollided=false;
+	
 	
 	
 	//Private variables
-	
+	//this Defines out Block Matrix it would be define as the pattern
 	private bool[,] blockMatrix;
+	
+	//Block Fall speed it would variate as change level or press drop button
 	private float fallSpeed;
+	
+	//Logical position on screen fo block nd its not the Transform position
 	private int yPosition;
 	private	int xPosition;
+	
+	//logical Size of The Block 
 	private int size;
-	//private int halfSize;
+	
+	//this is for defining center origin so block can rotate move 
 	private int halfSize;
 	private float halfSizeFloat;
-	private bool dropped = false;
-	private Material material;
-	private int rotationCount=0;
+	
+	
 	
 	// Use this for initialization
 	void Start () {
 		
-		
-		
 		size = block.Length;
 		var width = block[0].Length;
-	if (size < 2) {
-		Debug.LogError ("Blocks must have at least two lines");
-		return;
-	}
-	if (width != size) {
-		Debug.LogError ("Block width and height must be the same");
-		return;
-	}
-	if (size > GameManager.instance.maxBlockSize) {
-		Debug.LogError ("Blocks must not be larger than " + GameManager.instance.maxBlockSize);
-		return;
-	}
-	for ( int i = 1; i < size; i++) {
-		if (block[i].Length != block[i-1].Length) {
-			Debug.LogError ("All lines in the block must be the same length");
-			return;
-		}
-	}
-	
 		
+		//Code is optional only test certain limitation of block usage		
+		if (size < 2) {
+			Debug.LogError ("Blocks must have at least two lines");
+		return;
+		}
+		if (width != size) {
+			Debug.LogError ("Block width and height must be the same");
+		return;
+		}
+		if (size > GameManager.instance.maxBlockSize) {
+			Debug.LogError ("Blocks must not be larger than " + GameManager.instance.maxBlockSize);
+		return;
+		}
+			for ( int i = 1; i < size; i++) {
+				if (block[i].Length != block[i-1].Length) {
+					Debug.LogError ("All lines in the block must be the same length");
+				return;
+				}
+		}
+		////////////////////
+		
+		
+		//To define center origin of the block
 		halfSize = ((size*20)/2);
+		//Used Float so not to do alot of Type conversions
 		halfSizeFloat = ((size*20)/2);
-		// int halfSizediff =((size*20)/2);
+	
+		//Block matrix this would allow checking Collistions
+		//Basicaly a predefined Physics.
 		blockMatrix = new bool[size, size];
 		
+		//this is where our Pattern is converted into usable Node positions like checking 1 for Node and 0 for empty space
+		//This itertes through block pattern array and checks for 1
 		for (int y = 0; y < size ; y++) {
-		for (int x = 0; x < size; x++) {
+			for (int x = 0; x < size; x++) {
 				
-			if (block[y][x]=="1"[0]) {
-				blockMatrix[x, y] = true;
-				GameObject blocker =(GameObject) Instantiate(GameManager.instance.Node);//Instantiate(GameManager.instance.node,new Vector3((x-13), (size-y)+13-size, 0.0), Quaternion.identity) ;
-				blocker.transform.parent = transform;
+				if (block[y][x]=="1"[0]) {
+					blockMatrix[x, y] = true;
+					GameObject blocker =(GameObject) Instantiate(GameManager.instance.Node);
+					blocker.transform.parent = transform;
 					blocker.transform.localScale=Vector3.one*20;
-			//blocker.transform.localPosition= new Vector3((x*20), (y*(-20))+halfSizediff, 0.0f);
-				blocker.transform.localPosition= new Vector3((x*20)-halfSizeFloat, (size-(y*20))+halfSizeFloat-size, 0.0f);
-				blocker.GetComponent<UISlicedSprite>().color=this.blockColor;
+					//Node placement as our pattern suggests
+					blocker.transform.localPosition= new Vector3((x*20)-halfSizeFloat, (size-(y*20))+halfSizeFloat-size, 0.0f);
+					//Node each color is now our block color
+					blocker.GetComponent<UISprite>().color=this.blockColor;
 			
 				}
 			}
 		}
 		
+		//Check if its our regular Block or Next BLock
 		if(!this.isNextBlock)
 		{
-			
-			
-			
-			
+			//Logical block position from which Block would start falling
 			yPosition = (int)((GameManager.instance.fieldHeight*20)-20);
 			
-			//Debug.Log((xPosition*GameManager.instance.GameScale)+" " + (yPosition*GameManager.instance.GameScale));
+			//Pysical Block location with origin
 			transform.localPosition =new Vector3((float)((((GameManager.instance.fieldWidth)/2)*20 + (size%2 == 0? 0 : 20/2))),(yPosition - halfSizeFloat),-1);
 			
+			//Logical X position 
 			xPosition =(int)(transform.localPosition.x- halfSizeFloat);
 			
+			//our fall speed is equal Block Normal speed so current strting speed would Block normal speed
 			fallSpeed =(float) GameManager.instance.blockNormalSpeed;
-
-		if (GameManager.instance.CheckBlock (blockMatrix, (xPosition/20), (yPosition/20))) {
-					GameManager.instance.GameOver();
+			
+			//This is the logic which would define when the block is collided and its th emain source of whole tetris
+			if (GameManager.instance.CheckBlock (blockMatrix, (xPosition/20), (yPosition/20))) {
+					//Gameover logic initiates when block is unable to move
+				GameManager.instance.GameOver();
 					
 				return;
 			}
-			//StartCoroutine(yieldDelay((float)GameManager.instance.delayTime));
+			
 			
 			StartCoroutine( Delay(.5f));
+			
 		}
 		
 		
@@ -107,6 +129,8 @@ public class Block : MonoBehaviour {
 	
 		yield return new WaitForSeconds(time);
 		this.playable=true;
+		StartCoroutine(fall());
+		StartCoroutine(CheckInput());
 	}
 	
 	public IEnumerator yieldDelay(float time)
@@ -123,26 +147,28 @@ public class Block : MonoBehaviour {
 		yield return null;
 	}
 	
-void Update () {
-	if (playable&&!(GameManager.instance.isGamePaused)) {
-		// Check to see if block would collide if moved down one row
+public IEnumerator fall () {
+	while (playable&&!(GameManager.instance.isGamePaused)) {
 		
-		yPosition-=(int)fallSpeed;//fallSpeed*Time.deltaTime;
-	//	int newY= (int)ConvertRange(170,-90,13,0,yPosition);
+		yPosition--;//=(int)fallSpeed;
+		
 		if (GameManager.instance.CheckBlock (blockMatrix, (int)(xPosition/20), (int)(yPosition/20))) {
 			GameManager.instance.SetBlock (blockMatrix, (xPosition/20), (yPosition+20)/20, this.blockColor);
 		
 			Destroy(gameObject);
 			
-			return;
+			break;
 
 		}
 		
 				
 		// Make on-screen block fall down 1 square
 		// Also serves as a delay...if you want old-fashioned square-by-square movement, replace this with yield WaitForSeconds
-		for (float i = yPosition+1; i > yPosition; i -= Time.deltaTime/30) {
-			Vector3 val = transform.localPosition;
+		//Our fall logic Forced
+		
+			
+		for (float i = yPosition+1; i > yPosition; i -= Time.deltaTime*(fallSpeed*30)) {
+				Vector3 val = transform.localPosition;
 				if(transform.localEulerAngles.z==0)
 				{
 					transform.localPosition=new Vector3(val.x,(i - halfSize),val.z);
@@ -156,32 +182,42 @@ void Update () {
 				{
 					transform.localPosition=new Vector3(val.x,(i - halfSize),val.z);
 				}
-				//transform.position.y = i - halfSize;
-		//	emptyYield();
-		//	yield;
+				yield return null;
+			
 		}
 		
-		CheckInput();
-	//	emptyYield();
+	//	StartCoroutine(CheckInput());
+		
 	}
 }
 	
 
-
-private void CheckInput () {
 	
+
+
+public IEnumerator CheckInput () {
+	
+		while(playable&&!(GameManager.instance.isGamePaused))
+		{
 		
-		//var input = Input.GetAxis("Horizontal");
-		if (Input.GetKeyDown(KeyCode.LeftArrow)||Input.GetKeyDown(KeyCode.A)) {
-			StartCoroutine(yieldMoveHorizontal(-1*20));
+		if (Input.GetKey(KeyCode.LeftArrow)||Input.GetKey(KeyCode.A)) {
+			
+			MoveHorizontal(-1*20);
+			
+			yield return new WaitForSeconds(.2f);
+			
 		}
-		else if (Input.GetKeyDown(KeyCode.RightArrow)||Input.GetKeyDown(KeyCode.D)) {
-			StartCoroutine(yieldMoveHorizontal(1*20));
+		else if (Input.GetKey(KeyCode.RightArrow)||Input.GetKey(KeyCode.D)) {
+			MoveHorizontal(1*20);
+		
+			yield return new WaitForSeconds(.2f);
+		
 		}
 
-		if (Input.GetKeyDown(KeyCode.UpArrow)||Input.GetKeyDown(KeyCode.W)) {
+		if (Input.GetKey(KeyCode.UpArrow)||Input.GetKey(KeyCode.W)) {
 			RotateBlock();
 			GameManager.instance.numOfRotations++;
+				yield return new WaitForSeconds(.2f);
 		}
 		
 		if (Input.GetKeyDown(KeyCode.DownArrow)||Input.GetKeyDown(KeyCode.S)||Input.GetKeyDown(KeyCode.Space)) {
@@ -209,7 +245,7 @@ private void CheckInput () {
 		//Get speed down ou up just in Manual game
 		if(GameManager.instance.gameKind == "Manually"||GameManager.instance.gameKind=="DynamicM")
 		{
-		//	Debug.Log("+-");
+
 			if(Input.GetKeyDown(KeyCode.Plus)||Input.GetKeyDown(KeyCode.KeypadPlus))
 			{
 				GameManager.instance.blockNormalSpeed += .2;
@@ -223,39 +259,31 @@ private void CheckInput () {
 				GameManager.instance.numOfSpeedDown++;
 			}
 		}
+			yield return null;
+		}
 		
 	
 }
 	
-public IEnumerator MoveHorizontal (int dir) {
+public void MoveHorizontal (int dir) {
 	// Check to see if block could be moved in the desired direction
-	if (!GameManager.instance.CheckBlock (blockMatrix, (xPosition + dir)/20, (yPosition/20))) {
-	
-		Vector3 pos = transform.localPosition;
-		transform.localPosition=new Vector3((pos.x+dir),pos.y,pos.z);
-	//	transform.position.x += dir;
-	//	Debug.Log(xPosition + " " + dir);
-		xPosition += dir;
-	//	Debug.Log(xPosition + " " + dir);
 		
+			if (!GameManager.instance.CheckBlock (blockMatrix, (xPosition + dir)/20, (yPosition/20))) {
 		
-		yield return new WaitForSeconds ((float)GameManager.instance.blockMoveDelay);
-			
-	}
-	
-	
+				Vector3 pos = transform.localPosition;
+				transform.localPosition=new Vector3((pos.x+dir),pos.y,pos.z);
+
+				xPosition += dir;
+				
+			}
+		
 }
 	
 	
-public IEnumerator yieldMoveHorizontal(int dir)
-	{
-		StartCoroutine(MoveHorizontal(dir));
-		yield return null;
-	}
-
 
 void RotateBlock () {
 	
+		//This codesmakes the rotation fo logical block
 		var tempMatrix = new bool[size, size];
 	for (int y = 0; y < size; y++) {
 		for (int x = 0; x < size; x++) {
@@ -281,7 +309,7 @@ void RotateBlock () {
 				this.transform.localPosition= new Vector3(pos.x-20,pos.y,pos.z);
 				
 			}
-			
+			//This line makes the Block rotate Physicaly...
 				this.transform.Rotate(Vector3.forward*-90);
 			
 			

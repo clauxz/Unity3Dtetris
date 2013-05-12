@@ -74,6 +74,8 @@ public class GameManager : MonoBehaviour {
 	
 	//Main Block Object which would be falling
 	public GameObject block;
+	
+	//Scene Pause and counter 
 	public GameObject counter;
 	public GameObject pauselbl;
 	public GameObject pauseBlocker;
@@ -128,10 +130,13 @@ public class GameManager : MonoBehaviour {
 	public int numOfSpeedDown=0;
 	public System.DateTime startingDate;
 	
-	
+	public bool isRotating=false;
+	public bool isMoving=false;
 	
 	public bool isGamePaused=false;
 	private int rowsCleared = 0;
+	
+	public Block CurrentBlock;
 
 
 	
@@ -209,10 +214,10 @@ public class GameManager : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-		
+		//Initites Blocks Patterns
 		InitiateBlocks();
 		
-		
+		//this is to make sure we dont have more than one gamemanager script in scene
 		if(!instance)
 			instance=this;
 		else
@@ -221,7 +226,7 @@ public class GameManager : MonoBehaviour {
 			return;
 		}
 		
-		
+		//This is where our imaginative field 
 		fieldWidth = fieldWidth + maxBlockSize*2;
 		fieldHeight = fieldHeight + maxBlockSize;
 		field=new bool[fieldWidth,fieldHeight];
@@ -232,11 +237,13 @@ public class GameManager : MonoBehaviour {
 		//Updating speed by start level chosen previously
 		var level = PlayerPrefs.GetInt("GameSpeed", 1);
 		
+		//by default Block speed increase with level..
 		for(int i = 1; i < level; i++)
 		{
-			blockNormalSpeed += 0.5f;
+			blockNormalSpeed +=0.2;
 			delayTime -= delayTime * 0.4;
 		}
+		
 		
 		for (int i = 0; i < fieldHeight; i++) {
 			for (int j = 0; j < maxBlockSize; j++) {
@@ -261,9 +268,10 @@ public class GameManager : MonoBehaviour {
 		nextBlock = Random.Range(0, blocks.Count);
 		
 		
-		//Our First Block Gets Spwn on the Field..
+		//Date and time first initiates when game starts For scoreboard
 		startingDate=System.DateTime.Now;
 	
+		//Count DOwn begins here 
 		StartCoroutine(StartCountDown());
 		
 	}
@@ -306,11 +314,20 @@ public class GameManager : MonoBehaviour {
 	/// </summary>
 	public void SpawnBlock () {
 		
+		//Counting Blocks for data Scoreboard..
 		numOfBlockGen++;
+		
 		//Instantiating new block
+		
+		//Block Pattern Choosing happens here..
 		currentBlock = nextBlock;   //Line 
+		
+		//Game OBject Gets declared on screen here..
+		
 		GameObject go =(GameObject) Instantiate (block);
+		this.CurrentBlock = go.GetComponent<Block>();
 		go.transform.parent=blockHolder.transform;
+		
 		go.GetComponent<Block>().block=blocks[currentBlock];
 		go.GetComponent<Block>().blockColor=blocksColors[currentBlock];
 	
@@ -345,6 +362,8 @@ public class GameManager : MonoBehaviour {
 		pauseBlocker.GetComponent<BoxCollider>().enabled=false;
 		pauseBlocker.GetComponent<UISlicedSprite>().enabled=false;
 		isGamePaused=false;
+		StartCoroutine(this.CurrentBlock.fall());
+		StartCoroutine(this.CurrentBlock.CheckInput());
 		
 	}
 	
@@ -422,7 +441,7 @@ public class GameManager : MonoBehaviour {
 				c.transform.parent=blockHolder.transform;
 				c.transform.localPosition=new Vector3((xPos+x)*20, (yPos-y)*20, -1);
 				c.transform.localScale=new Vector3(20,20,1);
-				c.GetComponent<UISlicedSprite>().color=col;
+				c.GetComponent<UISprite>().color=col;
 				c.GetComponent<BlockBlinker>().from=col;
 			
 				field[xPos+x, yPos-y] = true;
@@ -535,6 +554,10 @@ public class GameManager : MonoBehaviour {
 	/// </returns>
 	public IEnumerator StartCountDown()
 	{
+	/*	GameObject counterB = (GameObject)Instantiate(counter);
+		counterB.transform.parent=GameObject.Find("Anchor(GameUI)").transform;
+		counterB.transform.localPosition=Vector3.zero;
+		counterB.transform.localScale=Vector3.zero;*/
 		
 		GameObject Blocker = GameObject.Find("Blocker");
 		
@@ -660,16 +683,9 @@ public class GameManager : MonoBehaviour {
 			PlayerPrefs.SetString(curPlayer + "_name", n);
 			PlayerPrefs.SetInt(curPlayer + "_score", score);
 			PlayerPrefs.SetInt(curPlayer + "_rows", totalRowsCleared);
-		
-			if(gameKind == "TimePlus"){
-				PlayerPrefs.SetInt(curPlayer + "_level", totalRowsCleared);	
-			}
-			else if(gameKind == "Constant"){
-				PlayerPrefs.SetInt(curPlayer + "_level", PlayerPrefs.GetInt("GameSpeed", 1));
-			}
-			else if(gameKind == "Manually"){
-				PlayerPrefs.SetInt(curPlayer + "_level", 0);	
-			}
+		//	int speed = (int)(((blockNormalSpeed-1)*5)+1);
+			PlayerPrefs.SetFloat(curPlayer + "_level",(float)blockNormalSpeed );
+	
 		
 			PlayerPrefs.SetFloat(curPlayer + "_timetaken", timeTaken);
 			PlayerPrefs.SetString(curPlayer + "_game", gameKind);

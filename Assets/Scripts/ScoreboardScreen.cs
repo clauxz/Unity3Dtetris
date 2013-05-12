@@ -12,7 +12,7 @@ public class ScoreboardScreen : MonoBehaviour {
 	private string[] names;
 	private float[] times;
 	private int[] rows;
-	private int[] levels;
+	private float[] levels;
 	private int[] scores;
 	private string[] games;
 	public string[] status;
@@ -35,7 +35,7 @@ public class ScoreboardScreen : MonoBehaviour {
 		names = new string[totalPlayers];
 		times = new float[totalPlayers];
 		rows = new int[totalPlayers];
-		levels = new int[totalPlayers];
+		levels = new float[totalPlayers];
 		scores = new int[totalPlayers];
 		games = new string[totalPlayers];
 		status = new string[totalPlayers];
@@ -53,7 +53,7 @@ public class ScoreboardScreen : MonoBehaviour {
 			names[i] = PlayerPrefs.GetString(prefix+"_name");
 			times[i] = PlayerPrefs.GetFloat(prefix+"_timetaken");
 			rows[i] = PlayerPrefs.GetInt(prefix+"_rows");
-			levels[i] = PlayerPrefs.GetInt(prefix+"_level");
+			levels[i] = PlayerPrefs.GetFloat(prefix+"_level");
 			scores[i] = PlayerPrefs.GetInt(prefix+"_score");
 			games[i] = PlayerPrefs.GetString(prefix+"_game");
 			status[i] = PlayerPrefs.GetString(prefix+"_status");
@@ -87,7 +87,7 @@ public class ScoreboardScreen : MonoBehaviour {
 				rows[j] = rows[i];
 				rows[i] = rowaux;
 				
-				int levelaux = levels[j];
+				float levelaux = levels[j];
 				levels[j] = levels[i];
 				levels[i] = levelaux;	
 				
@@ -160,6 +160,7 @@ public class ScoreboardScreen : MonoBehaviour {
 						UILabel[] array = nItem.GetComponentsInChildren<UILabel>();
 						array[0].text=string.Format("{0:F1}", times[i]);
 						array[1].text=games[i];
+				
 						array[2].text=levels[i].ToString();
 						array[3].text=names[i];
 						array[4].text=rows[i].ToString();
