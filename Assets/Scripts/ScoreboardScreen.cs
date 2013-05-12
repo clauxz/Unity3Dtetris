@@ -7,6 +7,7 @@ public class ScoreboardScreen : MonoBehaviour {
 	//Our Row Prefab Stores Here
 	public GameObject prefab;
 	public GameObject camera;
+	public GameObject popup;
 	
 	private int totalPlayers;
 	private string[] names;
@@ -23,6 +24,8 @@ public class ScoreboardScreen : MonoBehaviour {
 	public int[] numOfSpeedUp;
 	public int[] numOfSpeedDown;
 	public string[] startingDates;
+	
+	public string rowToDelete;
 	
 	public static ScoreboardScreen instance;
 	
@@ -56,6 +59,12 @@ public class ScoreboardScreen : MonoBehaviour {
 			levels[i] = PlayerPrefs.GetFloat(prefix+"_level");
 			scores[i] = PlayerPrefs.GetInt(prefix+"_score");
 			games[i] = PlayerPrefs.GetString(prefix+"_game");
+			
+			if(games[i]=="Manually")
+				games[i]="Manual";
+			else if(games[i]=="TimePlus")
+				games[i]="Dynamic";
+			
 			status[i] = PlayerPrefs.GetString(prefix+"_status");
 			prefixes[i] = PlayerPrefs.GetString(prefix+"_prefix");
 			numOfBlockGen[i] = PlayerPrefs.GetInt(prefix+"_numOfBlockGen");
@@ -156,7 +165,8 @@ public class ScoreboardScreen : MonoBehaviour {
 						nItem.transform.localPosition=Vector3.zero;
 				
 						nItem.transform.localScale=Vector3.one*(float)0.55;
-				
+						EventManager even= nItem.GetComponentsInChildren<EventManager>()[0];
+						even.objTrigger=popup;
 						UILabel[] array = nItem.GetComponentsInChildren<UILabel>();
 						array[0].text=string.Format("{0:F1}", times[i]);
 						array[1].text=games[i];

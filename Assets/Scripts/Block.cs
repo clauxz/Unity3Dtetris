@@ -35,6 +35,9 @@ public class Block : MonoBehaviour {
 	private int halfSize;
 	private float halfSizeFloat;
 	
+	private int CountBlockActivty=0;
+	private int CountRotateActivty=0;
+	
 	
 	
 	// Use this for initialization
@@ -149,8 +152,15 @@ public class Block : MonoBehaviour {
 	
 public IEnumerator fall () {
 	while (playable&&!(GameManager.instance.isGamePaused)) {
+		if(fallSpeed==GameManager.instance.blockDropSpeed)
+			{
+				yPosition-=2;
+			}
+			else
+			{
+				yPosition--;
+			}
 		
-		yPosition--;//=(int)fallSpeed;
 		
 		if (GameManager.instance.CheckBlock (blockMatrix, (int)(xPosition/20), (int)(yPosition/20))) {
 			GameManager.instance.SetBlock (blockMatrix, (xPosition/20), (yPosition+20)/20, this.blockColor);
@@ -165,9 +175,10 @@ public IEnumerator fall () {
 		// Make on-screen block fall down 1 square
 		// Also serves as a delay...if you want old-fashioned square-by-square movement, replace this with yield WaitForSeconds
 		//Our fall logic Forced
+		float speed=fallSpeed*30;
 		
 			
-		for (float i = yPosition+1; i > yPosition; i -= Time.deltaTime*(fallSpeed*30)) {
+		for (float i = yPosition+1; i > yPosition; i -= Time.deltaTime*(speed)) {
 				Vector3 val = transform.localPosition;
 				if(transform.localEulerAngles.z==0)
 				{
@@ -204,21 +215,56 @@ public IEnumerator CheckInput () {
 			
 			MoveHorizontal(-1*20);
 			
-			yield return new WaitForSeconds(.2f);
+			if(CountBlockActivty<2)
+			{
+				yield return new WaitForSeconds(.2f);
+					CountBlockActivty++;
+			}
+			else
+			{
+				yield return new WaitForSeconds(.1f);
+					
+			}
 			
 		}
 		else if (Input.GetKey(KeyCode.RightArrow)||Input.GetKey(KeyCode.D)) {
 			MoveHorizontal(1*20);
+			if(CountBlockActivty<3)
+			{
+				yield return new WaitForSeconds(.2f);
+					CountBlockActivty++;
+			}
+			else
+			{
+				yield return new WaitForSeconds(.1f);
+					
+			}
 		
-			yield return new WaitForSeconds(.2f);
-		
+		}
+		else
+		{
+			CountBlockActivty=0;		
 		}
 
 		if (Input.GetKey(KeyCode.UpArrow)||Input.GetKey(KeyCode.W)) {
 			RotateBlock();
 			GameManager.instance.numOfRotations++;
+				if(CountRotateActivty<2)
+			{
 				yield return new WaitForSeconds(.2f);
+					CountRotateActivty++;
+			}
+			else
+			{
+				yield return new WaitForSeconds(.1f);
+					
+			}
 		}
+			else
+			{
+				CountRotateActivty=0;
+			}
+		
 		
 		if (Input.GetKeyDown(KeyCode.DownArrow)||Input.GetKeyDown(KeyCode.S)||Input.GetKeyDown(KeyCode.Space)) {
 			GameManager.instance.numOfDropPressed++;

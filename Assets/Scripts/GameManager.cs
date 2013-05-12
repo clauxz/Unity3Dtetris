@@ -26,7 +26,11 @@ public enum ButtonType{
 	exportCSV=15,
 	deleteDB=16,
 	deleteRow=17,
-	DynamicM=18
+	DynamicM=18,
+	DeleteAllDb=19,
+	DeleteDb=20,
+	CancelPopup=21,
+	levelSelect=22
 	
 }
 

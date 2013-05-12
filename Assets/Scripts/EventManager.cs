@@ -5,8 +5,17 @@ public class EventManager : MonoBehaviour {
 	
 	public ButtonType buttonEvent;
 	
+	public GameObject objTrigger;
 	
-	//private int levelValue=1;
+	void Start()
+	{
+		switch(buttonEvent)
+		{
+		case ButtonType.levelSelect:
+				this.GetComponent<UILabel>().text= ((((float)(PlayerPrefs.GetInt("GameSpeed",1)))/5)+.8f).ToString();// .ToString();
+			break;
+		}
+	}
 	
 	void OnClick()
 	{
@@ -40,30 +49,31 @@ public class EventManager : MonoBehaviour {
 			
 		case ButtonType.Dynamic:
 			PlayerPrefs.SetString("GameKind", "TimePlus");
-			Debug.Log((int)((GameManager.levelValue-1)*5));
-			PlayerPrefs.SetInt("GameSpeed", GameManager.levelValue);
+		//	Debug.Log((int)((GameManager.levelValue-1)*5));
+			//PlayerPrefs.SetInt("GameSpeed", GameManager.levelValue);
 			Application.LoadLevel("TetrisClone");
 			break;
 		case ButtonType.DynamicM:
 			PlayerPrefs.SetString("GameKind", "DynamicM");
-			PlayerPrefs.SetInt("GameSpeed", GameManager.levelValue);
+		//	PlayerPrefs.SetInt("GameSpeed", GameManager.levelValue);
 			Application.LoadLevel("TetrisClone");
 			break;
 		case ButtonType.Constant:
 			PlayerPrefs.SetString("GameKind", "Constant");
-			PlayerPrefs.SetInt("GameSpeed", GameManager.levelValue);
+			//PlayerPrefs.SetInt("GameSpeed", GameManager.levelValue);
 			Application.LoadLevel("TetrisClone");
 			break;
 		case ButtonType.Manual:
 			PlayerPrefs.SetString("GameKind", "Manually");
-			PlayerPrefs.SetInt("GameSpeed", GameManager.levelValue);
+		//	PlayerPrefs.SetInt("GameSpeed", GameManager.levelValue);
 			Application.LoadLevel("TetrisClone");
 			break;
 		case ButtonType.Level_inc:
 			
 			if(GameManager.levelValue < 10){
 				GameManager.levelValue++;
-			GameObject.Find("levelValue").GetComponent<UILabel>().text=((((float)(GameManager.levelValue))/5)+.8f).ToString();
+				GameObject.Find("levelValue").GetComponent<UILabel>().text=((((float)(GameManager.levelValue))/5)+.8f).ToString();
+				PlayerPrefs.SetInt("GameSpeed", GameManager.levelValue);
 			}
 			
 			break;
@@ -71,6 +81,7 @@ public class EventManager : MonoBehaviour {
 			if(GameManager.levelValue > 1) {
 				GameManager.levelValue--;
 			GameObject.Find("levelValue").GetComponent<UILabel>().text=((((float)(GameManager.levelValue))/5)+.8f).ToString();
+				PlayerPrefs.SetInt("GameSpeed", GameManager.levelValue);
 			}
 			break;
 		case ButtonType.Return:
@@ -94,20 +105,34 @@ public class EventManager : MonoBehaviour {
 			
 			break;
 		case ButtonType.deleteDB:
-		//	GameObject.Find("Popup"). .SetActive(true);
-		//	PlayerPrefs.SetInt("Players", 1);
-		//	Application.LoadLevel("TetrisScore");
+			
+			objTrigger.SetActive(true);
+		
 			break;
 			
 		case ButtonType.deleteRow:
-			GameObject.Find("PopupAll").SetActive(true);
-		/*	string valu = (this.gameObject.name).Substring(this.gameObject.name.Length-1,1);
+			objTrigger.SetActive(true);
+			ScoreboardScreen.instance.rowToDelete=this.gameObject.name;
+			break;
+		case ButtonType.DeleteAllDb:
+				PlayerPrefs.SetInt("Players", 1);
+			Application.LoadLevel("TetrisScore");
+			objTrigger.SetActive(false);
+			break;
+		case ButtonType.DeleteDb:
+			
+			string valu = ScoreboardScreen.instance.rowToDelete.TrimStart("delete".ToCharArray());
 			Destroy(GameObject.Find("item"+valu));
 			GameObject.Find("Offset").GetComponent<UITable>().repositionNow=true;
+			
 			int val = System.Convert.ToInt16(valu);
 			ScoreboardScreen.instance.DeletePlayer(ScoreboardScreen.instance.prefixes[val]);
 			ScoreboardScreen.instance.status[val] = PlayerPrefs.GetString(ScoreboardScreen.instance.prefixes[val]+"_status");
-			*/
+			
+			objTrigger.SetActive(false);
+			break;
+		case ButtonType.CancelPopup:
+			objTrigger.SetActive(false);
 			break;
 			
 		}
