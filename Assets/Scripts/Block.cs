@@ -154,7 +154,7 @@ public IEnumerator fall () {
 	while (playable&&!(GameManager.instance.isGamePaused)) {
 		if(fallSpeed==GameManager.instance.blockDropSpeed)
 			{
-				yPosition-=2;
+				yPosition-=4;
 			}
 			else
 			{
@@ -215,28 +215,28 @@ public IEnumerator CheckInput () {
 			
 			MoveHorizontal(-1*20);
 			
-			if(CountBlockActivty<2)
+			if(CountBlockActivty<1)
 			{
 				yield return new WaitForSeconds(.2f);
 					CountBlockActivty++;
 			}
 			else
 			{
-				yield return new WaitForSeconds(.1f);
+				yield return new WaitForSeconds(.02f);
 					
 			}
 			
 		}
 		else if (Input.GetKey(KeyCode.RightArrow)||Input.GetKey(KeyCode.D)) {
 			MoveHorizontal(1*20);
-			if(CountBlockActivty<3)
+			if(CountBlockActivty<1)
 			{
 				yield return new WaitForSeconds(.2f);
 					CountBlockActivty++;
 			}
 			else
 			{
-				yield return new WaitForSeconds(.1f);
+				yield return new WaitForSeconds(.02f);
 					
 			}
 		
