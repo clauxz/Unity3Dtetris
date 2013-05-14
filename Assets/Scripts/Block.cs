@@ -171,10 +171,13 @@ public IEnumerator fall () {
 
 		}
 		
-				
+		
 		// Make on-screen block fall down 1 square
 		// Also serves as a delay...if you want old-fashioned square-by-square movement, replace this with yield WaitForSeconds
 		//Our fall logic Forced
+	
+	
+			
 		float speed=fallSpeed*30;
 		
 			
@@ -196,9 +199,6 @@ public IEnumerator fall () {
 				yield return null;
 			
 		}
-		
-	//	StartCoroutine(CheckInput());
-		
 	}
 }
 	
