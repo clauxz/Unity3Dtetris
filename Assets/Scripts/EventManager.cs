@@ -70,7 +70,7 @@ public class EventManager : MonoBehaviour {
 			break;
 		case ButtonType.Level_inc:
 			
-			if(GameManager.levelValue < 10){
+			if(GameManager.levelValue < 50){
 				GameManager.levelValue=PlayerPrefs.GetInt("GameSpeed", 1);
 				GameManager.levelValue++;
 				GameObject.Find("levelValue").GetComponent<UILabel>().text=((((float)(GameManager.levelValue))/5)+.8f).ToString();

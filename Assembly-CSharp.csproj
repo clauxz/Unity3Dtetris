@@ -44,6 +44,38 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\FingerGestures\Samples\Scripts\AdvancedPinchRotationSample.cs" />
+     <Compile Include="Assets\FingerGestures\Samples\Scripts\FingerEventsSamplePart1.cs" />
+     <Compile Include="Assets\FingerGestures\Samples\Scripts\FingerEventsSamplePart2.cs" />
+     <Compile Include="Assets\FingerGestures\Samples\Scripts\Internal\BasicSample.cs" />
+     <Compile Include="Assets\FingerGestures\Samples\Scripts\Internal\DragTrail.cs" />
+     <Compile Include="Assets\FingerGestures\Samples\Scripts\Internal\EmitParticles.cs" />
+     <Compile Include="Assets\FingerGestures\Samples\Scripts\Internal\MenuNode.cs" />
+     <Compile Include="Assets\FingerGestures\Samples\Scripts\Internal\SampleBase.cs" />
+     <Compile Include="Assets\FingerGestures\Samples\Scripts\Internal\SampleUI.cs" />
+     <Compile Include="Assets\FingerGestures\Samples\Scripts\Internal\StartMenu.cs" />
+     <Compile Include="Assets\FingerGestures\Samples\Scripts\Internal\SwipeParticlesEmitter.cs" />
+     <Compile Include="Assets\FingerGestures\Samples\Scripts\MultiFingerSwipeSample.cs" />
+     <Compile Include="Assets\FingerGestures\Samples\Scripts\OneFingerGestureSample.cs" />
+     <Compile Include="Assets\FingerGestures\Samples\Scripts\PinchRotationSample.cs" />
+     <Compile Include="Assets\FingerGestures\Samples\Scripts\ToolboxDragDropSample.cs" />
+     <Compile Include="Assets\FingerGestures\Samples\Scripts\ToolboxFingerEventsSample.cs" />
+     <Compile Include="Assets\FingerGestures\Samples\Scripts\ToolboxOneFingerGestureSample.cs" />
+     <Compile Include="Assets\FingerGestures\Samples\Scripts\TwoFingerGestureSample.cs" />
+     <Compile Include="Assets\FingerGestures\Samples\TouchPhaseVisualizer.cs" />
+     <Compile Include="Assets\FingerGestures\SkeletonCode\CSharpSkeleton.cs" />
+     <Compile Include="Assets\FingerGestures\Toolbox\Misc\TBDragOrbit.cs" />
+     <Compile Include="Assets\FingerGestures\Toolbox\Misc\TBPinchZoom.cs" />
+     <Compile Include="Assets\FingerGestures\Toolbox\TBComponent.cs" />
+     <Compile Include="Assets\FingerGestures\Toolbox\TBDrag.cs" />
+     <Compile Include="Assets\FingerGestures\Toolbox\TBFingerDown.cs" />
+     <Compile Include="Assets\FingerGestures\Toolbox\TBFingerUp.cs" />
+     <Compile Include="Assets\FingerGestures\Toolbox\TBInputManager.cs" />
+     <Compile Include="Assets\FingerGestures\Toolbox\TBLongPress.cs" />
+     <Compile Include="Assets\FingerGestures\Toolbox\TBSwipe.cs" />
+     <Compile Include="Assets\FingerGestures\Toolbox\TBTap.cs" />
+     <Compile Include="Assets\FingerGestures\Utils\GestureStateTracker.cs" />
+     <Compile Include="Assets\FingerGestures\Utils\MoveToFinger.cs" />
      <Compile Include="Assets\NGUI\Examples\Scripts\InventorySystem\Game\EquipItems.cs" />
      <Compile Include="Assets\NGUI\Examples\Scripts\InventorySystem\Game\EquipRandomItem.cs" />
      <Compile Include="Assets\NGUI\Examples\Scripts\InventorySystem\Game\UICursor.cs" />
@@ -170,6 +202,7 @@
      <None Include="Assets\Atlas\Segoe UI\Segoe UI.txt" />
      <None Include="Assets\Atlas\MetroE.txt" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Masked Colored.shader" />
+     <None Include="Assets\Readme.txt" />
      <None Include="Assets\NGUI\Examples\Models\Orc\Orc Skin.shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed) (AlphaClip) .shader" />
      <None Include="Assets\NGUI\Examples\Atlases\SciFi\SciFi Font - Normal.txt" />
@@ -195,6 +228,10 @@
      <None Include="Assets\NGUI\Examples\Atlases\Wooden\Arimo14.txt" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Depth.shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (SoftClip).shader" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
+      <Project>{F2ACAFE8-4F74-2EED-2BE6-79F55E88AC73}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
