@@ -127,6 +127,15 @@ public class GameManager : MonoBehaviour {
 	private GameObject goNextBlock;
 	private bool isNext;
 	
+	
+	public bool isSwipeLeft=false;
+	public bool isSwipeRight=false;
+	public bool isSwipeUp=false;
+	public bool isSwipeDown=false;
+	public bool isLongPress=false;
+	
+	
+	
 	public int numOfRotations=0;
 	public int numOfDropPressed=0;
 	public int numOfBlockGen=0;
