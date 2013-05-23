@@ -225,7 +225,8 @@ public IEnumerator CheckInput () {
 				yield return new WaitForSeconds(.02f);
 					
 			}
-			GameManager.instance.isSwipeLeft=false;
+				if(!GameManager.instance.isLongPress)
+					GameManager.instance.isSwipeLeft=false;
 		}
 		else if (Input.GetKey(KeyCode.RightArrow)||Input.GetKey(KeyCode.D)||GameManager.instance.isSwipeRight) {
 			MoveHorizontal(1*20);
@@ -239,7 +240,8 @@ public IEnumerator CheckInput () {
 				yield return new WaitForSeconds(.02f);
 					
 			}
-			GameManager.instance.isSwipeRight=false;
+			if(!GameManager.instance.isLongPress)
+				GameManager.instance.isSwipeRight=false;
 		}
 		else
 		{
@@ -248,7 +250,7 @@ public IEnumerator CheckInput () {
 			CountBlockActivty=0;		
 		}
 
-		if (Input.GetKey(KeyCode.UpArrow)||Input.GetKey(KeyCode.W)||GameManager.instance.isSwipeUp) {
+		if (Input.GetKey(KeyCode.UpArrow)||Input.GetKey(KeyCode.W)||Input.GetKey(KeyCode.Space)||GameManager.instance.isSwipeUp) {
 			RotateBlock();
 			GameManager.instance.numOfRotations++;
 				if(CountRotateActivty<2)
@@ -261,6 +263,7 @@ public IEnumerator CheckInput () {
 				yield return new WaitForSeconds(.1f);
 					
 			}
+			if(!GameManager.instance.isLongPress)
 				GameManager.instance.isSwipeUp=false;
 		}
 			else
@@ -269,14 +272,15 @@ public IEnumerator CheckInput () {
 			}
 		
 		
-		if (Input.GetKeyDown(KeyCode.DownArrow)||Input.GetKeyDown(KeyCode.S)||Input.GetKeyDown(KeyCode.Space)) {
+		if (Input.GetKeyDown(KeyCode.DownArrow)||Input.GetKeyDown(KeyCode.S)) {
 			GameManager.instance.numOfDropPressed++;
 			
 		}
 		
-		if (Input.GetKey(KeyCode.DownArrow)||Input.GetKey(KeyCode.S)||Input.GetKey(KeyCode.Space)||GameManager.instance.isSwipeDown) {
+		if (Input.GetKey(KeyCode.DownArrow)||Input.GetKey(KeyCode.S)||GameManager.instance.isSwipeDown) {
 			fallSpeed =(float)GameManager.instance.blockDropSpeed;
 			GameManager.instance.isDropPressed=true;
+		if(!GameManager.instance.isLongPress)
 			GameManager.instance.isSwipeDown=false;
 		}
 		else

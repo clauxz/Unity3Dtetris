@@ -46,21 +46,7 @@ void OnEnable()
     // spin the yellow cube when swipping it
     void FingerGestures_OnFingerSwipe( int fingerIndex, Vector2 startPos, FingerGestures.SwipeDirection direction, float velocity )
     {
-       switch(direction)
-		{
-			case FingerGestures.SwipeDirection.Right:
-				GameManager.instance.isSwipeRight=true;
-			break;
-			case FingerGestures.SwipeDirection.Left:
-				GameManager.instance.isSwipeLeft=true;
-			break;
-			case FingerGestures.SwipeDirection.Up:
-				GameManager.instance.isSwipeUp=true;
-			break;
-			case FingerGestures.SwipeDirection.Down:
-				GameManager.instance.isSwipeDown=true;
-			break;
-		}
+      
     }
 
     #region Drag & Drop Gesture
@@ -69,17 +55,28 @@ void OnEnable()
 
     void FingerGestures_OnFingerDragBegin( int fingerIndex, Vector2 fingerPos, Vector2 startPos )
     {
-        
+	
+        GameManager.instance.isLongPress=true;
     }
 
     void FingerGestures_OnFingerDragMove( int fingerIndex, Vector2 fingerPos, Vector2 delta )
     {
        
+
+		if(delta.x>0&&delta.y==0)
+			GameManager.instance.isSwipeRight=true;
+		else if(delta.x<0&&delta.y==0)
+			GameManager.instance.isSwipeLeft=true;
+		else if(delta.y>0&&delta.x==0)
+			GameManager.instance.isSwipeUp=true;
+		else if(delta.y<0&&delta.x==0)
+			GameManager.instance.isSwipeDown=true;
+		
     }
 
     void FingerGestures_OnFingerDragEnd( int fingerIndex, Vector2 fingerPos )
     {
-     
+     	GameManager.instance.isLongPress=false;
     }
 
     #endregion
