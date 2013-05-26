@@ -100,7 +100,7 @@ public class Block : MonoBehaviour {
 		if(!this.isNextBlock)
 		{
 			//Logical block position from which Block would start falling
-			yPosition = (int)((GameManager.instance.fieldHeight*20)-20);
+			yPosition = (int)((GameManager.instance.fieldHeight*20)-40);
 			
 			//Pysical Block location with origin
 			transform.localPosition =new Vector3((float)((((GameManager.instance.fieldWidth)/2)*20 + (size%2 == 0? 0 : 20/2))),(yPosition - halfSizeFloat),-1);

@@ -136,6 +136,12 @@ public class EventManager : MonoBehaviour {
 		case ButtonType.CancelPopup:
 			objTrigger.SetActive(false);
 			break;
+		case ButtonType.PauseGame:
+			GameManager.instance.PauseGame();
+			break;
+		case ButtonType.ResumeGame:
+			GameManager.instance.ResumeGame();
+			break;
 			
 		}
 		

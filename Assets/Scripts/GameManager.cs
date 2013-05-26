@@ -30,7 +30,9 @@ public enum ButtonType{
 	DeleteAllDb=19,
 	DeleteDb=20,
 	CancelPopup=21,
-	levelSelect=22
+	levelSelect=22,
+	PauseGame=23,
+	ResumeGame=24,
 	
 }
 
@@ -60,7 +62,7 @@ public class GameManager : MonoBehaviour {
 	//Setting up Pre defined Block Patterns
 	public List<string[]> blocks;
 	
-	//Setting up Predegined Block Colors.
+	//Setting up Predetermined Block Colors.
 	public List<Color> blocksColors;
 	
 	//Main Field Matrix Array For ingame block manipulation
@@ -83,6 +85,7 @@ public class GameManager : MonoBehaviour {
 	public GameObject counter;
 	public GameObject pauselbl;
 	public GameObject pauseBlocker;
+	public GameObject Buttons;
 	
 	//Ngui SceneObjects For changing them dynamacaly
 	public GameObject nextBlockObject;
@@ -363,7 +366,7 @@ public class GameManager : MonoBehaviour {
 		pauseBlocker.GetComponent<BoxCollider>().enabled=true;
 		pauseBlocker.GetComponent<UISlicedSprite>().enabled=true;
 		isGamePaused=true;
-		
+		Buttons.SetActive(true);
 	}
 	
 	/// <summary>
@@ -377,6 +380,7 @@ public class GameManager : MonoBehaviour {
 		isGamePaused=false;
 		StartCoroutine(this.CurrentBlock.fall());
 		StartCoroutine(this.CurrentBlock.CheckInput());
+		Buttons.SetActive(false);
 		
 	}
 	
