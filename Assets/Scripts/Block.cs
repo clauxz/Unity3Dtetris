@@ -263,7 +263,7 @@ public IEnumerator CheckInput () {
 				yield return new WaitForSeconds(.1f);
 					
 			}
-			if(!GameManager.instance.isLongPress)
+		//	if(!GameManager.instance.isLongPress)
 				GameManager.instance.isSwipeUp=false;
 		}
 			else
@@ -285,8 +285,8 @@ public IEnumerator CheckInput () {
 		}
 		else
 		{
+		//		if(Application.platform!=RuntimePlatform.Android||Application.platform!=RuntimePlatform.IPhonePlayer)
 			fallSpeed =(float) GameManager.instance.blockNormalSpeed ;
-			
 		}
 		
 		//Change the next block
@@ -334,7 +334,7 @@ public void MoveHorizontal (int dir) {
 	
 	
 
-void RotateBlock () {
+public void RotateBlock () {
 	
 		//This codesmakes the rotation fo logical block
 		var tempMatrix = new bool[size, size];

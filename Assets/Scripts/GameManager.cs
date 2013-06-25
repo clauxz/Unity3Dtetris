@@ -36,6 +36,16 @@ public enum ButtonType{
 	
 }
 
+public enum GamePage{
+	
+	TetrisInit=0,
+	TetrisStart=1,
+	TetrisRegister=2,
+	TetrisScoreBoard=3,
+	None=4
+	
+}
+
 
 /// <summary>
 /// Language Type Toggle Enumeration For easy Language script atachment to sprites for Toggling
@@ -152,9 +162,11 @@ public class GameManager : MonoBehaviour {
 	public bool isGamePaused=false;
 	private int rowsCleared = 0;
 	
+	private static int[] history;
+	
 	public Block CurrentBlock;
 
-
+	
 	
 	//Define Types of Blocks here..
 	
@@ -228,11 +240,66 @@ public class GameManager : MonoBehaviour {
 		
 	}
 	
+	public static int tgmRandomize()
+	{
+		int numOfTries=6;
+		int num=numOfTries;
+		int candidatePiece=0;
+		for(int x=0;x<numOfTries;x++)
+		{
+			candidatePiece= Random.Range(0,8);
+			
+			if(contains(history,candidatePiece))
+				num--;
+			else
+				break;
+		}
+		
+		if(num!=0)
+		{
+			List<int> temp =new List<int>() {0,1,2,3,4,5,6};
+			
+			for(int x=0;x<4;x++)
+				temp.Remove(history[x]);
+						
+			candidatePiece= temp[Random.Range(0,temp.Count)];
+		}
+		
+		for(int x=0;x<3;x++)
+			history[x]=history[x+1];
+		
+		history[3]=candidatePiece;
+		
+		return candidatePiece;
+		
+
+	}
+	
+	 static bool contains(int[] array,int key) {
+        foreach(int i in array) {
+            if (i == key) {
+                return true;
+            }
+        }
+        return false;
+    }
+				
+	static bool isNotFour(int n)
+	{
+  		return n != 4;
+	}
+	
+	
 	// Use this for initialization
 	void Start () {
 		//Initites Blocks Patterns
 		InitiateBlocks();
+		history = new int[4];
 		
+		history[0]=1;
+		history[1]=3;
+		history[2]=1;
+		history[3]=3;
 		//this is to make sure we dont have more than one gamemanager script in scene
 		if(!instance)
 			instance=this;
@@ -281,7 +348,7 @@ public class GameManager : MonoBehaviour {
 	
 		
 		//Random BLock Integer Gets Generated ...	
-		nextBlock = Random.Range(0, blocks.Count);
+		nextBlock = tgmRandomize();
 		
 		
 		//Date and time first initiates when game starts For scoreboard
@@ -362,11 +429,14 @@ public class GameManager : MonoBehaviour {
 	/// </summary>
 	public void PauseGame()
 	{
+		if(!isGamePaused)
+		{
 		pauselbl.GetComponent<UILabel>().enabled=true;
 		pauseBlocker.GetComponent<BoxCollider>().enabled=true;
 		pauseBlocker.GetComponent<UISlicedSprite>().enabled=true;
 		isGamePaused=true;
 		Buttons.SetActive(true);
+		}
 	}
 	
 	/// <summary>
@@ -374,6 +444,8 @@ public class GameManager : MonoBehaviour {
 	/// </summary>
 	public void ResumeGame()
 	{
+		if(isGamePaused)
+		{
 		pauselbl.GetComponent<UILabel>().enabled=false;
 		pauseBlocker.GetComponent<BoxCollider>().enabled=false;
 		pauseBlocker.GetComponent<UISlicedSprite>().enabled=false;
@@ -381,6 +453,7 @@ public class GameManager : MonoBehaviour {
 		StartCoroutine(this.CurrentBlock.fall());
 		StartCoroutine(this.CurrentBlock.CheckInput());
 		Buttons.SetActive(false);
+		}
 		
 	}
 	
@@ -414,7 +487,8 @@ public class GameManager : MonoBehaviour {
 	public void ChangeNextBlock () {
 	
 		//Randoming a new next block
-		nextBlock = Random.Range(0, blocks.Count);
+		nextBlock = tgmRandomize();
+		
 		var children = new List<GameObject>();
 
 		foreach (Transform child in nextBlockObject.transform) children.Add(child.gameObject);

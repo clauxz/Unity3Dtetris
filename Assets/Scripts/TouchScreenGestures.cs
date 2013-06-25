@@ -40,13 +40,20 @@ void OnEnable()
 
     void FingerGestures_OnFingerTap( int fingerIndex, Vector2 fingerPos, int tapCount )
     {
-     
+		if(!GameManager.instance.isGamePaused)
+    	 	GameManager.instance.CurrentBlock.RotateBlock();
+		
+		
     }
 
     // spin the yellow cube when swipping it
     void FingerGestures_OnFingerSwipe( int fingerIndex, Vector2 startPos, FingerGestures.SwipeDirection direction, float velocity )
     {
-      
+      if(direction== FingerGestures.SwipeDirection.Up)
+		{
+			GameManager.instance.CurrentBlock.RotateBlock();
+		}
+		
     }
 
     #region Drag & Drop Gesture
@@ -67,8 +74,8 @@ void OnEnable()
 			GameManager.instance.isSwipeRight=true;
 		else if(delta.x<0&&delta.y==0)
 			GameManager.instance.isSwipeLeft=true;
-		else if(delta.y>0&&delta.x==0)
-			GameManager.instance.isSwipeUp=true;
+	//	else if(delta.y>0&&delta.x==0)
+	//		GameManager.instance.isSwipeUp=true;
 		else if(delta.y<0&&delta.x==0)
 			GameManager.instance.isSwipeDown=true;
 		

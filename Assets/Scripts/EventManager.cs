@@ -22,14 +22,19 @@ public class EventManager : MonoBehaviour {
 		switch(buttonEvent)
 		{
 		case ButtonType.Start:
+			PlayerPrefs.SetString("GamePage","TetrisInit");
 				Application.LoadLevel("TetrisRegister");
+			//	PlayerPrefs.SetString("GamePage","TetrisRegister");
 			break;
 		case ButtonType.Tutorial:
 			PlayerPrefs.SetString("GameKind", "DynamicM");
 			Application.LoadLevel("TetrisClone");
+		//	PlayerPrefs.SetString("GamePage","TetrisClone");
 			break;
 		case ButtonType.Score:
+			PlayerPrefs.SetString("GamePage","TetrisInit");
 			Application.LoadLevel("TetrisScore");
+			
 			break;
 		case ButtonType.Exit:
 			Application.Quit();
@@ -40,6 +45,7 @@ public class EventManager : MonoBehaviour {
 				{
 					PlayerPrefs.SetString("CurrentPlayerName", pname);
 					//Starts the screen to choose game
+				PlayerPrefs.SetString("GamePage","TetrisRegister");
 					Application.LoadLevel("TetrisStart");
 				}
 			break;
@@ -76,7 +82,18 @@ public class EventManager : MonoBehaviour {
 				GameObject.Find("levelValue").GetComponent<UILabel>().text=((((float)(GameManager.levelValue))/5)+.8f).ToString();
 				PlayerPrefs.SetInt("GameSpeed", GameManager.levelValue);
 			}
-			
+			if(GameObject.Find("GameManager"))
+			{
+				var level = PlayerPrefs.GetInt("GameSpeed", 1);
+				GameManager.instance.blockNormalSpeed=1;
+				GameManager.instance.delayTime=1;
+				//by default Block speed increase with level..
+				for(int i = 1; i < level; i++)
+				{
+					GameManager.instance.blockNormalSpeed +=0.2;
+					GameManager.instance.delayTime -= GameManager.instance.delayTime * 0.4;
+				}
+			}
 			break;
 		case ButtonType.Level_dec:
 			if(GameManager.levelValue > 1) {
@@ -84,6 +101,19 @@ public class EventManager : MonoBehaviour {
 				GameManager.levelValue--;
 			GameObject.Find("levelValue").GetComponent<UILabel>().text=((((float)(GameManager.levelValue))/5)+.8f).ToString();
 				PlayerPrefs.SetInt("GameSpeed", GameManager.levelValue);
+			}
+			
+			if(GameObject.Find("GameManager"))
+			{
+				var level = PlayerPrefs.GetInt("GameSpeed", 1);
+				GameManager.instance.blockNormalSpeed=1;
+				GameManager.instance.delayTime=1;
+				//by default Block speed increase with level..
+				for(int i = 1; i < level; i++)
+				{
+					GameManager.instance.blockNormalSpeed +=0.2;
+					GameManager.instance.delayTime -= GameManager.instance.delayTime * 0.4;
+				}
 			}
 			break;
 		case ButtonType.Return:
@@ -99,7 +129,12 @@ public class EventManager : MonoBehaviour {
 			if(GameManager.instance.gameKind=="DynamicM")
 				Application.LoadLevel("TetrisInit");
 			else
+			{
+				PlayerPrefs.SetString("GamePage","TetrisInit");
 				Application.LoadLevel("TetrisStart");
+				
+			}
+				
 			break;
 		case ButtonType.exportCSV:
 			
@@ -118,7 +153,9 @@ public class EventManager : MonoBehaviour {
 			break;
 		case ButtonType.DeleteAllDb:
 				PlayerPrefs.SetInt("Players", 1);
+			PlayerPrefs.SetString("GamePage","TetrisInit");
 			Application.LoadLevel("TetrisScore");
+			
 			objTrigger.SetActive(false);
 			break;
 		case ButtonType.DeleteDb:

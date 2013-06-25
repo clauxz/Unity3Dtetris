@@ -9,6 +9,8 @@ public class ScoreboardScreen : MonoBehaviour {
 	public GameObject camera;
 	public GameObject popup;
 	
+	public bool isMobileScore=false;
+	
 	private int totalPlayers;
 	private string[] names;
 	private float[] times;
@@ -175,12 +177,15 @@ public class ScoreboardScreen : MonoBehaviour {
 						array[3].text=names[i];
 						array[4].text=rows[i].ToString();
 						array[5].text=scores[i].ToString();
+				if(!isMobileScore)
+				{
 						array[6].text=numOfRotates[i].ToString();
 				array[7].text=numOfDrops[i].ToString();
 				array[8].text=numOfBlockGen[i].ToString();
 				array[9].text=numOfSpeedUp[i].ToString();
 				array[10].text=numOfSpeedDown[i].ToString();
 				array[11].text=startingDates[i];//numOfRotates[i].ToString();
+				}
 						GameObject.Find("Delete").name="delete"+i;
 						nItem.GetComponent<UIDragCamera>().draggableCamera=camera.GetComponent<UIDraggableCamera>();
 			/*			GUILayout.BeginHorizontal();
